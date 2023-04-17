@@ -12,7 +12,7 @@ public class HashCheckerTest {
 
     @Test
     void checkedHashShouldBeTrue() {
-        final BlueMediaConfiguration fakeCredentials = BlueMediaConfiguration.builder()
+        final BlueMediaConfiguration fakeConfiguration = BlueMediaConfiguration.builder()
                 .setServiceId(0)
                 .setSharedKey("xyz")
                 .setHashAlgorithm(HashType.SHA256)
@@ -24,15 +24,15 @@ public class HashCheckerTest {
         };
 
         final Hashable hashable = new Hashable() {
-            final String hash = hashGenerator.generateHash(fakeFieldsValues, fakeCredentials);
+            final String hash = hashGenerator.generateHash(fakeFieldsValues, fakeConfiguration);
             @Override
-            public @Nullable String getHash() {
+            public @NotNull String getHash() {
                 return hash;
             }
 
             @Override
             public boolean isHashPresent() {
-                return hash != null;
+                return true;
             }
 
             @Override
@@ -43,10 +43,9 @@ public class HashCheckerTest {
 
         final boolean checkedHash = hashChecker.checkHash(
             hashable,
-            fakeCredentials
+            fakeConfiguration
         );
+
         Assertions.assertTrue(checkedHash);
     }
-
-    // TODO others
 }

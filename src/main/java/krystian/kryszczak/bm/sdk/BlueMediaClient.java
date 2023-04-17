@@ -144,7 +144,8 @@ public final class BlueMediaClient {
             .onErrorComplete();
     }
 
-    public @NotNull Maybe<String> getGatewayList() {
+    public @NotNull Maybe<String> getGatewayList() { // new
+
         return Maybe.empty();
     }
 

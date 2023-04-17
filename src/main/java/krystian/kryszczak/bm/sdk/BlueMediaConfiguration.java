@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ApiStatus.AvailableSince("1.0")
-public class BlueMediaConfiguration {
+public final class BlueMediaConfiguration {
     final int serviceId;
     final @NotNull String sharedKey;
     final @NotNull HashType hashAlgorithm;
