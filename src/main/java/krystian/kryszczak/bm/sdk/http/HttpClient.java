@@ -4,5 +4,5 @@ import io.reactivex.rxjava3.core.Maybe;
 import org.jetbrains.annotations.NotNull;
 
 public sealed interface HttpClient permits VertxHttpClient {
-    @NotNull <I, O> Maybe<@NotNull Response<O>> post(@NotNull Request<I, O> request);
+    @NotNull <I, O> Maybe<@NotNull O> post(@NotNull Request<I, O> request);
 }

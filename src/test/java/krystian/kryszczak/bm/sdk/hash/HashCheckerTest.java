@@ -12,8 +12,12 @@ public class HashCheckerTest {
 
     @Test
     void checkedHashShouldBeTrue() {
-        final BlueMediaConfiguration fakeCredentials =
-                new BlueMediaConfiguration(0,"xyz", HashType.SHA256, "|");
+        final BlueMediaConfiguration fakeCredentials = BlueMediaConfiguration.builder()
+                .setServiceId(0)
+                .setSharedKey("xyz")
+                .setHashAlgorithm(HashType.SHA256)
+                .setHashSeparator("|")
+                .build();
 
         final Object[] fakeFieldsValues = new Object[]{
             "Hello", "world", '!', 55
