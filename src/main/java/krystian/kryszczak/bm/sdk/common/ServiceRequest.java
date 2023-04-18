@@ -11,4 +11,12 @@ public abstract class ServiceRequest extends AbstractValueObject {
     protected @NotNull String serviceId;
     protected final @NotNull String messageId;
     protected @Nullable String hash;
+
+    @Override
+    public @NotNull Object[] toArray() {
+        return new Object[] {
+            serviceId,
+            messageId
+        };
+    }
 }

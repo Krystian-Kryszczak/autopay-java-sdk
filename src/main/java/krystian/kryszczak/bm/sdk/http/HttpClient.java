@@ -1,8 +1,10 @@
 package krystian.kryszczak.bm.sdk.http;
 
 import io.reactivex.rxjava3.core.Maybe;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.AvailableSince("")
 public sealed interface HttpClient permits VertxHttpClient {
-    @NotNull <I, O> Maybe<@NotNull O> post(@NotNull Request<I, O> request);
+    @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest);
 }

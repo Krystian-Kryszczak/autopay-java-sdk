@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 public sealed interface HashChecker permits HashCheckerImpl {
     HashChecker instance = new HashCheckerImpl();
+    static HashChecker getInstance() {
+        return instance;
+    }
 
     /**
      * Checks if krystian.kryszczak.bm.sdk.hash is correct.

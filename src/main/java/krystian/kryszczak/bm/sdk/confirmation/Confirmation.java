@@ -35,7 +35,10 @@ public record Confirmation(
 
     @Override
     public @NotNull String[] toArrayWithoutHash() {
-        return new String[]{orderId, serviceId};
+        return new String[] {
+            orderId,
+            serviceId
+        };
     }
     
     public enum Status {

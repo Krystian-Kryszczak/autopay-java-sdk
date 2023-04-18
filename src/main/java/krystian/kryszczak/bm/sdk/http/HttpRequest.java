@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URI;
 import java.util.Map;
 
-public record Request<I, O>(@NotNull URI uri, @NotNull Map<String, String> headers, I body) {
+public record HttpRequest<I extends HttpRequestBody>(@NotNull URI uri, @NotNull Map<String, String> headers, I body) {
     public String getHost() {
         return uri.getHost();
     }

@@ -10,8 +10,7 @@ import krystian.kryszczak.bm.sdk.hash.HashChecker;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpClient;
 import krystian.kryszczak.bm.sdk.http.VertxHttpClient;
-import krystian.kryszczak.bm.sdk.http.Request;
-import krystian.kryszczak.bm.sdk.http.Response;
+import krystian.kryszczak.bm.sdk.http.HttpRequest;
 import krystian.kryszczak.bm.sdk.itn.Itn;
 import krystian.kryszczak.bm.sdk.itn.decoder.Base64ItnDecoder;
 import krystian.kryszczak.bm.sdk.itn.decoder.ItnDecoder;
@@ -21,12 +20,12 @@ import krystian.kryszczak.bm.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.bm.sdk.itn.validator.XmlItnValidator;
 import krystian.kryszczak.bm.sdk.payway.PaywayList;
 import krystian.kryszczak.bm.sdk.payway.PaywayListRequest;
+import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import krystian.kryszczak.bm.sdk.regulation.RegulationListRequest;
 import krystian.kryszczak.bm.sdk.regulation.RegulationListRequest2;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
-import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
@@ -38,7 +37,7 @@ import java.net.URI;
 import java.util.Map;
 
 @AllArgsConstructor
-@ApiStatus.AvailableSince("1.0")
+@ApiStatus.AvailableSince("")
 public final class BlueMediaClient {
     private static final Logger logger = LoggerFactory.getLogger(BlueMediaClient.class);
     private static final XmlMapper xmlMapper = new XmlMapper();
@@ -58,7 +57,7 @@ public final class BlueMediaClient {
     /**
      * Perform standard transaction.
      */
-    @ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("")
     public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionData<Transaction> transactionData) {
         return Single.just(
             View.createRedirectHtml(TransactionDto.create(transactionData, this.configuration))
@@ -69,7 +68,7 @@ public final class BlueMediaClient {
      * Perform transaction in background.
      * Returns payway form or transaction data for user.
      */
-    //@ApiStatus.AvailableSince("1.0")
+    //@ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionData<TransactionBackground> transactionData) {
         return doTransaction(transactionData, false);
     }
@@ -78,19 +77,19 @@ public final class BlueMediaClient {
      * Initialize transaction.
      * Returns transaction continuation or transaction information.
      */
-    //@ApiStatus.AvailableSince("1.0")
+    //@ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionData<TransactionInit> transactionData) {
         return doTransaction(transactionData, true);
     }
 
     private @NotNull <T extends Transaction> Maybe<@NotNull T> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) { // TODO
         return Single.just(TransactionDto.create(transactionData, this.configuration))
-            .map(transactionDto -> new Request<TransactionDto, T>(
+            .map(transactionDto -> new HttpRequest<>(
                 new URI(transactionData.gatewayUrl() + Routes.PAYMENT_ROUTE),
                 Map.of(
                     HEADER, !transactionInit
-                            ? PAY_HEADER
-                            : CONTINUE_HEADER
+                        ? PAY_HEADER
+                        : CONTINUE_HEADER
                 ),
                 transactionDto
             ))
@@ -111,7 +110,7 @@ public final class BlueMediaClient {
      * Process ITN requests.
      * @param itn string encoded with base64
      */
-    //@ApiStatus.AvailableSince("1.0")
+    //@ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull Itn> doItnIn(final @NotNull String itn) throws JsonProcessingException {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();
@@ -130,7 +129,7 @@ public final class BlueMediaClient {
     /**
      * Returns response for ITN IN request.
      */
-    //@ApiStatus.AvailableSince("1.0")
+    //@ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn) {
         return doItnInResponse(itn, true);
     }
@@ -161,58 +160,73 @@ public final class BlueMediaClient {
             )
         );
 
-        final var request = new Request<PaywayListRequest, PaywayList>(
-            URI.create(gatewayUrl + Routes.PAYWAY_LIST_ROUTE),
-            Map.of(),
-            PaywayListRequest.create(
-                gatewayUrl,
-                configuration
-            )
-        );
+//        final var request = new HttpRequest<PaywayListRequest>(
+//            URI.create(gatewayUrl + Routes.PAYWAY_LIST_ROUTE),
+//            Map.of(),
+//            PaywayListRequest.create(
+//                gatewayUrl,
+//                configuration
+//            )
+//        );
 
-        return httpClient.post(request);
+//        return httpClient.post(request)
+//            .flatMap(Maybe.empty());
+        return Maybe.empty();
     }
 
     /**
      * Returns payment regulations.
      */
     public @NotNull Maybe<RegulationListResponse> getRegulationList(final @NotNull String gatewayUrl) {
-        return httpClient.post(
-            new Request<RegulationListRequest, RegulationListResponse>(
-                URI.create(gatewayUrl + Routes.GET_REGULATIONS_ROUTE),
-                Map.of(),
 
-                RegulationListRequest.create(
-                    gatewayUrl,
-                    this.configuration.getServiceId(),
-                    RandomUtils.randomMessageId(),
-                    this.configuration
-                )
-            )
+        final URI requestUrl = URI.create(gatewayUrl + Routes.GET_REGULATIONS_ROUTE);
+        final Map<String, String> headers = Map.of();
+
+//        final RegulationList regulationList = new RegulationList(
+//            configuration.getServiceId(),
+//            RandomUtils.randomMessageId()
+//        );
+
+        final var request = RegulationListRequest.create(
+            gatewayUrl,
+            configuration.getServiceId(),
+            RandomUtils.randomMessageId(),
+            configuration
         );
+//
+//        final var request = new HttpRequest<>(
+//            requestUrl,
+//            headers,
+//
+//            requestUrl
+//        );
+
+//        return httpClient.post(request);
+        return Maybe.empty();
     }
 
     public @NotNull Maybe<String> getRegulationList2(final @NotNull String gatewayUrl) {
-        return httpClient.post(
-            new Request<>(
-                URI.create(gatewayUrl + "/legalData"),
-                Map.of(),
-
-                RegulationListRequest2.create(
-                    1500,
-                    configuration.getServiceId(),
-                    RandomUtils.randomMessageId(),
-                    configuration
-                )
-            )
-        );
+        return Maybe.empty();
+//        return httpClient.post(
+//            new HttpRequest<>(
+//                URI.create(gatewayUrl + "/legalData"),
+//                Map.of(),
+//
+//                RegulationListRequest2.create(
+//                    1500,
+//                    configuration.getServiceId(),
+//                    RandomUtils.randomMessageId(),
+//                    configuration
+//                )
+//            )
+//        );
     }
 
 
     /**
      * Checks id hash is valid.
      */
-    @ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("")
     public boolean checkHash(final @NotNull Hashable hashable) {
         return HashChecker.instance.checkHash(hashable, configuration);
     }
@@ -220,7 +234,7 @@ public final class BlueMediaClient {
     /**
      * Method allows to check if gateway returns with valid data.
      */
-    @ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("")
     public boolean doConfirmationCheck(final @NotNull Confirmation confirmation) {
         return checkHash(confirmation);
     }
@@ -228,7 +242,7 @@ public final class BlueMediaClient {
     /**
      * Method allows to get Itn object from base64
      */
-    //@ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("")
     public static @NotNull Itn getItnObject(final @NotNull String itn) throws Exception {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();

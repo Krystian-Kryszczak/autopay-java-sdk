@@ -3,13 +3,17 @@ package krystian.kryszczak.bm.sdk.transaction;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(force = true) // TEMP TODO
 public abstract sealed class Transaction implements Hashable
         permits TransactionBackground, TransactionInit, TransactionContinue {
     protected final @NotNull String serviceId;
@@ -63,7 +67,41 @@ public abstract sealed class Transaction implements Hashable
     }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() { // TODO
-        return new Object[0];
+    public @NotNull Object[] toArrayWithoutHash() {
+        final List<Object> list = new LinkedList<>(List.of(serviceId, orderId, amount));
+
+        final Object[] nullable = new Object[] {
+            description,
+            gatewayId,
+            currency,
+            customerEmail,
+            customerNRB,
+            texCountry,
+            customerIp,
+            title,
+            receiverName,
+            validityTime,
+            linkValidityTime,
+            authorizationCode,
+            screenType,
+            blikUIDKey,
+            blikUIDLabel,
+            returnUrl,
+            defaultRegulationAcceptanceState,
+            defaultRegulationAcceptanceId,
+            defaultRegulationAcceptanceTime,
+            receiverNRB,
+            receiverAddress,
+            remoteId,
+            bankHref
+        };
+
+        for (Object obj : nullable) {
+            if (obj != null) {
+                list.add(obj);
+            }
+        }
+
+        return list.toArray();
     }
 }

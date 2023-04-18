@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class HashCheckerTest {
-    private final HashGenerator hashGenerator = HashGenerator.instance;
-    private final HashChecker hashChecker = HashChecker.instance;
+    private final HashGenerator hashGenerator = HashGenerator.getInstance();
+    private final HashChecker hashChecker = HashChecker.getInstance();
 
     @Test
-    void checkedHashShouldBeTrue() {
+    void checkHashShouldReturnTrue() {
         final BlueMediaConfiguration fakeConfiguration = BlueMediaConfiguration.builder()
                 .setServiceId(0)
                 .setSharedKey("xyz")

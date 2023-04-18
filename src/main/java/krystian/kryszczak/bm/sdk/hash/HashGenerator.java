@@ -3,10 +3,11 @@ package krystian.kryszczak.bm.sdk.hash;
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.NoSuchAlgorithmException;
-
 public sealed interface HashGenerator permits HashGeneratorImpl {
     HashGenerator instance = new HashGeneratorImpl();
+    static HashGenerator getInstance() {
+        return instance;
+    }
 
     /**
      * Generates hash.

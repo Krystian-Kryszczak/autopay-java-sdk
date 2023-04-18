@@ -18,4 +18,11 @@ public final class TransactionInit extends Transaction {
         this.reason = reason;
         this.paymentStatus = paymentStatus;
     }
+
+    public TransactionInit() {
+        super();
+        this.reason = null;
+        this.confirmation = null;
+        this.paymentStatus = null;
+    }
 }

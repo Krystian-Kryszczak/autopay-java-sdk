@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'krystian.kryszczak'
-version '1.0'
+version '0.4-beta'
 
 repositories {
     mavenCentral()

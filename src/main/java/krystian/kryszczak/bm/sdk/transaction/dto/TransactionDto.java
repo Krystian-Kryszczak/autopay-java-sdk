@@ -5,7 +5,7 @@ import krystian.kryszczak.bm.sdk.common.dto.AbstractDto;
 import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.Transaction;
 import krystian.kryszczak.bm.sdk.transaction.TransactionData;
-import krystian.kryszczak.bm.sdk.transfer.TransferReady;
+import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 @Getter
-public final class TransactionDto extends AbstractDto implements TransferReady {
+public final class TransactionDto extends AbstractDto implements HttpRequestBody {
     private final @NotNull Transaction transaction;
     private final @NotNull Translations.Language htmlFormLanguage = Translations.Language.pl;
 

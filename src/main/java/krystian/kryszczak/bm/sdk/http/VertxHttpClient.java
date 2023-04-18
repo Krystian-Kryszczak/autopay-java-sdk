@@ -1,50 +1,47 @@
 package krystian.kryszczak.bm.sdk.http;
 
 import io.reactivex.rxjava3.core.Maybe;
+import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.rxjava3.core.Vertx;
 import io.vertx.rxjava3.ext.web.client.WebClient;
-import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-
-@AllArgsConstructor
+@ApiStatus.AvailableSince("")
 public final class VertxHttpClient implements HttpClient {
-    private final Vertx vertx = Vertx.vertx();
-    private final WebClient client = WebClient.wrap(vertx.createHttpClient());
+    private static final Logger logger = LoggerFactory.getLogger(VertxHttpClient.class);
+    private final WebClient client;
+
+    public VertxHttpClient() {
+        Vertx vertx = Vertx.vertx();
+
+        final WebClientOptions webClientOptions = new WebClientOptions()
+            .setFollowRedirects(false)
+            .setVerifyHost(true)
+            .setLogActivity(true);
+
+        client = WebClient.wrap(
+            vertx.createHttpClient(webClientOptions)
+        );
+    }
 
     @Override
-    public @NotNull <I, O> Maybe<@NotNull O> post(@NotNull Request<I, O> request) {
-        final URI uri = request.uri();
+    public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
+        final var vertexRequest = client.post(
+            VertexAdapter.adapt(httpRequest.uri())
+        );
 
-        System.out.println();
-        System.out.println(request.getPort());
-        System.out.println(request.getHost());
-        System.out.println(request.getPath());
-        System.out.println();
-
-        client.post(request.getPort(), request.getHost(), request.getPath())
-            .followRedirects(true)
-            .rxSendJson(request.body())
-            .doOnSuccess(it -> System.out.println(it.bodyAsString("UTF-8")))
-            .doOnSuccess(it -> System.out.println("Status code: " + it.statusCode()))
-            .doOnSuccess(it -> System.out.println(it.getHeader("Location")))
-            .blockingGet();
-
-
-//        return client.rxRequest(HttpMethod.POST, request.uri().getPort(), request.uri().getHost(), request.uri().getPath())
-//            .flatMap(req -> req
-//                .rxSend()
-//                .flatMap(response -> {
-//                    if (response.statusCode() == 200) {
-//                        return Single.just((O) response.body());
-//                    } else {
-//                        return Single.error(new NoStackTraceThrowable("Invalid response"));
-//                    }
-//                })
-//            )
-//            .toMaybe();
-
-        return Maybe.empty();
+        return vertexRequest
+            .putHeaders(
+                vertexRequest.headers()
+                    .addAll(httpRequest.headers())
+            ).rxSendMultipartForm(
+                VertexAdapter.asMultipartForm(httpRequest.body())
+            )
+            .map(it -> it.bodyAsString("UTF-8"))
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete();
     }
 }

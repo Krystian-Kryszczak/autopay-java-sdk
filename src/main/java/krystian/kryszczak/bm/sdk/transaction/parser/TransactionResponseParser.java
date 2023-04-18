@@ -7,15 +7,15 @@ import krystian.kryszczak.bm.sdk.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionResponseParser<T extends Transaction> extends ResponseParser<T> {
-    public TransactionResponseParser(@NotNull Response<@NotNull T> response, @NotNull BlueMediaConfiguration configuration) {
+    public TransactionResponseParser(@NotNull String response, @NotNull BlueMediaConfiguration configuration) {
         super(response, configuration);
     }
 
-    public @NotNull Response<T> parse() {
+    public @NotNull String parse() {
         return parse(false);
     }
 
-    public @NotNull Response<T> parse(boolean transactionInit) {
+    public @NotNull String parse(boolean transactionInit) {
 //        super.isResponseError();
 //        $this->isErrorResponse();
         //        $paywayForm = $this->getPaywayFormResponse();
@@ -32,7 +32,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
 
 
         // TODO
-        return getResponse();
+        return getResponseBody();
     }
 
 
