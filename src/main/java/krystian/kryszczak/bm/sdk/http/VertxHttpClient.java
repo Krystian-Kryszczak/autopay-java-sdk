@@ -15,7 +15,7 @@ public final class VertxHttpClient implements HttpClient {
     private final WebClient client;
 
     public VertxHttpClient() {
-        Vertx vertx = Vertx.vertx();
+        final Vertx vertx = Vertx.vertx();
 
         final WebClientOptions webClientOptions = new WebClientOptions()
             .setFollowRedirects(false)
@@ -39,8 +39,7 @@ public final class VertxHttpClient implements HttpClient {
                     .addAll(httpRequest.headers())
             ).rxSendMultipartForm(
                 VertexAdapter.asMultipartForm(httpRequest.body())
-            )
-            .map(it -> it.bodyAsString("UTF-8"))
+            ).map(it -> it.bodyAsString("UTF-8"))
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete();
     }

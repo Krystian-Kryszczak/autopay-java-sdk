@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import krystian.kryszczak.bm.sdk.common.Routes;
+import krystian.kryszczak.bm.sdk.common.parser.ServiceResponseParser;
 import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.hash.HashChecker;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
@@ -19,10 +20,8 @@ import krystian.kryszczak.bm.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.bm.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.bm.sdk.itn.validator.XmlItnValidator;
 import krystian.kryszczak.bm.sdk.payway.PaywayList;
-import krystian.kryszczak.bm.sdk.payway.PaywayListRequest;
 import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import krystian.kryszczak.bm.sdk.regulation.RegulationListRequest;
-import krystian.kryszczak.bm.sdk.regulation.RegulationListRequest2;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
@@ -179,30 +178,21 @@ public final class BlueMediaClient {
      */
     public @NotNull Maybe<RegulationListResponse> getRegulationList(final @NotNull String gatewayUrl) {
 
-        final URI requestUrl = URI.create(gatewayUrl + Routes.GET_REGULATIONS_ROUTE);
-        final Map<String, String> headers = Map.of();
-
-//        final RegulationList regulationList = new RegulationList(
-//            configuration.getServiceId(),
-//            RandomUtils.randomMessageId()
-//        );
-
-        final var request = RegulationListRequest.create(
-            gatewayUrl,
-            configuration.getServiceId(),
-            RandomUtils.randomMessageId(),
-            configuration
+        final HttpRequest<RegulationList> request = new HttpRequest<>(
+            URI.create(gatewayUrl + Routes.GET_REGULATIONS_ROUTE),
+            Map.of(),
+            RegulationList.create(
+                configuration.getServiceId(),
+                RandomUtils.randomMessageId(),
+                configuration
+            )
         );
-//
-//        final var request = new HttpRequest<>(
-//            requestUrl,
-//            headers,
-//
-//            requestUrl
-//        );
 
-//        return httpClient.post(request);
-        return Maybe.empty();
+        return httpClient.post(request)
+            .flatMap(it ->
+                new ServiceResponseParser(it, this.configuration)
+                    .parseListResponse(RegulationListResponse.class)
+            );
     }
 
     public @NotNull Maybe<String> getRegulationList2(final @NotNull String gatewayUrl) {
