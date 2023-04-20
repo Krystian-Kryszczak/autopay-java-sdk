@@ -12,4 +12,9 @@ public final class RegulationListResponse extends RegulationList {
         super(serviceId, messageId, hash);
         this.regulations = regulations;
     }
+
+    public RegulationListResponse() {
+        super(null, null, null);
+        this.regulations = null;
+    }
 }

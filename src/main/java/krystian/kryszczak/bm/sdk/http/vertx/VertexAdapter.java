@@ -1,7 +1,8 @@
-package krystian.kryszczak.bm.sdk.http;
+package krystian.kryszczak.bm.sdk.http.vertx;
 
 import io.vertx.rxjava3.ext.web.multipart.MultipartForm;
 import io.vertx.rxjava3.uritemplate.UriTemplate;
+import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;

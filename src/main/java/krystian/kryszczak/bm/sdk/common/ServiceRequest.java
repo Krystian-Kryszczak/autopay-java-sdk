@@ -9,8 +9,14 @@ import org.jetbrains.annotations.NotNull;
 @Getter(AccessLevel.PROTECTED)
 @AllArgsConstructor
 public abstract class ServiceRequest implements HttpRequestBody {
-    protected @NotNull String serviceId;
-    protected final @NotNull String messageId;
+    protected
+//    @NotNull
+    String serviceId;
+    protected final
+//    @NotNull
+    String messageId;
     @Getter
-    protected @NotNull String hash;
+    protected
+//    @NotNull
+    String hash;
 }

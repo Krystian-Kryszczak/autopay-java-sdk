@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Builder
 public record Confirmation(
-    @NotNull String serviceId,
+    int serviceId,
     @NotNull String orderId,
     @Nullable String hash
 ) implements Serializable, Hashable {
@@ -34,10 +34,10 @@ public record Confirmation(
     }
 
     @Override
-    public @NotNull String[] toArrayWithoutHash() {
-        return new String[] {
+    public @NotNull Object[] toArrayWithoutHash() {
+        return new Object[] {
+            serviceId,
             orderId,
-            serviceId
         };
     }
     

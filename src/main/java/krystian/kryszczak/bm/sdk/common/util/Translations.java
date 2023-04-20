@@ -51,6 +51,7 @@ public final class Translations {
     public static @NotNull Map<String, String> getTranslationPhrasesMap(@NotNull Language language) {
         return getTranslations(language, Translations.REQUIRED_TRANSLATIONS);
     }
+
     private static @NotNull Map<String, String> getTranslations(@NotNull Language language, final @NotNull String[] requiredTranslations) {
         final Map<String, String> translationPhrases = translations.get(language);
 

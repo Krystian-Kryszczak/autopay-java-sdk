@@ -15,7 +15,6 @@ final class HashGeneratorImpl implements HashGenerator {
         final String separator = configuration.getHashSeparator();
 
         for (Object obj : array) {
-            System.out.println(obj);
             builder
                 .append(obj)
                 .append(separator);

@@ -5,6 +5,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.AvailableSince("")
-public sealed interface HttpClient permits VertxHttpClient {
+public interface HttpClient {
     @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest);
+
+    static HttpClient getDefaultHttpClient() {
+        return new JavaHttpClient();
+    }
 }

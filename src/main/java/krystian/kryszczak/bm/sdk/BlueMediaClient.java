@@ -10,7 +10,6 @@ import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.hash.HashChecker;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpClient;
-import krystian.kryszczak.bm.sdk.http.VertxHttpClient;
 import krystian.kryszczak.bm.sdk.http.HttpRequest;
 import krystian.kryszczak.bm.sdk.itn.Itn;
 import krystian.kryszczak.bm.sdk.itn.decoder.Base64ItnDecoder;
@@ -21,10 +20,10 @@ import krystian.kryszczak.bm.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.bm.sdk.itn.validator.XmlItnValidator;
 import krystian.kryszczak.bm.sdk.payway.PaywayList;
 import krystian.kryszczak.bm.sdk.regulation.RegulationList;
-import krystian.kryszczak.bm.sdk.regulation.RegulationListRequest;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
+import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
@@ -38,20 +37,19 @@ import java.util.Map;
 @AllArgsConstructor
 @ApiStatus.AvailableSince("")
 public final class BlueMediaClient {
+    private static final String HEADER = "BmHeader";
+    private static final String PAY_HEADER = "pay-bm";
+    private static final String CONTINUE_HEADER = "pay-bm-continue-transaction-url";
+
     private static final Logger logger = LoggerFactory.getLogger(BlueMediaClient.class);
-    private static final XmlMapper xmlMapper = new XmlMapper();
 
     private final BlueMediaConfiguration configuration;
     private final HttpClient httpClient;
 
     public BlueMediaClient(final @NotNull BlueMediaConfiguration configuration) {
         this.configuration = configuration;
-        this.httpClient = new VertxHttpClient();
+        this.httpClient = HttpClient.getDefaultHttpClient();
     }
-
-    private static final String HEADER = "BmHeader";
-    private static final String PAY_HEADER = "pay-bm";
-    private static final String CONTINUE_HEADER = "pay-bm-continue-transaction-url";
 
     /**
      * Perform standard transaction.
@@ -67,7 +65,7 @@ public final class BlueMediaClient {
      * Perform transaction in background.
      * Returns payway form or transaction data for user.
      */
-    //@ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionData<TransactionBackground> transactionData) {
         return doTransaction(transactionData, false);
     }
@@ -76,12 +74,12 @@ public final class BlueMediaClient {
      * Initialize transaction.
      * Returns transaction continuation or transaction information.
      */
-    //@ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionData<TransactionInit> transactionData) {
         return doTransaction(transactionData, true);
     }
 
-    private @NotNull <T extends Transaction> Maybe<@NotNull T> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) { // TODO
+    private @NotNull <T extends Transaction> Maybe<@NotNull T> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) {
         return Single.just(TransactionDto.create(transactionData, this.configuration))
             .map(transactionDto -> new HttpRequest<>(
                 new URI(transactionData.gatewayUrl() + Routes.PAYMENT_ROUTE),
@@ -90,7 +88,7 @@ public final class BlueMediaClient {
                         ? PAY_HEADER
                         : CONTINUE_HEADER
                 ),
-                transactionDto
+                transactionDto // TODO
             ))
             .doOnError(throwable ->
                 logger.error(
@@ -100,9 +98,7 @@ public final class BlueMediaClient {
             )
             .onErrorComplete()
             .flatMap(httpClient::post)
-//            .map(response -> new TransactionResponseParser<>(response, configuration).parse(transactionInit))
-//            .flatMap(Response::getBody)
-            .flatMap(r -> Maybe.empty());
+            .map(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit));
     }
 
     /**
@@ -195,24 +191,6 @@ public final class BlueMediaClient {
             );
     }
 
-    public @NotNull Maybe<String> getRegulationList2(final @NotNull String gatewayUrl) {
-        return Maybe.empty();
-//        return httpClient.post(
-//            new HttpRequest<>(
-//                URI.create(gatewayUrl + "/legalData"),
-//                Map.of(),
-//
-//                RegulationListRequest2.create(
-//                    1500,
-//                    configuration.getServiceId(),
-//                    RandomUtils.randomMessageId(),
-//                    configuration
-//                )
-//            )
-//        );
-    }
-
-
     /**
      * Checks id hash is valid.
      */
@@ -229,6 +207,7 @@ public final class BlueMediaClient {
         return checkHash(confirmation);
     }
 
+    private static final XmlMapper xmlMapper = new XmlMapper();
     /**
      * Method allows to get Itn object from base64
      */

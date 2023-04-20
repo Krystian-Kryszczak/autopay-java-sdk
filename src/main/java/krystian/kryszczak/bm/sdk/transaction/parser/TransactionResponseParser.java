@@ -11,11 +11,11 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
         super(response, configuration);
     }
 
-    public @NotNull String parse() {
+    public @NotNull T parse() {
         return parse(false);
     }
 
-    public @NotNull String parse(boolean transactionInit) {
+    public @NotNull T parse(boolean transactionInit) {
 //        super.isResponseError();
 //        $this->isErrorResponse();
         //        $paywayForm = $this->getPaywayFormResponse();
@@ -32,7 +32,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
 
 
         // TODO
-        return getResponseBody();
+        return null;
     }
 
 

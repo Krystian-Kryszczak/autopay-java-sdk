@@ -1,9 +1,12 @@
-package krystian.kryszczak.bm.sdk.http;
+package krystian.kryszczak.bm.sdk.http.vertx;
 
 import io.reactivex.rxjava3.core.Maybe;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.rxjava3.core.Vertx;
 import io.vertx.rxjava3.ext.web.client.WebClient;
+import krystian.kryszczak.bm.sdk.http.HttpClient;
+import krystian.kryszczak.bm.sdk.http.HttpRequest;
+import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -29,9 +32,10 @@ public final class VertxHttpClient implements HttpClient {
 
     @Override
     public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
-        final var vertexRequest = client.post(
-            VertexAdapter.adapt(httpRequest.uri())
-        );
+
+        logger.debug("Connecting to " + httpRequest.uri());
+
+        final var vertexRequest = client.post(httpRequest.uri().toString());
 
         return vertexRequest
             .putHeaders(
@@ -39,7 +43,15 @@ public final class VertxHttpClient implements HttpClient {
                     .addAll(httpRequest.headers())
             ).rxSendMultipartForm(
                 VertexAdapter.asMultipartForm(httpRequest.body())
-            ).map(it -> it.bodyAsString("UTF-8"))
+            )
+            .flatMapMaybe(it -> {
+                logger.info("STATUS MESSAGE" + it.statusMessage());
+                logger.info("STATUS CODE" + it.statusCode());
+
+                final String body = it.bodyAsString("UTF-8");
+                if (body == null) return Maybe.empty();
+                return Maybe.just(body);
+            })
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete();
     }

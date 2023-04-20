@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ApiStatus.AvailableSince("1.0")
@@ -16,6 +18,16 @@ public final class BlueMediaConfiguration {
     final @NotNull String sharedKey;
     final @NotNull HashType hashAlgorithm;
     final @NotNull String hashSeparator;
+
+    public static @NotNull BlueMediaConfiguration fromEnvironmentVariables() {
+        final int bmServiceId = Integer.parseInt(System.getenv("BM_SERVICE_ID"));
+        final String sharedKey = Objects.requireNonNull(System.getenv("BM_SHARED_KEY"), "BM_SHARED_KEY is not defined or invalid.");
+
+        return BlueMediaConfiguration.builder()
+            .setServiceId(bmServiceId)
+            .setSharedKey(sharedKey)
+            .build();
+    }
 
     public static @NotNull Builder.Required builder() {
         return new Builder.Required();
