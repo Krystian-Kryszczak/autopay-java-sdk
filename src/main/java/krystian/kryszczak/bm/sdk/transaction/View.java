@@ -24,7 +24,7 @@ public final class View {
             ).append(separator);
 
 
-        for (final var entry : transactionDto.fieldsMapWithCapitalizedKeysAndFormattedValues().entrySet()) {
+        for (final var entry : transactionDto.toCapitalizedMap().entrySet()) {
             final var fieldName = entry.getKey();
             final var fieldValue = entry.getValue();
 

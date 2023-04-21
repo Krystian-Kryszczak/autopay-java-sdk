@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.MODULE)
 public final class GatewayRequest {
     private final int ServiceID;
     private final @NotNull String MessageID;

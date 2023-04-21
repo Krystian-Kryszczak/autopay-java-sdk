@@ -31,7 +31,7 @@ public final class TransactionDto extends AbstractDto implements HttpRequestBody
     }
 
     @Override
-    public @NotNull Map<@NotNull String, @NotNull String> fieldsMapWithCapitalizedKeysAndFormattedValues() {
+    public @NotNull Map<@NotNull String, @NotNull String> toCapitalizedMap() {
         return null; // TODO
     }
 

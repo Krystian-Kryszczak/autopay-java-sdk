@@ -1,4 +1,7 @@
 package krystian.kryszczak.bm.sdk.itn.response;
 
-public class TransactionsConfirmations {
-}
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+
+public record TransactionsConfirmations(@NotNull TransactionConfirmed transactionConfirmed) implements Serializable {}

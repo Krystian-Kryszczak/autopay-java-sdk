@@ -6,18 +6,17 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public final class JavaHttpClient implements HttpClient {
-    private static final Logger logger = LoggerFactory.getLogger(JavaHttpClient.class);
+public final class NativeHttpClient implements HttpClient {
+    private static final Logger logger = LoggerFactory.getLogger(NativeHttpClient.class);
 
     private final java.net.http.HttpClient httpClient;
 
-    public JavaHttpClient() {
+    public NativeHttpClient() {
         httpClient = java.net.http.HttpClient.newBuilder()
             .followRedirects(java.net.http.HttpClient.Redirect.NEVER)
             .build();
@@ -27,7 +26,7 @@ public final class JavaHttpClient implements HttpClient {
     @Override
     public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
         final var body = java.net.http.HttpRequest.BodyPublishers.ofString(
-            getDataString(httpRequest.body().fieldsMapWithCapitalizedKeysAndFormattedValues()),
+            getDataString(httpRequest.body().toCapitalizedMap()),
             StandardCharsets.UTF_8
         );
 
@@ -53,7 +52,7 @@ public final class JavaHttpClient implements HttpClient {
         .map(HttpResponse::body);
     }
 
-    private String getDataString(Map<String, String> params) throws UnsupportedEncodingException {
+    private String getDataString(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for(Map.Entry<String, String> entry : params.entrySet()){

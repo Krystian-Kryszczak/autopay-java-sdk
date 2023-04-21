@@ -1,4 +1,7 @@
 package krystian.kryszczak.bm.sdk.itn.response;
 
-public class TransactionConfirmed {
-}
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+
+public record TransactionConfirmed(@NotNull String orderID, @NotNull String confirmation) implements Serializable {} // TODO check if orderID can be int type

@@ -1,6 +1,5 @@
 package krystian.kryszczak.bm.sdk;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
@@ -26,6 +25,7 @@ import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
 import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -105,8 +105,9 @@ public final class BlueMediaClient {
      * Process ITN requests.
      * @param itn string encoded with base64
      */
-    //@ApiStatus.AvailableSince("")
-    public @NotNull Maybe<@NotNull Itn> doItnIn(final @NotNull String itn) throws JsonProcessingException {
+    @SneakyThrows
+    @ApiStatus.AvailableSince("")
+    public @NotNull Maybe<@NotNull Itn> doItnIn(final @NotNull String itn) {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();
 
@@ -115,7 +116,8 @@ public final class BlueMediaClient {
             return Maybe.just(
                 ItnDto.buildFormXml(decoded)
                     .getItn()
-            );
+            ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete();
         }
 
         return Maybe.empty();
@@ -124,7 +126,7 @@ public final class BlueMediaClient {
     /**
      * Returns response for ITN IN request.
      */
-    //@ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn) {
         return doItnInResponse(itn, true);
     }
@@ -132,46 +134,39 @@ public final class BlueMediaClient {
     /**
      * Returns response for ITN IN request.
      */
-    //@ApiStatus.AvailableSince("1.0")
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn, final boolean transactionConfirmed) {
         return Maybe.just(ItnResponse.create(itn, transactionConfirmed, this.configuration))
             .onErrorComplete();
     }
 
-    public @NotNull Maybe<String> getGatewayList() { // new
-
-        return Maybe.empty();
-    }
-
     /**
      * Returns payway list.
      */
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<PaywayList> getPaywayList(@NotNull String gatewayUrl) {
-        final var a = Map.of(
-            "gateway", gatewayUrl,
-            "paywayList", Map.of(
-                "serviceID", this.configuration.getServiceId(),
-                "messageID", RandomUtils.randomMessageId()
+
+        final HttpRequest<PaywayList> request = new HttpRequest<>(
+            URI.create(gatewayUrl + Routes.PAYWAY_LIST_ROUTE),
+            Map.of(),
+            PaywayList.create(
+                configuration.getServiceId(),
+                RandomUtils.randomMessageId(),
+                configuration
             )
         );
 
-//        final var request = new HttpRequest<PaywayListRequest>(
-//            URI.create(gatewayUrl + Routes.PAYWAY_LIST_ROUTE),
-//            Map.of(),
-//            PaywayListRequest.create(
-//                gatewayUrl,
-//                configuration
-//            )
-//        );
-
-//        return httpClient.post(request)
-//            .flatMap(Maybe.empty());
-        return Maybe.empty();
+        return httpClient.post(request)
+            .flatMap(it ->
+                new ServiceResponseParser(it, this.configuration)
+                    .parseListResponse(PaywayList.class)
+            );
     }
 
     /**
      * Returns payment regulations.
      */
+    @ApiStatus.AvailableSince("")
     public @NotNull Maybe<RegulationListResponse> getRegulationList(final @NotNull String gatewayUrl) {
 
         final HttpRequest<RegulationList> request = new HttpRequest<>(

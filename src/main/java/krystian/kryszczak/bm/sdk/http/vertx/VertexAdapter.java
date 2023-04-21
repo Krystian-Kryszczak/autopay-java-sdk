@@ -15,7 +15,7 @@ public final class VertexAdapter {
     public static MultipartForm asMultipartForm(@NotNull HttpRequestBody body) {
         final MultipartForm multipartForm = MultipartForm.create()
                 .setCharset("UTF-8");
-        for (final var entry : body.fieldsMapWithCapitalizedKeysAndFormattedValues().entrySet()) {
+        for (final var entry : body.toCapitalizedMap().entrySet()) {
             multipartForm.attribute(entry.getKey(), entry.getValue());
         }
         return multipartForm;

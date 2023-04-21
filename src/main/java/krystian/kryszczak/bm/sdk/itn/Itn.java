@@ -30,7 +30,9 @@ public final class Itn implements Serializable, Hashable {
     }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() {
-        return new Object[0];
+    public @NotNull Object[] toArrayWithoutHash() { // TODO
+        return new Object[] {
+            serviceId
+        };
     }
 }

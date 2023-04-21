@@ -9,6 +9,6 @@ public interface HttpClient {
     @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest);
 
     static HttpClient getDefaultHttpClient() {
-        return new JavaHttpClient();
+        return new NativeHttpClient();
     }
 }
