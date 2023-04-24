@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 @AllArgsConstructor
-public abstract class ResponseParser<T> {
+public abstract class ResponseParser<T > {
     protected final @NotNull String responseBody;
     protected final @NotNull BlueMediaConfiguration configuration;
 }
