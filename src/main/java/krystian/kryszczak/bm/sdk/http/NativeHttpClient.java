@@ -1,15 +1,14 @@
 package krystian.kryszczak.bm.sdk.http;
 
 import io.reactivex.rxjava3.core.Maybe;
+import krystian.kryszczak.bm.sdk.util.HttpUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public final class NativeHttpClient implements HttpClient {
     private static final Logger logger = LoggerFactory.getLogger(NativeHttpClient.class);
@@ -26,7 +25,7 @@ public final class NativeHttpClient implements HttpClient {
     @Override
     public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
         final var body = java.net.http.HttpRequest.BodyPublishers.ofString(
-            getDataString(httpRequest.body().toCapitalizedMap()),
+                HttpUtils.convertMapToFormUrlencoded(httpRequest.body().toCapitalizedMap()),
             StandardCharsets.UTF_8
         );
 
@@ -50,20 +49,5 @@ public final class NativeHttpClient implements HttpClient {
         )
         .doAfterSuccess(response -> logger.info("Status code: " + response.statusCode()))
         .map(HttpResponse::body);
-    }
-
-    private String getDataString(Map<String, String> params) {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first)
-                first = false;
-            else
-                result.append("&");
-            result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
-        }
-        return result.toString();
     }
 }

@@ -20,6 +20,10 @@ public final class ServiceResponseParser extends ResponseParser<String> {
     }
 
     public <T extends Serializable> Maybe<T> parseListResponse(Class<T> type) {
+        if (!isResponseValid()) {
+            return Maybe.empty();
+        }
+
         try {
             return Maybe.just(xmlMapper.readValue(this.responseBody, type));
         } catch (RuntimeException | JsonProcessingException e) {

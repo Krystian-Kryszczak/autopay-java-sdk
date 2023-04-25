@@ -1,6 +1,5 @@
 package krystian.kryszczak.bm.sdk.itn;
 
-import krystian.kryszczak.bm.sdk.common.AbstractValueObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +8,7 @@ import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor
-public final class CustomerData extends AbstractValueObject implements Serializable {
+public final class CustomerData implements Serializable {
 
     /**
      * Customer firstname.

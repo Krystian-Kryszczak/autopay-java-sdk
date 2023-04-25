@@ -36,6 +36,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
     implementation "ch.qos.logback:logback-core:$logbackVersion", "ch.qos.logback:logback-classic:$logbackVersion"
+
+    implementation "org.apache.commons:commons-text:1.10.0"
 }
 
 test {

@@ -17,11 +17,11 @@ public abstract class ServiceRequestBody implements HttpRequestBody {
     protected @NotNull String hash;
 
     @Override
-    public @NotNull Map<@NotNull String, @NotNull String> toCapitalizedMap() {
+    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         return Map.of(
-            "ServiceID", serviceId,
-            "MessageID", messageId,
-            "Hash", hash
+            "serviceID", serviceId,
+            "messageID", messageId,
+            "hash", hash
         );
     }
 }

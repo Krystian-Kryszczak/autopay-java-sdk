@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(force = true) // TEMP TODO
-public abstract sealed class Transaction implements Hashable
+public abstract sealed class Transaction implements Hashable, Serializable
         permits TransactionBackground, TransactionInit, TransactionContinue {
     protected final @NotNull String serviceId;
     /**

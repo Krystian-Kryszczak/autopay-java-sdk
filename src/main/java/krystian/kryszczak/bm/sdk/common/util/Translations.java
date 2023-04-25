@@ -11,24 +11,11 @@ public final class Translations {
     public static final String JAVASCRIPT_DISABLED = "form.paywall.javascript_disabled";
     public static final String JAVASCRIPT_REQUIRED = "form.paywall.javascript_required";
 
-    public static final String[] REQUIRED_TRANSLATIONS = new String[]{
+    public static final String[] REQUIRED_TRANSLATIONS = new String[] {
         REDIRECT,
         JAVASCRIPT_DISABLED,
         JAVASCRIPT_REQUIRED
     };
-
-    public enum Language {
-        pl, en, de;
-
-        static boolean contains(@NotNull String languageName) {
-            for (var language : Language.values()) {
-                if (language.name().equals(languageName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
 
     private static final Map<Language, Map<String, String>> translations = Map.of(
         Language.pl, Map.of(
@@ -48,11 +35,24 @@ public final class Translations {
         )
     );
 
-    public static @NotNull Map<String, String> getTranslationPhrasesMap(@NotNull Language language) {
+    public enum Language {
+        pl, en, de;
+
+        static boolean exists(@NotNull String languageName) {
+            for (var language : Language.values()) {
+                if (language.name().equals(languageName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static @NotNull Map<String, String> getTranslations(@NotNull Language language) {
         return getTranslations(language, Translations.REQUIRED_TRANSLATIONS);
     }
 
-    private static @NotNull Map<String, String> getTranslations(@NotNull Language language, final @NotNull String[] requiredTranslations) {
+    public static @NotNull Map<String, String> getTranslations(@NotNull Language language, final @NotNull String[] requiredTranslations) {
         final Map<String, String> translationPhrases = translations.get(language);
 
         final var missingTranslationKeys = Arrays.stream(requiredTranslations)

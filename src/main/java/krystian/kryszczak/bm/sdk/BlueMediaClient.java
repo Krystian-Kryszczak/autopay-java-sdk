@@ -13,7 +13,6 @@ import krystian.kryszczak.bm.sdk.http.HttpRequest;
 import krystian.kryszczak.bm.sdk.itn.Itn;
 import krystian.kryszczak.bm.sdk.itn.decoder.Base64ItnDecoder;
 import krystian.kryszczak.bm.sdk.itn.decoder.ItnDecoder;
-import krystian.kryszczak.bm.sdk.itn.dto.ItnDto;
 import krystian.kryszczak.bm.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.bm.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.bm.sdk.itn.validator.XmlItnValidator;
@@ -21,7 +20,6 @@ import krystian.kryszczak.bm.sdk.payway.PaywayList;
 import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
-import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
 import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
@@ -56,9 +54,7 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionData<Transaction> transactionData) {
-        return Single.just(
-            View.createRedirectHtml(TransactionDto.create(transactionData, this.configuration))
-        );
+        return Single.error(new RuntimeException());
     }
 
     /**
@@ -67,7 +63,7 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionData<TransactionBackground> transactionData) {
-        return doTransaction(transactionData, false);
+        return Maybe.error(new RuntimeException());
     }
 
     /**
@@ -76,29 +72,11 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionData<TransactionInit> transactionData) {
-        return doTransaction(transactionData, true);
+        return Maybe.error(new RuntimeException());
     }
 
-    private @NotNull <T extends Transaction> Maybe<@NotNull T> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) {
-        return Single.just(TransactionDto.create(transactionData, this.configuration))
-            .map(transactionDto -> new HttpRequest<>(
-                new URI(transactionData.gatewayUrl() + Routes.PAYMENT_ROUTE),
-                Map.of(
-                    HEADER, !transactionInit
-                        ? PAY_HEADER
-                        : CONTINUE_HEADER
-                ),
-                transactionDto // TODO
-            ))
-            .doOnError(throwable ->
-                logger.error(
-                    "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
-                    throwable
-                )
-            )
-            .onErrorComplete()
-            .flatMap(httpClient::post)
-            .map(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit));
+    private @NotNull <T extends Transaction> Maybe<@NotNull Transaction> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) {
+        return Maybe.error(new RuntimeException());
     }
 
     /**
@@ -112,13 +90,7 @@ public final class BlueMediaClient {
         final ItnValidator itnValidator = new XmlItnValidator();
 
         final var decoded = itnDecoder.decode(itn);
-        if (itnValidator.validate(decoded)) {
-            return Maybe.just(
-                ItnDto.buildFormXml(decoded)
-                    .getItn()
-            ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
-            .onErrorComplete();
-        }
+
 
         return Maybe.empty();
     }
