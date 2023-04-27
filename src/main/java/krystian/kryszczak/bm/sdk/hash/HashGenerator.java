@@ -10,7 +10,7 @@ public sealed interface HashGenerator permits HashGeneratorImpl {
     }
 
     /**
-     * Generates hash.
+     * Generates Hash.
      */
     @NotNull String generateHash(@NotNull Object[] data, @NotNull BlueMediaConfiguration configuration);
 }

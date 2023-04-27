@@ -1,13 +1,15 @@
 package krystian.kryszczak.bm.sdk.serializer;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-public final class SerializerImpl implements Serializer { // TODO
+public final class SerializerImpl implements Serializer {
 
-    private final String XML_TYPE = "xml";
+    private static final String XML_TYPE = "xml";
+    private static final XmlMapper mapper = new XmlMapper();
 
     @Override
     public <T extends HttpRequestBody> @NotNull T serializeDataToDto(@NotNull Object[] data, @NotNull Class<T> type) {
@@ -15,7 +17,7 @@ public final class SerializerImpl implements Serializer { // TODO
     }
 
     @Override
-    public @NotNull Object[] toArray(@NotNull Object object) {
+    public @NotNull Object[] toArray(@NotNull Object object) { // TODO
         return new Object[0];
     }
 

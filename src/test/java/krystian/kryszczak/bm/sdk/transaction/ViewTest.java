@@ -1,7 +1,7 @@
 package krystian.kryszczak.bm.sdk.transaction;
 
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
-import krystian.kryszczak.bm.sdk.transaction.dto.TransactionDto;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import org.junit.jupiter.api.Test;
 
 public final class ViewTest {
@@ -9,7 +9,7 @@ public final class ViewTest {
 
     @Test
     void createRedirectHtmlTest() {
-        final TransactionData transactionData = null; // TODO
-        View.createRedirectHtml(TransactionDto.create(transactionData, this.configuration));
+        final TransactionRequest<? extends Transaction> transactionRequest = null; // TODO
+        View.createRedirectHtml(transactionRequest);
     }
 }

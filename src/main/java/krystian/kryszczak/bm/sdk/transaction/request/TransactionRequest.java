@@ -1,0 +1,64 @@
+package krystian.kryszczak.bm.sdk.transaction.request;
+
+import krystian.kryszczak.bm.sdk.transaction.Transaction;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
+@Getter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract sealed class TransactionRequest<T extends Transaction> permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
+    private final @NotNull String gatewayUrl;
+    private final @NotNull T transaction;
+
+    protected abstract sealed static class Builder<T extends Transaction> permits TransactionBackgroundRequest.Builder, TransactionContinueRequest.Builder, TransactionInitRequest.Builder {
+        protected abstract static sealed class Required<T extends Transaction> permits TransactionBackgroundRequest.Builder.Required, TransactionContinueRequest.Builder.Required, TransactionInitRequest.Builder.Required {
+            public abstract @NotNull WithGatewayUrl<T> setGatewayUrl(@NotNull String gatewayUrl);
+            public abstract @NotNull WithTransaction<T> setTransaction(@NotNull T transaction);
+        }
+
+        @AllArgsConstructor(access = AccessLevel.PROTECTED)
+        public abstract static sealed class WithGatewayUrl<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithGatewayUrl, TransactionContinueRequest.Builder.WithGatewayUrl, TransactionInitRequest.Builder.WithGatewayUrl {
+            private String gatewayUrl;
+
+            public final @NotNull WithGatewayUrl<T> setGatewayUrl(@NotNull String gatewayUrl) {
+                this.gatewayUrl = gatewayUrl;
+                return this;
+            }
+
+            public abstract @NotNull Completer<T> setTransaction(@NotNull T transaction);
+        }
+
+        @AllArgsConstructor(access = AccessLevel.PROTECTED)
+        public abstract static sealed class WithTransaction<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithTransaction, TransactionContinueRequest.Builder.WithTransaction, TransactionInitRequest.Builder.WithTransaction {
+            @Getter(AccessLevel.PROTECTED)
+            private @NotNull T transaction;
+
+            public abstract @NotNull Completer<T> setGatewayUrl(@NotNull String gatewayUrl);
+
+            public final @NotNull WithTransaction<T> setTransaction(@NotNull T transaction) {
+                this.transaction = transaction;
+                return this;
+            }
+        }
+
+        @AllArgsConstructor(access = AccessLevel.PROTECTED)
+        protected abstract static sealed class Completer<T extends Transaction> permits TransactionBackgroundRequest.Builder.Completer, TransactionContinueRequest.Builder.Completer, TransactionInitRequest.Builder.Completer {
+            protected @NotNull String gatewayUrl;
+            protected @NotNull T transaction;
+
+            public @NotNull Completer<T> setGatewayUrl(@NotNull String gatewayUrl) {
+                this.gatewayUrl = gatewayUrl;
+                return this;
+            }
+
+            public @NotNull Completer<T> setTransaction(@NotNull T transaction) {
+                this.transaction = transaction;
+                return this;
+            }
+
+            public abstract @NotNull TransactionRequest<T> build();
+        }
+    }
+}

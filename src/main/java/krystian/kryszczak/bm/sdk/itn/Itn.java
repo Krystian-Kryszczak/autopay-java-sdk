@@ -24,6 +24,10 @@ public final class Itn implements Serializable, Hashable {
 
     private @Nullable String hash;
 
+    public static @NotNull Itn buildFormXml(@NotNull String decoded) {
+        return null; // TODO
+    }
+
     @Override
     public boolean isHashPresent() {
         return getHash() != null;

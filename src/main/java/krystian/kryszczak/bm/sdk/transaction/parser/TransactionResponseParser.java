@@ -55,7 +55,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
             .onErrorComplete()
             .flatMap(transaction -> {
                 if (!HashChecker.instance.checkHash(transaction, this.configuration)) {
-                    logger.error("Received wrong hash! (" + transaction.getHash() + ")");
+                    logger.error("Received wrong Hash! (" + transaction.getHash() + ")");
                     return Maybe.empty();
                 }
                 return Maybe.just(transaction);

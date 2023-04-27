@@ -10,8 +10,8 @@ public sealed interface HashChecker permits HashCheckerImpl {
     }
 
     /**
-     * Checks if hash is correct.
-     * @return true if hash is valid otherwise hash is not present or is incorrect
+     * Checks if Hash is correct.
+     * @return true if Hash is valid otherwise Hash is not present or is incorrect
      */
     boolean checkHash(@NotNull Hashable data, @NotNull BlueMediaConfiguration credentials);
 }

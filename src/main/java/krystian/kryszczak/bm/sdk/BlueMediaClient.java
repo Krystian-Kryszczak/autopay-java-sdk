@@ -21,6 +21,9 @@ import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionBackgroundRequest;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionInitRequest;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -53,8 +56,10 @@ public final class BlueMediaClient {
      * Perform standard transaction.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionData<Transaction> transactionData) {
-        return Single.error(new RuntimeException());
+    public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionRequest<Transaction> transactionRequest) {
+        return Single.just(
+            View.createRedirectHtml(transactionRequest)
+        );
     }
 
     /**
@@ -62,8 +67,8 @@ public final class BlueMediaClient {
      * Returns payway form or transaction data for user.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionData<TransactionBackground> transactionData) {
-        return Maybe.error(new RuntimeException());
+    public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionBackgroundRequest transactionRequest) {
+        return doTransaction(transactionRequest, false);
     }
 
     /**
@@ -71,12 +76,30 @@ public final class BlueMediaClient {
      * Returns transaction continuation or transaction information.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionData<TransactionInit> transactionData) {
-        return Maybe.error(new RuntimeException());
+    public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionInitRequest transactionRequest) {
+        return doTransaction(transactionRequest, true);
     }
 
-    private @NotNull <T extends Transaction> Maybe<@NotNull Transaction> doTransaction(final @NotNull TransactionData<T> transactionData, final boolean transactionInit) {
-        return Maybe.error(new RuntimeException());
+    @SneakyThrows
+    private @NotNull <T extends Transaction> Maybe<@NotNull Transaction> doTransaction(final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
+        return Single.just(new HttpRequest<>(
+                new URI(transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE),
+                Map.of(
+                    HEADER, !transactionInit
+                            ? PAY_HEADER
+                            : CONTINUE_HEADER
+                ),
+                transactionRequest
+            ))
+            .doOnError(throwable ->
+                logger.error(
+                    "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
+                    throwable
+                )
+            )
+            .onErrorComplete()
+            .flatMap(httpClient::post)
+            .flatMap(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit));
     }
 
     /**
@@ -90,7 +113,12 @@ public final class BlueMediaClient {
         final ItnValidator itnValidator = new XmlItnValidator();
 
         final var decoded = itnDecoder.decode(itn);
-
+        if (itnValidator.validate(decoded)) {
+            return Maybe.just(
+                Itn.buildFormXml(decoded)
+            ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            .onErrorComplete();
+        }
 
         return Maybe.empty();
     }
@@ -159,7 +187,7 @@ public final class BlueMediaClient {
     }
 
     /**
-     * Checks id hash is valid.
+     * Checks id Hash is valid.
      */
     @ApiStatus.AvailableSince("")
     public boolean checkHash(final @NotNull Hashable hashable) {
