@@ -1,11 +1,12 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionInitRequest extends TransactionRequest<TransactionInit> {
-    private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction) {
-        super(gatewayUrl, transaction);
+    private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction, @NotNull Translations.Language language) {
+        super(gatewayUrl, transaction, language);
     }
 
     public static Builder.Required builder() {
@@ -54,7 +55,7 @@ public final class TransactionInitRequest extends TransactionRequest<Transaction
 
             @Override
             public @NotNull TransactionInitRequest build() {
-                return new TransactionInitRequest(this.gatewayUrl, this.transaction);
+                return new TransactionInitRequest(this.gatewayUrl, this.transaction, this.language);
             }
         }
     }

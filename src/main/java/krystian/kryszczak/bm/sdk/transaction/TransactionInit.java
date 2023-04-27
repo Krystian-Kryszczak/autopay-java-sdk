@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 public final class TransactionInit extends Transaction {
@@ -17,5 +18,12 @@ public final class TransactionInit extends Transaction {
         this.confirmation = confirmation;
         this.reason = reason;
         this.paymentStatus = paymentStatus;
+    }
+
+    @Override
+    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
+        return Map.of(
+            // TODO
+        );
     }
 }

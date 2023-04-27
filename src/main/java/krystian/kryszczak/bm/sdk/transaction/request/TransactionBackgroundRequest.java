@@ -1,11 +1,12 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.TransactionBackground;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionBackgroundRequest extends TransactionRequest<TransactionBackground> {
-    private TransactionBackgroundRequest(@NotNull String gatewayUrl, @NotNull TransactionBackground transaction) {
-        super(gatewayUrl, transaction);
+    private TransactionBackgroundRequest(@NotNull String gatewayUrl, @NotNull TransactionBackground transaction, @NotNull Translations.Language language) {
+        super(gatewayUrl, transaction, language);
     }
 
     public static @NotNull Builder.Required builder() {
@@ -54,7 +55,7 @@ public final class TransactionBackgroundRequest extends TransactionRequest<Trans
 
             @Override
             public @NotNull TransactionBackgroundRequest build() {
-                return new TransactionBackgroundRequest(this.gatewayUrl, this.transaction);
+                return new TransactionBackgroundRequest(this.gatewayUrl, this.transaction, this.language);
             }
         }
     }

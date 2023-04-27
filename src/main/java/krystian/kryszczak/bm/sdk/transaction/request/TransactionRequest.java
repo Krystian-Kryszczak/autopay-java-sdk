@@ -1,5 +1,6 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.Transaction;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract sealed class TransactionRequest<T extends Transaction> permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
     private final @NotNull String gatewayUrl;
     private final @NotNull T transaction;
+    private final @NotNull Translations.Language htmlFormLanguage;
 
     protected abstract sealed static class Builder<T extends Transaction> permits TransactionBackgroundRequest.Builder, TransactionContinueRequest.Builder, TransactionInitRequest.Builder {
         protected abstract static sealed class Required<T extends Transaction> permits TransactionBackgroundRequest.Builder.Required, TransactionContinueRequest.Builder.Required, TransactionInitRequest.Builder.Required {
@@ -43,10 +45,15 @@ public abstract sealed class TransactionRequest<T extends Transaction> permits T
             }
         }
 
-        @AllArgsConstructor(access = AccessLevel.PROTECTED)
         protected abstract static sealed class Completer<T extends Transaction> permits TransactionBackgroundRequest.Builder.Completer, TransactionContinueRequest.Builder.Completer, TransactionInitRequest.Builder.Completer {
             protected @NotNull String gatewayUrl;
             protected @NotNull T transaction;
+            protected @NotNull Translations.Language language = Translations.Language.pl;
+
+            protected Completer(@NotNull String gatewayUrl, @NotNull T transaction) {
+                this.gatewayUrl = gatewayUrl;
+                this.transaction = transaction;
+            }
 
             public @NotNull Completer<T> setGatewayUrl(@NotNull String gatewayUrl) {
                 this.gatewayUrl = gatewayUrl;
@@ -55,6 +62,11 @@ public abstract sealed class TransactionRequest<T extends Transaction> permits T
 
             public @NotNull Completer<T> setTransaction(@NotNull T transaction) {
                 this.transaction = transaction;
+                return this;
+            }
+
+            public @NotNull Completer<T> setLanguage(@NotNull Translations.Language language) {
+                this.language = language;
                 return this;
             }
 

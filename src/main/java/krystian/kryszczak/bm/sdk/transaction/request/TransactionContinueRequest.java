@@ -1,11 +1,12 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionContinueRequest extends TransactionRequest<TransactionContinue> {
-    private TransactionContinueRequest(@NotNull String gatewayUrl, @NotNull TransactionContinue transaction) {
-        super(gatewayUrl, transaction);
+    private TransactionContinueRequest(@NotNull String gatewayUrl, @NotNull TransactionContinue transaction, @NotNull Translations.Language language) {
+        super(gatewayUrl, transaction, language);
     }
 
     public static Builder.Required builder() {
@@ -54,7 +55,7 @@ public final class TransactionContinueRequest extends TransactionRequest<Transac
 
             @Override
             public @NotNull TransactionContinueRequest build() {
-                return new TransactionContinueRequest(this.gatewayUrl, this.transaction);
+                return new TransactionContinueRequest(this.gatewayUrl, this.transaction, this.language);
             }
         }
     }

@@ -1,6 +1,7 @@
 package krystian.kryszczak.bm.sdk.transaction;
 
 import krystian.kryszczak.bm.sdk.hash.Hashable;
+import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(force = true) // TEMP TODO
-public abstract sealed class Transaction implements Hashable, Serializable
-        permits TransactionBackground, TransactionInit, TransactionContinue {
+public abstract sealed class Transaction implements HttpRequestBody, Hashable, Serializable permits TransactionBackground, TransactionInit, TransactionContinue {
     protected final @NotNull String serviceId;
     /**
      * Transaction ID, required

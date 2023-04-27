@@ -2,15 +2,17 @@ package krystian.kryszczak.bm.sdk.transaction;
 
 import krystian.kryszczak.bm.sdk.common.Routes;
 import krystian.kryszczak.bm.sdk.common.util.Translations;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import org.jetbrains.annotations.NotNull;
 
 public final class View {
     private static final @NotNull String separator = System.getProperty("line.separator", "\n");
 
-    public static @NotNull String createRedirectHtml(@NotNull TransactionDto transactionDto) {
+    public static @NotNull String createRedirectHtml(@NotNull TransactionRequest<? extends Transaction> transactionRequest) {
+        final Transaction transaction = transactionRequest.getTransaction();
 
         final var translationPhrases = Translations.getTranslations(
-            transactionDto.getHtmlFormLanguage()
+            transactionRequest.getHtmlFormLanguage()
         );
 
         final var result = new StringBuilder()
@@ -18,12 +20,11 @@ public final class View {
             .append(
                 String.format(
                     "<form action=\"%s\" method=\"post\" id=\"BlueMediaPaymentForm\" name=\"BlueMediaPaymentForm\">",
-                    transactionDto.getGatewayUrl() + Routes.PAYMENT_ROUTE
+                    transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE
                 )
             ).append(separator);
 
-
-        for (final var entry : transactionDto.toCapitalizedMap().entrySet()) {
+        for (final var entry : transaction.toCapitalizedMap().entrySet()) {
             final var fieldName = entry.getKey();
             final var fieldValue = entry.getValue();
 

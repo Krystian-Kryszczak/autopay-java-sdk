@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 public final class TransactionContinue extends Transaction {
@@ -15,5 +16,12 @@ public final class TransactionContinue extends Transaction {
         super(serviceId, orderId, amount, description, gatewayId, currency, customerEmail, customerNRB, texCountry, customerIp, title, receiverName, validityTime, linkValidityTime, authorizationCode, screenType, blikUIDKey, blikUIDLabel, returnUrl, defaultRegulationAcceptanceState, defaultRegulationAcceptanceId, defaultRegulationAcceptanceTime, receiverNRB, receiverAddress, remoteId, bankHref, hash);
         this.status = status;
         this.redirectUrl = redirectUrl;
+    }
+
+    @Override
+    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
+        return Map.of(
+            // TODO
+        );
     }
 }
