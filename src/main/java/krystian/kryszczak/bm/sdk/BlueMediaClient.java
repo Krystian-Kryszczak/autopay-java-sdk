@@ -76,7 +76,7 @@ public final class BlueMediaClient {
      * Returns transaction continuation or transaction information.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Maybe<@NotNull TransactionInit> doTransactionInit(final @NotNull TransactionInitRequest transactionRequest) {
+    public @NotNull Maybe<@NotNull Transaction> doTransactionInit(final @NotNull TransactionInitRequest transactionRequest) {
         return doTransaction(transactionRequest, true);
     }
 
@@ -89,7 +89,7 @@ public final class BlueMediaClient {
                             ? PAY_HEADER
                             : CONTINUE_HEADER
                 ),
-                transactionRequest
+                transactionRequest.getTransaction()
             ))
             .doOnError(throwable ->
                 logger.error(

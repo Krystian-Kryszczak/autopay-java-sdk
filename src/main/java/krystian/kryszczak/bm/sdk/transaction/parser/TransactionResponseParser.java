@@ -26,17 +26,16 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
         super(response, configuration);
     }
 
-    public @NotNull Maybe<Transaction> parse() {
+    public @NotNull Maybe<T> parse() {
         return parse(false);
     }
 
-    public @NotNull Maybe<Transaction> parse(final boolean transactionInit) {
+    public @NotNull Maybe<T> parse(final boolean transactionInit) {
         return Maybe.just(getPaywayFormResponse())
             .flatMap(paywayForm -> {
                 if (transactionInit) {
                     return this.parseTransactionInitResponse();
                 }
-
                 return this.parseTransactionBackgroundResponse();
             })
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
@@ -63,8 +62,8 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
     }
 
     @SneakyThrows
-    private Maybe<? extends Transaction> parseTransactionInitResponse() {
-        return Single.just(new XmlMapper().valueToTree(this.responseBody).findValue("redirectUrl") != null)
+    private Maybe<T> parseTransactionInitResponse() {
+        return (Maybe<T>) Single.just(new XmlMapper().valueToTree(this.responseBody).findValue("redirectUrl") != null)
             .map(it -> it ? new XmlMapper().readValue(this.responseBody, TransactionContinue.class)
                         : new XmlMapper().readValue(this.responseBody, TransactionInit.class))
             .flatMapMaybe(it -> HashChecker.instance.checkHash(it, this.configuration) ? Maybe.just(it) : Maybe.empty())

@@ -9,6 +9,11 @@ public final class TransactionInitRequest extends TransactionRequest<Transaction
         super(gatewayUrl, transaction, language);
     }
 
+    @Override
+    public @NotNull TransactionInit getTransaction() {
+        return super.getTransaction();
+    }
+
     public static Builder.Required builder() {
         return new Builder.Required();
     }

@@ -2,21 +2,18 @@ package krystian.kryszczak.bm.sdk.transaction;
 
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor(force = true) // TEMP TODO
-public abstract sealed class Transaction implements HttpRequestBody, Hashable, Serializable permits TransactionBackground, TransactionInit, TransactionContinue {
+@SuperBuilder
+public abstract sealed class Transaction implements HttpRequestBody, Hashable, Serializable permits TransactionBackground, TransactionResponse {
     protected final @NotNull String serviceId;
     /**
      * Transaction ID, required
@@ -65,6 +62,45 @@ public abstract sealed class Transaction implements HttpRequestBody, Hashable, S
     @Override
     public boolean isHashPresent() {
         return hash != null;
+    }
+
+    @Override
+    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
+        final Map<@NotNull String, @NotNull String> result = new LinkedHashMap<>();
+        result.put("serviceID", serviceId);
+        result.put("orderID", orderId);
+        result.put("amount", amount);
+
+        final Map<@NotNull String, @Nullable Object> nullable = new LinkedHashMap<>();
+        nullable.put("description", description);
+        nullable.put("gatewayID", gatewayId);
+        nullable.put("currency", currency);
+        nullable.put("customerEmail", customerEmail);
+        nullable.put("customerNRB", customerNRB);
+        nullable.put("texCountry", texCountry);
+        nullable.put("customerIp", customerIp);
+        nullable.put("title", title);
+        nullable.put("receiverName", receiverName);
+        nullable.put("validityTime", validityTime);
+        nullable.put("linkValidityTime", linkValidityTime);
+        nullable.put("authorizationCode", authorizationCode);
+        nullable.put("screenType", screenType);
+        nullable.put("blikUIDKey", blikUIDKey);
+        nullable.put("blikUIDLabel", blikUIDLabel);
+        nullable.put("returnUrl", returnUrl);
+        nullable.put("defaultRegulationAcceptanceState", defaultRegulationAcceptanceState);
+        nullable.put("defaultRegulationAcceptanceID", defaultRegulationAcceptanceId);
+        nullable.put("defaultRegulationAcceptanceTime", defaultRegulationAcceptanceTime);
+        nullable.put("receiverNRB", receiverNRB);
+        nullable.put("receiverAddress", receiverAddress);
+        nullable.put("remoteId", remoteId);
+        nullable.put("bankHref", bankHref);
+
+        nullable.entrySet().stream()
+            .filter(entry -> entry.getValue() != null)
+            .forEach(entry -> result.put(entry.getKey(), String.valueOf(entry.getValue())));
+
+        return result;
     }
 
     @Override

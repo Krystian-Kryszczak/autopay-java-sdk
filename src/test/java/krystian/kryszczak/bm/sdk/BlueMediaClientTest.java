@@ -20,7 +20,7 @@ public final class BlueMediaClientTest {
 
     @Test
     public void getTransactionRedirectTest() {
-        final var data = new TransactionRequest<Transaction>(gatewayUrl, new TransactionInit());
+        final var data = new TransactionRequest<Transaction>(gatewayUrl, new TransactionInit("", "", ""));
 
         final String htmlRedirect = client.getTransactionRedirect(data).blockingGet();
         // TODO
