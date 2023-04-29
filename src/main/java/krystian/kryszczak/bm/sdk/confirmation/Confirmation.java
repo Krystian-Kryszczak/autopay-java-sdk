@@ -2,18 +2,17 @@ package krystian.kryszczak.bm.sdk.confirmation;
 
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Map;
 
 @Builder
 @Getter
-@AllArgsConstructor
+@SuperBuilder
 public final class Confirmation implements Serializable, Hashable, HttpRequestBody {
     private final int ServiceID;
     private final @NotNull String OrderID;
@@ -21,16 +20,7 @@ public final class Confirmation implements Serializable, Hashable, HttpRequestBo
 
     @Override
     public boolean isHashPresent() {
-        return Hash != null;
-    }
-
-    public static @Nullable Confirmation build(@NotNull String[] array) {
-        if (array.length < 3 || canNotBeConvertToInt(array[0]) || canNotBeConvertToInt(array[1])) return null;
-        // TODO
-        return null;
-    }
-    private static boolean canNotBeConvertToInt(@NotNull String value) {
-        return false; // TODO
+        return true;
     }
 
     @Override
