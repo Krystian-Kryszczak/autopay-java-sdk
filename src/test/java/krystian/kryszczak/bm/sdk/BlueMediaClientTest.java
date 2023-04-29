@@ -3,7 +3,9 @@ package krystian.kryszczak.bm.sdk;
 import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
 import krystian.kryszczak.bm.sdk.transaction.Transaction;
+import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
 import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionContinueRequest;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
 import org.junit.jupiter.api.Test;
@@ -19,10 +21,16 @@ public final class BlueMediaClientTest {
 
 
     @Test
-    public void getTransactionRedirectTest() {
-        final var data = new TransactionRequest<Transaction>(gatewayUrl, new TransactionInit("", "", ""));
+    public void getTransactionRedirectTest() { // TODO
+        final var transaction = TransactionContinue.builder()
+            .build();
 
-        final String htmlRedirect = client.getTransactionRedirect(data).blockingGet();
+        final var request = TransactionContinueRequest.builder()
+            .setGatewayUrl("")
+            .setTransaction(transaction)
+            .build();
+
+        final String htmlRedirect = client.getTransactionRedirect(request).blockingGet();
         // TODO
     }
 

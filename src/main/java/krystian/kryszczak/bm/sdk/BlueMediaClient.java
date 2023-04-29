@@ -22,6 +22,7 @@ import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionBackgroundRequest;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionContinueRequest;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionInitRequest;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
@@ -56,7 +57,7 @@ public final class BlueMediaClient {
      * Perform standard transaction.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionRequest<Transaction> transactionRequest) {
+    public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionContinueRequest transactionRequest) {
         return Single.just(
             View.createRedirectHtml(transactionRequest)
         );

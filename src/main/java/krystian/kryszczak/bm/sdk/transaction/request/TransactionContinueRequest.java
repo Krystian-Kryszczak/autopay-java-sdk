@@ -33,7 +33,7 @@ public final class TransactionContinueRequest extends TransactionRequest<Transac
                 super(gatewayUrl);
             }
 
-            public @NotNull TransactionRequest.Builder.Completer<TransactionContinue> setTransaction(@NotNull TransactionContinue transaction) {
+            public @NotNull Completer setTransaction(@NotNull TransactionContinue transaction) {
                 return new Completer(gatewayUrl, transaction);
             }
         }
