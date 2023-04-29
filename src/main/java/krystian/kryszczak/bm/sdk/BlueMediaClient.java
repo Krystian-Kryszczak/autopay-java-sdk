@@ -67,7 +67,7 @@ public final class BlueMediaClient {
      * Returns payway form or transaction data for user.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Maybe<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionBackgroundRequest transactionRequest) {
+    public @NotNull Maybe<@NotNull Transaction> doTransactionBackground(final @NotNull TransactionBackgroundRequest transactionRequest) {
         return doTransaction(transactionRequest, false);
     }
 
