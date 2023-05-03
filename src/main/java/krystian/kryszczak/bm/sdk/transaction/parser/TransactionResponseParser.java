@@ -7,10 +7,7 @@ import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import krystian.kryszczak.bm.sdk.common.BlueMediaPattern;
 import krystian.kryszczak.bm.sdk.common.parser.ResponseParser;
 import krystian.kryszczak.bm.sdk.hash.HashChecker;
-import krystian.kryszczak.bm.sdk.transaction.Transaction;
-import krystian.kryszczak.bm.sdk.transaction.TransactionBackground;
-import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
-import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
+import krystian.kryszczak.bm.sdk.transaction.*;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -26,11 +23,11 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
         super(response, configuration);
     }
 
-    public @NotNull Maybe<T> parse() {
+    public @NotNull Maybe<Transaction> parse() {
         return parse(false);
     }
 
-    public @NotNull Maybe<T> parse(final boolean transactionInit) {
+    public @NotNull Maybe<Transaction> parse(final boolean transactionInit) {
         return Maybe.just(getPaywayFormResponse())
             .flatMap(paywayForm -> {
                 if (transactionInit) {
@@ -62,8 +59,8 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
     }
 
     @SneakyThrows
-    private Maybe<T> parseTransactionInitResponse() {
-        return (Maybe<T>) Single.just(new XmlMapper().valueToTree(this.responseBody).findValue("redirectUrl") != null)
+    private Maybe<TransactionResponse> parseTransactionInitResponse() {
+        return Single.just(new XmlMapper().valueToTree(this.responseBody).findValue("redirectUrl") != null)
             .map(it -> it ? new XmlMapper().readValue(this.responseBody, TransactionContinue.class)
                         : new XmlMapper().readValue(this.responseBody, TransactionInit.class))
             .flatMapMaybe(it -> HashChecker.instance.checkHash(it, this.configuration) ? Maybe.just(it) : Maybe.empty())

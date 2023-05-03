@@ -32,9 +32,6 @@ public final class VertxHttpClient implements HttpClient {
 
     @Override
     public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
-
-        logger.debug("Connecting to " + httpRequest.uri());
-
         final var vertexRequest = client.post(httpRequest.uri().toString());
 
         return vertexRequest
@@ -45,9 +42,6 @@ public final class VertxHttpClient implements HttpClient {
                 VertexAdapter.asMultipartForm(httpRequest.body())
             )
             .flatMapMaybe(it -> {
-                logger.info("STATUS MESSAGE" + it.statusMessage());
-                logger.info("STATUS CODE" + it.statusCode());
-
                 final String body = it.bodyAsString("UTF-8");
                 if (body == null) return Maybe.empty();
                 return Maybe.just(body);

@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter(AccessLevel.PROTECTED)
 @AllArgsConstructor
-public abstract class ServiceRequestBody implements HttpRequestBody {
+public abstract class ServiceHttpRequestBody implements HttpRequestBody {
     protected @NotNull String serviceId;
     protected final @NotNull String messageId;
     @Getter

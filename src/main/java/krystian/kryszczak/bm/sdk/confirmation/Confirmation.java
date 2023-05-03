@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.Map;
 
-@Builder
+//@Builder
 @Getter
 @SuperBuilder
 public final class Confirmation implements Serializable, Hashable, HttpRequestBody {
