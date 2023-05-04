@@ -5,11 +5,12 @@ import krystian.kryszczak.bm.sdk.common.ServiceHttpRequestBody;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
 public class RegulationList extends ServiceHttpRequestBody implements Serializable, Hashable {
-    protected RegulationList(@NotNull String serviceId, @NotNull String messageId, @NotNull String hash) {
+    protected RegulationList(@NotNull String serviceId, @NotNull String messageId, @Nullable String hash) {
         super(serviceId, messageId, hash);
     }
 
@@ -34,11 +35,14 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
 
     @Override
     public boolean isHashPresent() {
-        return false;
+        return true;
     }
 
     @Override
     public @NotNull Object[] toArrayWithoutHash() {
-        return new Object[0];
+        return new Object[] {
+            serviceId,
+            messageId
+        };
     }
 }

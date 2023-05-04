@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public abstract class ServiceHttpRequestBody implements HttpRequestBody {
     protected @NotNull String serviceId;
     protected final @NotNull String messageId;
     @Getter
-    protected @NotNull String hash;
+    protected @Nullable String hash;
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
