@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-public class PaywayList extends ServiceHttpRequestBody implements Serializable {
+public final class PaywayList extends ServiceHttpRequestBody implements Serializable {
 
-    protected PaywayList(@NotNull String serviceId, @NotNull String messageId, @NotNull String hash) {
+    private PaywayList(@NotNull String serviceId, @NotNull String messageId, @NotNull String hash) {
         super(serviceId, messageId, hash);
     }
 
@@ -31,5 +31,4 @@ public class PaywayList extends ServiceHttpRequestBody implements Serializable {
             hash
         );
     }
-
 }
