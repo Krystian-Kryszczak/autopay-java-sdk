@@ -2,32 +2,32 @@ package krystian.kryszczak.bm.sdk.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class JacksonXmlSerializer implements Serializer {
     private static final Logger logger = LoggerFactory.getLogger(JacksonXmlSerializer.class);
 
     private final XmlMapper mapper = new XmlMapper();
 
+    @SneakyThrows
     @Override
-    public <T extends HttpRequestBody> @Nullable T serializeDataToDto(@NotNull Object[] data, @NotNull Class<T> type) {
-        throw new UnsupportedOperationException(); // TODO
-    }
-
-    @Override
-    public @Nullable Object[] toArray(@NotNull Object object) {
-        throw new UnsupportedOperationException(); // TODO
-    }
-
-    @Override
-    public <T> @Nullable T fromArray(@NotNull Object[] data, Class<T> type) {
-        throw new UnsupportedOperationException(); // TODO
+    public @Nullable Object[] toArray(@NotNull Serializable data) {
+        final var tree = mapper.readTree(mapper.writeValueAsString(data));
+        final var fields = tree.fields();
+        final List<Object> values = new LinkedList<>();
+        while (fields.hasNext()) {
+            var value = fields.next().getValue().asText();
+            values.add(value);
+        }
+        return values.toArray();
     }
 
     @Override
