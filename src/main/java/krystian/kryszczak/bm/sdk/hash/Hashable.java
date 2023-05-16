@@ -5,6 +5,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Hashable {
     @Nullable String getHash();
-    boolean isHashPresent();
+
+    default boolean isHashPresent() {
+        return getHash() != null;
+    }
+
     @NotNull Object[] toArrayWithoutHash();
 }

@@ -30,7 +30,7 @@ public final class BlueMediaClientTest {
             .setTransaction(transaction)
             .build();
 
-        final String htmlRedirect = client.getTransactionRedirect(request).blockingGet();
+        final String htmlRedirect = client.getTransactionRedirect(request);
         // TODO
     }
 

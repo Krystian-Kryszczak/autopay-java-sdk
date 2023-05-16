@@ -57,10 +57,8 @@ public final class BlueMediaClient {
      * Perform standard transaction.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Single<@NotNull String> getTransactionRedirect(final @NotNull TransactionContinueRequest transactionRequest) {
-        return Single.just(
-            View.createRedirectHtml(transactionRequest)
-        );
+    public @NotNull String getTransactionRedirect(final @NotNull TransactionContinueRequest transactionRequest) {
+        return View.createRedirectHtml(transactionRequest);
     }
 
     /**
@@ -115,9 +113,11 @@ public final class BlueMediaClient {
 
         final var decoded = itnDecoder.decode(itn);
         if (itnValidator.validate(decoded)) {
-            return Maybe.just(
-                Itn.buildFormXml(decoded)
-            ).doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+            Itn itnObj = Itn.buildFormXml(decoded);
+            if (itnObj == null) return Maybe.empty();
+
+            return Maybe.just(itnObj)
+            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete();
         }
 

@@ -28,11 +28,6 @@ public final class PaywayListRequest implements Hashable {
     }
 
     @Override
-    public boolean isHashPresent() {
-        return true;
-    }
-
-    @Override
     public @NotNull Object[] toArrayWithoutHash() {
         return new Object[] {
             gatewayUrl

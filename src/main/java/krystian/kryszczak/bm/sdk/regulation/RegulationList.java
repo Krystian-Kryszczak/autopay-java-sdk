@@ -34,11 +34,6 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
     }
 
     @Override
-    public boolean isHashPresent() {
-        return true;
-    }
-
-    @Override
     public @NotNull Object[] toArrayWithoutHash() {
         return new Object[] {
             serviceId,
