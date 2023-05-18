@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: krystian.kryszczak.bluemedia
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, gradle, http-client-test, jackson-databind, java, java-application, junit, logback, micronaut-build, netty-server, properties, readme, rxjava3, security, security-annotations, security-jwt, shade, views-velocity]
