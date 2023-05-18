@@ -1,7 +1,8 @@
 package krystian.kryszczak.bm.sdk.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +13,11 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class JacksonXmlSerializer implements Serializer {
-    private static final Logger logger = LoggerFactory.getLogger(JacksonXmlSerializer.class);
+@RequiredArgsConstructor
+public abstract sealed class JacksonSerializer implements Serializer permits JsonSerializer, XmlSerializer {
+    private static final Logger logger = LoggerFactory.getLogger(JacksonSerializer.class);
 
-    private final XmlMapper mapper = new XmlMapper();
+    private final ObjectMapper mapper;
 
     @SneakyThrows
     @Override

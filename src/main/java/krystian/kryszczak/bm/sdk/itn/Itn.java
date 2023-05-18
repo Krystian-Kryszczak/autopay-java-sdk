@@ -1,7 +1,7 @@
 package krystian.kryszczak.bm.sdk.itn;
 
 import krystian.kryszczak.bm.sdk.hash.Hashable;
-import krystian.kryszczak.bm.sdk.serializer.JacksonXmlSerializer;
+import krystian.kryszczak.bm.sdk.serializer.XmlSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public final class Itn implements Serializable, Hashable {
     private @Nullable String hash;
 
     public static @Nullable Itn buildFormXml(@NotNull String decoded) {
-        return new JacksonXmlSerializer().deserializeXml(decoded, Itn.class);
+        return new XmlSerializer().deserializeXml(decoded, Itn.class);
     }
 
     @Override

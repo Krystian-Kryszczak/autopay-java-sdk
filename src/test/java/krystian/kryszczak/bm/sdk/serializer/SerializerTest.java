@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class SerializerTest {
-    private final Serializer serializer = new JacksonXmlSerializer();
+    private final Serializer serializer = new XmlSerializer();
 
     @Test
     void serializerTest() throws IOException {
