@@ -17,6 +17,7 @@ import krystian.kryszczak.bm.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.bm.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.bm.sdk.itn.validator.XmlItnValidator;
 import krystian.kryszczak.bm.sdk.payway.PaywayList;
+import krystian.kryszczak.bm.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
@@ -145,10 +146,9 @@ public final class BlueMediaClient {
      * Returns payway list.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull Maybe<PaywayList> getPaywayList(@NotNull String gatewayUrl) {
-
+    public @NotNull Maybe<PaywayListResponse> getPaywayList(@NotNull String gatewayUrl) {
         final HttpRequest<PaywayList> request = new HttpRequest<>(
-            URI.create(gatewayUrl + Routes.PAYWAY_LIST_ROUTE),
+            URI.create(gatewayUrl).resolve(Routes.PAYWAY_LIST_ROUTE.getValue()),
             Map.of(),
             PaywayList.create(
                 configuration.getServiceId(),
@@ -160,7 +160,7 @@ public final class BlueMediaClient {
         return httpClient.post(request)
             .flatMap(it ->
                 new ServiceResponseParser(it, this.configuration)
-                    .parseListResponse(PaywayList.class)
+                    .parseListResponse(PaywayListResponse.class)
             );
     }
 
@@ -169,9 +169,8 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public @NotNull Maybe<RegulationListResponse> getRegulationList(final @NotNull String gatewayUrl) {
-
         final HttpRequest<RegulationList> request = new HttpRequest<>(
-            URI.create(gatewayUrl + Routes.GET_REGULATIONS_ROUTE),
+            URI.create(gatewayUrl).resolve(Routes.GET_REGULATIONS_ROUTE.getValue()),
             Map.of(),
             RegulationList.create(
                 configuration.getServiceId(),

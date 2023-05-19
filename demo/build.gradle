@@ -15,6 +15,10 @@ repositories {
 
 dependencies {
     implementation project(path: ':')
+
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     implementation("io.micronaut:micronaut-jackson-databind")

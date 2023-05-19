@@ -2,6 +2,7 @@ package krystian.kryszczak.bm.sdk.regulation.response;
 
 import krystian.kryszczak.bm.sdk.regulation.RegulationList;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -9,11 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public final class RegulationListResponse extends RegulationList {
-    private final Regulations regulations;
+    private Regulations regulations;
 
-    public RegulationListResponse(@NotNull String serviceId, @NotNull Regulations regulations, @NotNull String messageId, @NotNull String hash) {
-        super(serviceId, messageId, hash);
+    public RegulationListResponse(@NotNull String serviceID, @NotNull Regulations regulations, @NotNull String messageID, @NotNull String hash) {
+        super(serviceID, messageID, hash);
         this.regulations = regulations;
     }
 

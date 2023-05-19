@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: example
+    name: demo
   security:
     authentication: bearer
     token:
@@ -13,3 +13,7 @@ netty:
   default:
     allocator:
       max-order: 3
+bluemedia:
+  service-id: ${BM_SERVICE_ID}
+  shared-key: ${BM_SHARED_KEY}
+  gateway-url: ${BM_GATEWAY_URL}

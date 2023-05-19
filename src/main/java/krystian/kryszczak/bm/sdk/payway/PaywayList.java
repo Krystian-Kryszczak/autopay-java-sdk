@@ -3,31 +3,33 @@ package krystian.kryszczak.bm.sdk.payway;
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import krystian.kryszczak.bm.sdk.common.ServiceHttpRequestBody;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-public final class PaywayList extends ServiceHttpRequestBody implements Serializable {
+@NoArgsConstructor
+public class PaywayList extends ServiceHttpRequestBody implements Serializable {
 
-    private PaywayList(@NotNull String serviceId, @NotNull String messageId, @NotNull String hash) {
-        super(serviceId, messageId, hash);
+    private PaywayList(@NotNull String serviceID, @NotNull String messageID, @NotNull String hash) {
+        super(serviceID, messageID, hash);
     }
 
-    public static PaywayList create(int serviceId, @NotNull String messageId, @NotNull BlueMediaConfiguration configuration) {
-        final String serviceIdStr = String.valueOf(serviceId);
+    public static PaywayList create(int serviceID, @NotNull String messageID, @NotNull BlueMediaConfiguration configuration) {
+        final String serviceIdStr = String.valueOf(serviceID);
 
         final String hash = HashGenerator.getInstance()
             .generateHash(
                 new Object[] {
                     serviceIdStr,
-                    messageId
+                    messageID
                 },
                 configuration
             );
 
         return new PaywayList(
             serviceIdStr,
-            messageId,
+            messageID,
             hash
         );
     }

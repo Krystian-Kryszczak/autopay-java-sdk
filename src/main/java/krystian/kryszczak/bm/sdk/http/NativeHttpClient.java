@@ -47,7 +47,10 @@ public final class NativeHttpClient implements HttpClient {
                 )
             )
         )
-        .doAfterSuccess(response -> logger.info("Status code: " + response.statusCode()))
+        .doOnSuccess(it -> logger.debug("Response body: " + it.body()))
+        .doOnSuccess(response -> logger.debug("Status code: " + response.statusCode()))
+        .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
+        .onErrorComplete()
         .map(HttpResponse::body);
     }
 }
