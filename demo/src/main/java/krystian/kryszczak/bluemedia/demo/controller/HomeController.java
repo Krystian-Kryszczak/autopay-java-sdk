@@ -1,4 +1,4 @@
-package krystian.kryszczak.bluemedia.controller;
+package krystian.kryszczak.bluemedia.demo.controller;
 
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;

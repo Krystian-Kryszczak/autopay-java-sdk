@@ -1,4 +1,4 @@
-package krystian.kryszczak.bluemedia;
+package krystian.kryszczak.bluemedia.demo;
 
 import io.micronaut.runtime.Micronaut;
 

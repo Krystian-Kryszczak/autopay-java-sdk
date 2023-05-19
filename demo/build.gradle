@@ -14,19 +14,23 @@ repositories {
 }
 
 dependencies {
+    implementation project(path: ':')
+    annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.rxjava3:micronaut-rxjava3")
     implementation("io.micronaut.security:micronaut-security")
     implementation("io.micronaut.security:micronaut-security-jwt")
     implementation("io.micronaut.views:micronaut-views-velocity")
+    compileOnly("org.projectlombok:lombok")
+    compileOnly("org.jetbrains:annotations:24.0.1")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut:micronaut-http-client")
 }
 
 application {
-    mainClass.set("krystian.kryszczak.bluemedia.Application")
+    mainClass.set("krystian.kryszczak.bluemedia.demo.Application")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
