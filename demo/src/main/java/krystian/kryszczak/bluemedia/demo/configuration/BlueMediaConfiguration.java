@@ -9,4 +9,5 @@ public final class BlueMediaConfiguration {
     private Integer serviceId;
     private String sharedKey;
     private String gatewayUrl;
+    private String itnEndpoint;
 }

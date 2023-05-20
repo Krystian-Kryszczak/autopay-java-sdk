@@ -18,20 +18,24 @@ public final class BlueMediaConfigurationTest {
         items.put("bluemedia.service-id", 55555);
         items.put("bluemedia.shared-key", "test-shared-key");
         items.put("bluemedia.gateway-url", "https://pay-accept.bm.pl");
+        items.put("bluemedia.itnEndpoint", "itn");
 
         ApplicationContext ctx = ApplicationContext.run(items);
         BlueMediaConfiguration blueMediaConfiguration = ctx.getBean(BlueMediaConfiguration.class);
         final Integer serviceId = blueMediaConfiguration.getServiceId();
         final String sharedKey = blueMediaConfiguration.getSharedKey();
         final String gatewayUrl = blueMediaConfiguration.getGatewayUrl();
+        final String itnEndpoint = blueMediaConfiguration.getItnEndpoint();
 
         assertNotNull(serviceId);
         assertNotNull(sharedKey);
         assertNotNull(gatewayUrl);
+        assertNotNull(itnEndpoint);
 
         assertEquals(55555, serviceId);
         assertEquals("test-shared-key", sharedKey);
         assertEquals("https://pay-accept.bm.pl", gatewayUrl);
+        assertEquals("itn", itnEndpoint);
 
         ctx.close();
     }

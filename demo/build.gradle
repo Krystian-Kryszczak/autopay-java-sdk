@@ -18,6 +18,7 @@ dependencies {
 
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut.xml:micronaut-jackson-xml")
 
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")

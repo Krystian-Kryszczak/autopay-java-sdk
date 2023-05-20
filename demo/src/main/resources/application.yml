@@ -9,6 +9,11 @@ micronaut:
           secret:
             generator:
               secret: ${JWT_GENERATOR_SIGNATURE_SECRET}
+  server:
+    netty:
+      access-logger:
+        enabled: true
+        log-format: common
 netty:
   default:
     allocator:
@@ -17,3 +22,4 @@ bluemedia:
   service-id: ${BM_SERVICE_ID}
   shared-key: ${BM_SHARED_KEY}
   gateway-url: ${BM_GATEWAY_URL}
+  itn-endpoint: ${BM_ITN_ENDPOINT}
