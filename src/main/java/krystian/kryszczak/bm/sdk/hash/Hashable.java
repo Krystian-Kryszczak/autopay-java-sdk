@@ -12,7 +12,7 @@ public abstract class Hashable {
     public abstract @Nullable String getHash();
 
     @JsonIgnore
-    public boolean isHashPresent() {
+    public final boolean isHashPresent() {
         return getHash() != null;
     }
 

@@ -2,12 +2,12 @@ package krystian.kryszczak.bm.sdk.util;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 import static krystian.kryszczak.bm.sdk.util.StringUtils.bin2hex;
 
 public final class RandomUtils {
-    public static final int MESSAGE_ID_LENGTH = 32;
+    static final int MESSAGE_ID_LENGTH = 32;
 
     public static @NotNull String randomMessageId() {
         return bin2hex(new String(randomBytes()));
@@ -16,7 +16,7 @@ public final class RandomUtils {
     private static byte @NotNull [] randomBytes() {
         final var bytes = new byte[MESSAGE_ID_LENGTH/2];
 
-        new Random()
+        new SecureRandom()
             .nextBytes(bytes);
 
         for (int i = 0; i < bytes.length; i++) {

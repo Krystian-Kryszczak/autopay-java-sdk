@@ -11,6 +11,10 @@ import krystian.kryszczak.bluemedia.demo.service.BlueMediaService;
 import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.bm.sdk.transaction.Transaction;
+import krystian.kryszczak.bm.sdk.transaction.TransactionBackground;
+import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
+import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +23,21 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public final class BlueMediaController {
     private final BlueMediaService blueMediaService;
+
+    @Get("get-transaction-redirect")
+    @NotNull String getTransactionRedirect(TransactionContinue transaction) {
+        return blueMediaService.getTransactionRedirect(transaction);
+    }
+
+    @Get("do-transaction-init")
+    @NotNull Maybe<@NotNull Transaction> doTransactionInit(TransactionInit transaction) {
+        return blueMediaService.doTransactionInit(transaction);
+    }
+
+    @Get("do-transaction-background")
+    @NotNull Maybe<@NotNull Transaction> doTransactionBackground(TransactionBackground transaction) {
+        return blueMediaService.doTransactionBackground(transaction);
+    }
 
     @Get("payway-list")
     @NotNull Maybe<PaywayListResponse> paywayList() {

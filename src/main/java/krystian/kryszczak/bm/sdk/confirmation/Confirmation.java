@@ -4,7 +4,6 @@ import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
@@ -16,11 +15,6 @@ public final class Confirmation extends Hashable implements Serializable, HttpRe
     private final int ServiceID;
     private final @NotNull String OrderID;
     private final @NotNull String Hash;
-
-    @Override
-    public boolean isHashPresent() {
-        return true;
-    }
 
     @Override
     public @NotNull Object[] toArrayWithoutHash() {

@@ -60,11 +60,6 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     protected final @Nullable String hash;
 
     @Override
-    public boolean isHashPresent() {
-        return hash != null;
-    }
-
-    @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         final Map<@NotNull String, @NotNull String> result = new LinkedHashMap<>();
         result.put("serviceID", serviceID);

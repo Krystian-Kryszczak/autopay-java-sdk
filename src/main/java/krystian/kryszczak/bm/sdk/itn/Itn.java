@@ -4,12 +4,14 @@ import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.serializer.XmlSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
 @Getter
+@ToString
 @AllArgsConstructor
 public final class Itn extends Hashable implements Serializable {
     private final @NotNull String serviceID;
@@ -27,6 +29,10 @@ public final class Itn extends Hashable implements Serializable {
 
     public static @Nullable Itn buildFormXml(@NotNull String decoded) {
         return new XmlSerializer().deserializeXml(decoded, Itn.class);
+    }
+
+    public boolean isPaymentStatusSuccess() {
+        return paymentStatus.equals("SUCCESS");
     }
 
     @Override

@@ -28,11 +28,6 @@ public class HashCheckerTest {
             }
 
             @Override
-            public boolean isHashPresent() {
-                return true;
-            }
-
-            @Override
             public @NotNull Object[] toArrayWithoutHash() {
                 return fakeFieldsValues;
             }
