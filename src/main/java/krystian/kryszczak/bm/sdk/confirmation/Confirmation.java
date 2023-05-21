@@ -2,6 +2,7 @@ package krystian.kryszczak.bm.sdk.confirmation;
 
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -10,8 +11,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 @Getter
-@SuperBuilder
-public final class Confirmation implements Serializable, Hashable, HttpRequestBody {
+@AllArgsConstructor
+public final class Confirmation extends Hashable implements Serializable, HttpRequestBody {
     private final int ServiceID;
     private final @NotNull String OrderID;
     private final @NotNull String Hash;

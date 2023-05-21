@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor
-public final class Itn implements Serializable, Hashable {
+public final class Itn extends Hashable implements Serializable {
     private final @NotNull String serviceID;
     private final @NotNull String orderID;
     private final @NotNull String remoteID;

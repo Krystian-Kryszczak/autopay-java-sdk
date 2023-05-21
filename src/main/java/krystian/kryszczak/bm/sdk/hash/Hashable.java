@@ -1,16 +1,20 @@
 package krystian.kryszczak.bm.sdk.hash;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Hashable {
-    @Nullable String getHash();
+@SuperBuilder
+@NoArgsConstructor
+public abstract class Hashable {
+    public abstract @Nullable String getHash();
 
     @JsonIgnore
-    default boolean isHashPresent() {
+    public boolean isHashPresent() {
         return getHash() != null;
     }
 
-    @NotNull Object[] toArrayWithoutHash();
+    public abstract @NotNull Object[] toArrayWithoutHash();
 }

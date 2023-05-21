@@ -84,11 +84,7 @@ public final class BlueMediaClientTest {
         };
 
         final String hash = HashGenerator.generateHash(data, configuration);
-        final Confirmation confirmation = Confirmation.builder()
-            .ServiceID(serviceId)
-            .OrderID(randomMessageId)
-            .Hash(hash)
-            .build();
+        final Confirmation confirmation = new Confirmation(serviceId, randomMessageId, hash);
 
         assertTrue(client.doConfirmationCheck(confirmation));
     }

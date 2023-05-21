@@ -13,7 +13,7 @@ import java.util.*;
 
 @Getter
 @SuperBuilder
-public abstract sealed class Transaction implements HttpRequestBody, Hashable, Serializable permits TransactionBackground, TransactionResponse {
+public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionResponse {
     protected final @NotNull String serviceID;
     /**
      * Transaction ID, required

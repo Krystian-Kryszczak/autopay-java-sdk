@@ -1,5 +1,6 @@
 package krystian.kryszczak.bm.sdk.common;
 
+import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 @Getter
 @NoArgsConstructor(force = true)
-public abstract class ServiceHttpRequestBody implements HttpRequestBody {
+public abstract class ServiceHttpRequestBody extends Hashable implements HttpRequestBody {
     protected @NotNull String serviceID;
     protected @NotNull String messageID;
     protected @Nullable String hash;
