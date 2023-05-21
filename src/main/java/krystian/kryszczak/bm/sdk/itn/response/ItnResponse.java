@@ -1,13 +1,13 @@
 package krystian.kryszczak.bm.sdk.itn.response;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
 import krystian.kryszczak.bm.sdk.itn.Itn;
+import krystian.kryszczak.bm.sdk.serializer.XmlSerializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
@@ -23,7 +23,7 @@ public final class ItnResponse implements Serializable {
     public static @NotNull ItnResponse create(@NotNull Itn itn, boolean transactionConfirmed, @NotNull BlueMediaConfiguration configuration) {
         final var confirmation = transactionConfirmed ? STATUS_CONFIRMED : STATUS_NOT_CONFIRMED;
 
-        final String orderId = itn.getOrderId();
+        final String orderId = itn.getOrderID();
 
         final var hashData = new Object[] {
             configuration.getServiceId(),
@@ -39,12 +39,11 @@ public final class ItnResponse implements Serializable {
                     confirmation
                 )
             ),
-            HashGenerator.instance.generateHash(hashData, configuration)
+            HashGenerator.generateHash(hashData, configuration)
         );
     }
 
-    @SneakyThrows
-    public @NotNull String toXml() {
-        return new XmlMapper().writeValueAsString(this);
+    public @Nullable String toXml() {
+        return new XmlSerializer().toXml(this);
     }
 }

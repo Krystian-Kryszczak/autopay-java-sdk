@@ -16,7 +16,7 @@ public class HashGeneratorTest {
 
     @Test
     void hashGeneratorTest() {
-        final String hash = HashGenerator.instance.generateHash(
+        final String hash = HashGenerator.generateHash(
             new Object[] {
                 configuration.getServiceId(),
                 100, // OrderID

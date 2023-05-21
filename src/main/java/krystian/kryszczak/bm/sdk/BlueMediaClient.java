@@ -1,6 +1,5 @@
 package krystian.kryszczak.bm.sdk;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import krystian.kryszczak.bm.sdk.common.Routes;
@@ -31,11 +30,13 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @ApiStatus.AvailableSince("")
@@ -109,20 +110,7 @@ public final class BlueMediaClient {
     @SneakyThrows
     @ApiStatus.AvailableSince("")
     public @NotNull Maybe<@NotNull Itn> doItnIn(final @NotNull String itn) {
-        final ItnDecoder itnDecoder = new Base64ItnDecoder();
-        final ItnValidator itnValidator = new XmlItnValidator();
-
-        final var decoded = itnDecoder.decode(itn);
-        if (itnValidator.validate(decoded)) {
-            Itn itnObj = Itn.buildFormXml(decoded);
-            if (itnObj == null) return Maybe.empty();
-
-            return Maybe.just(itnObj)
-            .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
-            .onErrorComplete();
-        }
-
-        return Maybe.empty();
+        return Maybe.fromOptional(Optional.ofNullable(getItnObject(itn)));
     }
 
     /**
@@ -191,7 +179,7 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public boolean checkHash(final @NotNull Hashable hashable) {
-        return HashChecker.instance.checkHash(hashable, configuration);
+        return HashChecker.checkHash(hashable, configuration);
     }
 
     /**
@@ -202,21 +190,21 @@ public final class BlueMediaClient {
         return checkHash(confirmation);
     }
 
-    private static final XmlMapper xmlMapper = new XmlMapper();
     /**
      * Method allows to get Itn object from base64
      */
     @ApiStatus.AvailableSince("")
-    public static @NotNull Itn getItnObject(final @NotNull String itn) throws Exception {
+    public static @Nullable Itn getItnObject(final @NotNull String itn) {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();
 
         final String decoded = itnDecoder.decode(itn);
 
         if (!itnValidator.validate(decoded)) {
-            throw new RuntimeException("ITN data must be an valid XML, base64 encoded.");
+            logger.error("ITN data must be an valid XML, base64 encoded.");
+            return null;
         }
 
-        return xmlMapper.readValue(decoded, Itn.class);
+        return Itn.buildFormXml(decoded);
     }
 }

@@ -14,11 +14,11 @@ import java.util.*;
 @Getter
 @SuperBuilder
 public abstract sealed class Transaction implements HttpRequestBody, Hashable, Serializable permits TransactionBackground, TransactionResponse {
-    protected final @NotNull String serviceId;
+    protected final @NotNull String serviceID;
     /**
      * Transaction ID, required
      */
-    protected final @NotNull String orderId;
+    protected final @NotNull String orderID;
     /**
      * Transaction amount, required
      */
@@ -28,7 +28,7 @@ public abstract sealed class Transaction implements HttpRequestBody, Hashable, S
      */
     protected final @Nullable String description;
 
-    protected final @Nullable Integer gatewayId;
+    protected final @Nullable Integer gatewayID;
     /**
      * Transaction currency, optional, default PLN
      */
@@ -67,13 +67,13 @@ public abstract sealed class Transaction implements HttpRequestBody, Hashable, S
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         final Map<@NotNull String, @NotNull String> result = new LinkedHashMap<>();
-        result.put("serviceID", serviceId);
-        result.put("orderID", orderId);
+        result.put("serviceID", serviceID);
+        result.put("orderID", orderID);
         result.put("amount", amount);
 
         final Map<@NotNull String, @Nullable Object> nullable = new LinkedHashMap<>();
         nullable.put("description", description);
-        nullable.put("gatewayID", gatewayId);
+        nullable.put("gatewayID", gatewayID);
         nullable.put("currency", currency);
         nullable.put("customerEmail", customerEmail);
         nullable.put("customerNRB", customerNRB);
@@ -105,11 +105,11 @@ public abstract sealed class Transaction implements HttpRequestBody, Hashable, S
 
     @Override
     public @NotNull Object[] toArrayWithoutHash() {
-        final List<Object> list = new LinkedList<>(List.of(serviceId, orderId, amount));
+        final List<Object> list = new LinkedList<>(List.of(serviceID, orderID, amount));
 
         final Object[] nullable = new Object[] {
             description,
-            gatewayId,
+            gatewayID,
             currency,
             customerEmail,
             customerNRB,

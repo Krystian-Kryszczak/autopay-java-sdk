@@ -83,7 +83,7 @@ public final class BlueMediaClientTest {
             randomMessageId
         };
 
-        final String hash = HashGenerator.instance.generateHash(data, configuration);
+        final String hash = HashGenerator.generateHash(data, configuration);
         final Confirmation confirmation = Confirmation.builder()
             .ServiceID(serviceId)
             .OrderID(randomMessageId)

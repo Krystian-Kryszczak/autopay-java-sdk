@@ -50,7 +50,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
         return Single.just(new XmlMapper().readValue(this.responseBody, TransactionBackground.class))
             .onErrorComplete()
             .flatMap(transaction -> {
-                if (!HashChecker.instance.checkHash(transaction, this.configuration)) {
+                if (!HashChecker.checkHash(transaction, this.configuration)) {
                     logger.error("Received wrong Hash! (" + transaction.getHash() + ")");
                     return Maybe.empty();
                 }
@@ -63,7 +63,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
         return Single.just(new XmlMapper().valueToTree(this.responseBody).findValue("redirectUrl") != null)
             .map(it -> it ? new XmlMapper().readValue(this.responseBody, TransactionContinue.class)
                         : new XmlMapper().readValue(this.responseBody, TransactionInit.class))
-            .flatMapMaybe(it -> HashChecker.instance.checkHash(it, this.configuration) ? Maybe.just(it) : Maybe.empty())
+            .flatMapMaybe(it -> HashChecker.checkHash(it, this.configuration) ? Maybe.just(it) : Maybe.empty())
             .doOnError(throwable -> logger.error(throwable.getMessage(), throwable))
             .onErrorComplete();
     }

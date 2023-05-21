@@ -12,12 +12,12 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 public final class Itn implements Serializable, Hashable {
-    private final @NotNull String serviceId;
-    private final @NotNull String orderId;
-    private final @NotNull String remoteId;
+    private final @NotNull String serviceID;
+    private final @NotNull String orderID;
+    private final @NotNull String remoteID;
     private final @NotNull String amount;
     private final @NotNull String currency;
-    private final int gatewayId;
+    private final int gatewayID;
     private final @NotNull String paymentDate;
     private @NotNull String paymentStatus;
     private @NotNull String paymentStatusDetails;
@@ -30,19 +30,14 @@ public final class Itn implements Serializable, Hashable {
     }
 
     @Override
-    public boolean isHashPresent() {
-        return getHash() != null;
-    }
-
-    @Override
     public @NotNull Object[] toArrayWithoutHash() {
         return new Object[] {
-            serviceId,
-            orderId,
-            remoteId,
+            serviceID,
+            orderID,
+            remoteID,
             amount,
             currency,
-            gatewayId,
+            gatewayID,
             paymentDate,
             paymentStatus,
             paymentStatusDetails,

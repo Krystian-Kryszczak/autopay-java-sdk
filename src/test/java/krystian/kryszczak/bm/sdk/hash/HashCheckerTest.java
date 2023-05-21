@@ -2,13 +2,10 @@ package krystian.kryszczak.bm.sdk.hash;
 
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class HashCheckerTest {
-    private final HashGenerator hashGenerator = HashGenerator.getInstance();
-    private final HashChecker hashChecker = HashChecker.getInstance();
 
     @Test
     void checkHashShouldReturnTrue() {
@@ -24,7 +21,7 @@ public class HashCheckerTest {
         };
 
         final Hashable hashable = new Hashable() {
-            final String hash = hashGenerator.generateHash(fakeFieldsValues, fakeConfiguration);
+            final String hash = HashGenerator.generateHash(fakeFieldsValues, fakeConfiguration);
             @Override
             public @NotNull String getHash() {
                 return hash;
@@ -41,7 +38,7 @@ public class HashCheckerTest {
             }
         };
 
-        final boolean checkedHash = hashChecker.checkHash(
+        final boolean checkedHash = HashChecker.checkHash(
             hashable,
             fakeConfiguration
         );

@@ -19,8 +19,7 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
     public static RegulationList create(int serviceID, @NotNull String messageID, @NotNull BlueMediaConfiguration configuration) {
         final String serviceIdStr = String.valueOf(serviceID);
 
-        final String hash = HashGenerator.getInstance()
-            .generateHash(
+        final String hash = HashGenerator.generateHash(
                 new Object[] {
                     serviceIdStr,
                     messageID

@@ -31,7 +31,7 @@ public final class GatewayRequest {
             serviceId,
             randomMessageId,
             currenciesJoined,
-            HashGenerator.instance.generateHash(
+            HashGenerator.generateHash(
                 new Object[] {
                     serviceId,
                     randomMessageId,
