@@ -2,23 +2,21 @@ package krystian.kryszczak.bm.sdk;
 
 import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
-import krystian.kryszczak.bm.sdk.transaction.Transaction;
+import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
-import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionContinueRequest;
-import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class BlueMediaClientTest {
     final BlueMediaConfiguration configuration = BlueMediaConfiguration.fromEnvironmentVariables();
     final BlueMediaClient client = new BlueMediaClient(configuration);
 
     final String gatewayUrl = "https://pay.bm.pl";
-
 
     @Test
     public void getTransactionRedirectTest() { // TODO
@@ -70,7 +68,40 @@ public final class BlueMediaClientTest {
 
     @Test
     public void checkHashTest() {
-        // TODO
+        final int serviceId = configuration.getServiceId();
+        final String randomMessageId = RandomUtils.randomMessageId();
+
+        final var data = new Object[] {
+            serviceId,
+            randomMessageId
+        };
+
+        final String hash = HashGenerator.generateHash(data, configuration);
+        final Hashable hashable = new Hashable() {
+            @Override
+            public @Nullable String getHash() {
+                return hash;
+            }
+
+            @Override
+            public @NotNull Object[] toArrayWithoutHash() {
+                return data;
+            }
+        };
+        assertTrue(client.checkHash(hashable));
+
+        final Hashable invalidHashable = new Hashable() {
+            @Override
+            public @Nullable String getHash() {
+                return hash + "-incorrect";
+            }
+
+            @Override
+            public @NotNull Object[] toArrayWithoutHash() {
+                return data;
+            }
+        };
+        assertFalse(client.checkHash(invalidHashable));
     }
 
     @Test
@@ -85,8 +116,10 @@ public final class BlueMediaClientTest {
 
         final String hash = HashGenerator.generateHash(data, configuration);
         final Confirmation confirmation = new Confirmation(serviceId, randomMessageId, hash);
-
         assertTrue(client.doConfirmationCheck(confirmation));
+
+        final Confirmation invalidConfirmation = new Confirmation(serviceId, randomMessageId, hash + "-incorrect");
+        assertFalse(client.doConfirmationCheck(invalidConfirmation));
     }
 
     @Test
