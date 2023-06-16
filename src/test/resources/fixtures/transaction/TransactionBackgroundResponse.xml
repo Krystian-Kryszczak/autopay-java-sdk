@@ -6,7 +6,7 @@
     <orderID>12345</orderID>
     <amount>5.12</amount>
     <currency>PLN</currency>
-    <title>Test krystian.kryszczak.bm.sdk.transaction 12345</title>
+    <title>Test transaction 12345</title>
     <remoteID>12345</remoteID>
     <bankHref>https://ssl.bsk.com.pl/bskonl/login.html</bankHref>
     <returnURL>https://google.pl</returnURL>

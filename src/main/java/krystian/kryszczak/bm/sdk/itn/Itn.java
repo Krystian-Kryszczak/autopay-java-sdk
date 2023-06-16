@@ -28,7 +28,7 @@ public final class Itn extends Hashable implements Serializable {
     private @Nullable String hash;
 
     public static @Nullable Itn buildFormXml(@NotNull String decoded) {
-        return new XmlSerializer().deserializeXml(decoded, Itn.class);
+        return new XmlSerializer().deserialize(decoded, Itn.class);
     }
 
     public boolean isPaymentStatusSuccess() {

@@ -59,7 +59,7 @@ public final class BlueMediaClient {
      * Perform standard transaction.
      */
     @ApiStatus.AvailableSince("")
-    public @NotNull String getTransactionRedirect(final @NotNull TransactionContinueRequest transactionRequest) {
+    public @NotNull String getTransactionRedirect(final @NotNull TransactionRequest<?> transactionRequest) {
         return View.createRedirectHtml(transactionRequest);
     }
 

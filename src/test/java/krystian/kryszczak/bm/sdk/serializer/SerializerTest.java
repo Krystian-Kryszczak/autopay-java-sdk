@@ -18,10 +18,10 @@ public final class SerializerTest {
     void serializerTest() throws IOException {
         final String data = Files.readString(Paths.get("src/test/resources/fixtures/regulation-list/RegulationList.xml"), StandardCharsets.UTF_8);
 
-        final var deserialized = serializer.deserializeXml(data, RegulationListResponse.class);
+        final var deserialized = serializer.deserialize(data, RegulationListResponse.class);
         assertNotNull(deserialized);
 
-        final var serialized = serializer.toXml(deserialized);
+        final var serialized = serializer.serialize(deserialized);
         assertEquals(data, serialized);
     }
 }

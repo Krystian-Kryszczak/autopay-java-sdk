@@ -39,7 +39,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     protected final @Nullable String customerEmail;
     protected final @Nullable String customerNRB;
     protected final @Nullable String texCountry;
-    protected final @Nullable String customerIp;
+    protected final @Nullable String customerIP;
     protected final @Nullable String title;
     protected final @Nullable String receiverName;
     protected final @Nullable LocalDateTime validityTime;
@@ -48,13 +48,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     protected final @Nullable String screenType;
     protected final @Nullable String blikUIDKey;
     protected final @Nullable String blikUIDLabel;
-    protected final @Nullable String returnUrl;
+    protected final @Nullable String returnURL;
     protected final @Nullable String defaultRegulationAcceptanceState;
-    protected final @Nullable String defaultRegulationAcceptanceId;
+    protected final @Nullable String defaultRegulationAcceptanceID;
     protected final @Nullable LocalDateTime defaultRegulationAcceptanceTime;
     protected final @Nullable String receiverNRB;
     protected final @Nullable String receiverAddress;
-    protected final @Nullable String remoteId;
+    protected final @Nullable String remoteID;
     protected final @Nullable String bankHref;
 
     protected final @Nullable String hash;
@@ -73,7 +73,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
         nullable.put("customerEmail", customerEmail);
         nullable.put("customerNRB", customerNRB);
         nullable.put("texCountry", texCountry);
-        nullable.put("customerIp", customerIp);
+        nullable.put("customerIp", customerIP);
         nullable.put("title", title);
         nullable.put("receiverName", receiverName);
         nullable.put("validityTime", validityTime);
@@ -82,13 +82,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
         nullable.put("screenType", screenType);
         nullable.put("blikUIDKey", blikUIDKey);
         nullable.put("blikUIDLabel", blikUIDLabel);
-        nullable.put("returnUrl", returnUrl);
+        nullable.put("returnUrl", returnURL);
         nullable.put("defaultRegulationAcceptanceState", defaultRegulationAcceptanceState);
-        nullable.put("defaultRegulationAcceptanceID", defaultRegulationAcceptanceId);
+        nullable.put("defaultRegulationAcceptanceID", defaultRegulationAcceptanceID);
         nullable.put("defaultRegulationAcceptanceTime", defaultRegulationAcceptanceTime);
         nullable.put("receiverNRB", receiverNRB);
         nullable.put("receiverAddress", receiverAddress);
-        nullable.put("remoteId", remoteId);
+        nullable.put("remoteId", remoteID);
         nullable.put("bankHref", bankHref);
 
         nullable.entrySet().stream()
@@ -109,7 +109,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             customerEmail,
             customerNRB,
             texCountry,
-            customerIp,
+                customerIP,
             title,
             receiverName,
             validityTime,
@@ -118,13 +118,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             screenType,
             blikUIDKey,
             blikUIDLabel,
-            returnUrl,
+                returnURL,
             defaultRegulationAcceptanceState,
-            defaultRegulationAcceptanceId,
+                defaultRegulationAcceptanceID,
             defaultRegulationAcceptanceTime,
             receiverNRB,
             receiverAddress,
-            remoteId,
+                remoteID,
             bankHref
         };
 

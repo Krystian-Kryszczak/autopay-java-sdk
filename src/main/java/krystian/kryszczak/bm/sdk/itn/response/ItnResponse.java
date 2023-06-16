@@ -44,6 +44,6 @@ public final class ItnResponse implements Serializable {
     }
 
     public @Nullable String toXml() {
-        return new XmlSerializer().toXml(this);
+        return new XmlSerializer().serialize(this);
     }
 }

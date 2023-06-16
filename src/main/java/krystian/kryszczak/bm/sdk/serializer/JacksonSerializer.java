@@ -10,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 public abstract sealed class JacksonSerializer implements Serializer permits JsonSerializer, XmlSerializer {
@@ -32,8 +31,19 @@ public abstract sealed class JacksonSerializer implements Serializer permits Jso
         return values.toArray();
     }
 
+    @SneakyThrows
     @Override
-    public <T extends Serializable> @Nullable T deserializeXml(@NotNull String xml, @NotNull Class<T> type) {
+    public @Nullable Map<String, String> toMap(@NotNull Serializable data) {
+        final var tree = mapper.readTree(mapper.writeValueAsString(data));
+        final Map<String, String> result = new HashMap<>();
+        tree.fields().forEachRemaining(
+            entry -> result.put(entry.getKey(), entry.getValue().asText())
+        );
+        return result;
+    }
+
+    @Override
+    public <T extends Serializable> @Nullable T deserialize(@NotNull String xml, @NotNull Class<T> type) {
         try {
             return mapper.readValue(xml, type);
         } catch (JsonProcessingException e) {
@@ -43,7 +53,7 @@ public abstract sealed class JacksonSerializer implements Serializer permits Jso
     }
 
     @Override
-    public @Nullable String toXml(@NotNull Serializable value) {
+    public @Nullable String serialize(@NotNull Serializable value) {
         try {
             return mapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {

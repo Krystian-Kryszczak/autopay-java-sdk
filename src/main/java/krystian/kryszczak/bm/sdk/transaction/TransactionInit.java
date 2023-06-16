@@ -10,9 +10,9 @@ import java.util.Map;
 @Getter
 @SuperBuilder
 public final class TransactionInit extends TransactionResponse {
-    private final @NotNull String confirmation;
-    private final @Nullable String reason;
-    private final @NotNull String paymentStatus;
+    private final String confirmation;
+    private final String reason;
+    private final String paymentStatus;
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
