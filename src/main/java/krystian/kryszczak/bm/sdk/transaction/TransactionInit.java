@@ -3,7 +3,6 @@ package krystian.kryszczak.bm.sdk.transaction;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -18,9 +17,9 @@ public final class TransactionInit extends TransactionResponse {
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         final var result = super.toArray();
 
-        result.put("confirmation", confirmation);
+        if (confirmation != null) result.put("confirmation", confirmation);
         if (reason != null) result.put("reason", reason);
-        result.put("paymentStatus", paymentStatus);
+        if (paymentStatus != null) result.put("paymentStatus", paymentStatus);
 
         return result;
     }

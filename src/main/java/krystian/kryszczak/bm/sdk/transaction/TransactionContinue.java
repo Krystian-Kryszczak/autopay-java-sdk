@@ -9,14 +9,16 @@ import java.util.Map;
 @Getter
 @SuperBuilder
 public final class TransactionContinue extends TransactionResponse {
-    private final @NotNull String status;
-    private final @NotNull String redirectUrl;
+    private final String status;
+    private final String redirectUrl;
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         final var result = super.toArray();
-        result.put("status", status);
-        result.put("redirectUrl", redirectUrl);
+
+        if (status != null) result.put("status", status);
+        if (redirectUrl != null) result.put("redirectUrl", redirectUrl);
+
         return result;
     }
 }
