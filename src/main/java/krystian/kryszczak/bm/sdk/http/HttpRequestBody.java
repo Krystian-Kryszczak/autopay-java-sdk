@@ -1,5 +1,6 @@
 package krystian.kryszczak.bm.sdk.http;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -11,9 +12,7 @@ public interface HttpRequestBody {
     @NotNull
     default Map<@NotNull String, @NotNull String> toCapitalizedMap() {
         return toArray().entrySet().stream()
-            .map(entry -> Map.entry(
-                entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1),
-                entry.getValue()))
+            .map(entry -> Map.entry(StringUtils.capitalize(entry.getKey()), entry.getValue()))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
