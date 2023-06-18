@@ -1,6 +1,8 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import krystian.kryszczak.bm.sdk.common.util.Translations;
+import krystian.kryszczak.bm.sdk.hash.HashGenerator;
 import krystian.kryszczak.bm.sdk.transaction.Transaction;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,15 @@ public abstract sealed class TransactionRequest<T extends Transaction> permits T
     private final @NotNull T transaction;
     private final @NotNull Translations.Language htmlFormLanguage;
 
+    public void configure(final @NotNull BlueMediaConfiguration configuration) {
+        transaction.setServiceID(configuration.getServiceId());
+        final String hash = HashGenerator.generateHash(
+            transaction.toArrayWithoutHash(),
+            configuration
+        );
+        transaction.setHash(hash);
+    }
+
     protected abstract sealed static class Builder<T extends Transaction> permits TransactionBackgroundRequest.Builder, TransactionContinueRequest.Builder, TransactionInitRequest.Builder {
         protected abstract static sealed class Required<T extends Transaction> permits TransactionBackgroundRequest.Builder.Required, TransactionContinueRequest.Builder.Required, TransactionInitRequest.Builder.Required {
             public abstract @NotNull WithGatewayUrl<T> setGatewayUrl(@NotNull String gatewayUrl);
@@ -22,6 +33,7 @@ public abstract sealed class TransactionRequest<T extends Transaction> permits T
 
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
         public abstract static sealed class WithGatewayUrl<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithGatewayUrl, TransactionContinueRequest.Builder.WithGatewayUrl, TransactionInitRequest.Builder.WithGatewayUrl {
+            @Getter(AccessLevel.PROTECTED)
             private String gatewayUrl;
 
             public final @NotNull WithGatewayUrl<T> setGatewayUrl(@NotNull String gatewayUrl) {

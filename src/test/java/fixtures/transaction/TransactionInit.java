@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
 public abstract class TransactionInit {
-    public static TransactionInitRequest getTransactionInitContinue() {
+    public static @NotNull TransactionInitRequest getTransactionInitContinue() {
         return TransactionInitRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")
             .setTransaction(
@@ -40,8 +40,7 @@ public abstract class TransactionInit {
                     .customerIP("127.0.0.1")
                     .title("Test")
                     .build()
-            ).build()
-            ;
+            ).build();
     }
 
     @SneakyThrows

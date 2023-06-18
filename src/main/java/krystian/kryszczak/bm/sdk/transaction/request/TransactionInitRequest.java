@@ -33,13 +33,12 @@ public final class TransactionInitRequest extends TransactionRequest<Transaction
         }
 
         public static final class WithGatewayUrl extends TransactionRequest.Builder.WithGatewayUrl<TransactionInit> {
-            private String gatewayUrl;
             private WithGatewayUrl(String gatewayUrl) {
                 super(gatewayUrl);
             }
 
             public @NotNull Completer setTransaction(@NotNull TransactionInit transaction) {
-                return new TransactionInitRequest.Builder.Completer(gatewayUrl, transaction);
+                return new TransactionInitRequest.Builder.Completer(super.getGatewayUrl(), transaction);
             }
         }
 

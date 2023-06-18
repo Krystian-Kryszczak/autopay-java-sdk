@@ -28,13 +28,12 @@ public final class TransactionContinueRequest extends TransactionRequest<Transac
         }
 
         public static final class WithGatewayUrl extends TransactionRequest.Builder.WithGatewayUrl<TransactionContinue> {
-            private String gatewayUrl;
             private WithGatewayUrl(String gatewayUrl) {
                 super(gatewayUrl);
             }
 
             public @NotNull Completer setTransaction(@NotNull TransactionContinue transaction) {
-                return new Completer(gatewayUrl, transaction);
+                return new Completer(super.getGatewayUrl(), transaction);
             }
         }
 

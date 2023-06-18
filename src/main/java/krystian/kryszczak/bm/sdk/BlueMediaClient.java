@@ -1,5 +1,6 @@
 package krystian.kryszczak.bm.sdk;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import krystian.kryszczak.bm.sdk.common.Routes;
@@ -22,7 +23,6 @@ import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.bm.sdk.transaction.*;
 import krystian.kryszczak.bm.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionBackgroundRequest;
-import krystian.kryszczak.bm.sdk.transaction.request.TransactionContinueRequest;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionInitRequest;
 import krystian.kryszczak.bm.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.bm.sdk.util.RandomUtils;
@@ -60,6 +60,7 @@ public final class BlueMediaClient {
      */
     @ApiStatus.AvailableSince("")
     public @NotNull String getTransactionRedirect(final @NotNull TransactionRequest<?> transactionRequest) {
+        transactionRequest.configure(configuration);
         return View.createRedirectHtml(transactionRequest);
     }
 
@@ -83,24 +84,26 @@ public final class BlueMediaClient {
 
     @SneakyThrows
     private @NotNull <T extends Transaction> Maybe<@NotNull Transaction> doTransaction(final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
-        return Single.just(new HttpRequest<>(
-                new URI(transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE),
-                Map.of(
-                    HEADER, !transactionInit
-                            ? PAY_HEADER
-                            : CONTINUE_HEADER
-                ),
-                transactionRequest.getTransaction()
-            ))
-            .doOnError(throwable ->
-                logger.error(
-                    "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
-                    throwable
+        return Completable.fromAction(() -> transactionRequest.configure(configuration)).andThen(
+            Single.just(new HttpRequest<>(
+                    new URI(transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE),
+                    Map.of(
+                        HEADER, !transactionInit
+                                ? PAY_HEADER
+                                : CONTINUE_HEADER
+                    ),
+                    transactionRequest.getTransaction()
+                ))
+                .doOnError(throwable ->
+                    logger.error(
+                        "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
+                        throwable
+                    )
                 )
-            )
-            .onErrorComplete()
-            .flatMap(httpClient::post)
-            .flatMap(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit));
+                .onErrorComplete()
+                .flatMap(httpClient::post)
+                .flatMap(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
+        );
     }
 
     /**

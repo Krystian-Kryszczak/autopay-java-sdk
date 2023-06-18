@@ -3,6 +3,7 @@ package krystian.kryszczak.bm.sdk.transaction;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,8 @@ import java.util.*;
 @Getter
 @SuperBuilder
 public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionResponse {
-    protected final @NotNull String serviceID;
+    @Setter
+    protected int serviceID;
     /**
      * Transaction ID, required
      */
@@ -57,12 +59,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     protected final @Nullable String remoteID;
     protected final @Nullable String bankHref;
 
-    protected final @Nullable String hash;
+    @Setter
+    protected @Nullable String hash;
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toArray() {
         final Map<@NotNull String, @NotNull String> result = new LinkedHashMap<>();
-        result.put("serviceID", serviceID);
+        result.put("serviceID", String.valueOf(serviceID));
         result.put("orderID", orderID);
         result.put("amount", amount);
 
@@ -109,7 +112,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             customerEmail,
             customerNRB,
             texCountry,
-                customerIP,
+            customerIP,
             title,
             receiverName,
             validityTime,
@@ -118,13 +121,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             screenType,
             blikUIDKey,
             blikUIDLabel,
-                returnURL,
+            returnURL,
             defaultRegulationAcceptanceState,
-                defaultRegulationAcceptanceID,
+            defaultRegulationAcceptanceID,
             defaultRegulationAcceptanceTime,
             receiverNRB,
             receiverAddress,
-                remoteID,
+            remoteID,
             bankHref
         };
 
