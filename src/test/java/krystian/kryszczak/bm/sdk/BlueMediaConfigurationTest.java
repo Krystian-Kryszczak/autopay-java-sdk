@@ -15,7 +15,7 @@ public final class BlueMediaConfigurationTest {
     private static final String WRONG_HASH_ALGO = "wrong_algorithm";
     private static final String HASH_SEPARATOR = "|";
 
-    private static final String HASH_SHA256 = "SHA256";
+    private static final HashType HASH_SHA256 = HashType.SHA256;
 
     private static BlueMediaConfiguration configuration;
 
@@ -24,7 +24,7 @@ public final class BlueMediaConfigurationTest {
         configuration = BlueMediaConfiguration.builder()
             .setServiceId(SERVICE_ID)
             .setSharedKey(SHARED_KEY)
-            .setHashAlgorithm(HashType.valueOf(HASH_SHA256))
+            .setHashAlgorithm(HASH_SHA256)
             .setHashSeparator(HASH_SEPARATOR)
             .build();
     }
@@ -47,7 +47,7 @@ public final class BlueMediaConfigurationTest {
             BlueMediaConfiguration.builder()
                 .setServiceId(Integer.parseInt(WRONG_SERVICE_ID))
                 .setSharedKey(SHARED_KEY)
-                .setHashAlgorithm(HashType.valueOf(HASH_SHA256))
+                .setHashAlgorithm(HASH_SHA256)
                 .setHashSeparator(HASH_SEPARATOR)
                 .build()
         );
@@ -65,7 +65,7 @@ public final class BlueMediaConfigurationTest {
 
     @Test
     public void testGetHashAlgoReturnTypeAndValue() {
-        assertSame(HASH_SHA256, configuration.getHashAlgorithm().name());
+        assertSame(HASH_SHA256, configuration.getHashAlgorithm());
     }
 
     @Test

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Map;
 
-public final class Translations {
+public abstract class Translations {
     public static final String REDIRECT = "form.paywall.redirect";
     public static final String JAVASCRIPT_DISABLED = "form.paywall.javascript_disabled";
     public static final String JAVASCRIPT_REQUIRED = "form.paywall.javascript_required";

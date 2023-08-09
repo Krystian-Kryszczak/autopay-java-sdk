@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 public final class HashGenerator {
 
     /**
-     * Generates Hash.
+     * Generates hash.
      */
     public static @NotNull String generateHash(@NotNull Object[] array, @NotNull BlueMediaConfiguration configuration) {
         final StringBuilder builder = new StringBuilder();
@@ -28,11 +28,11 @@ public final class HashGenerator {
 
     private static @NotNull String encode(String orginalString, @NotNull String hashAlgorithm) {
         try {
-            MessageDigest sha256 = MessageDigest.getInstance(hashAlgorithm);
-            byte[] hash = sha256.digest(orginalString.getBytes());
-            StringBuilder hexString = new StringBuilder();
+            final MessageDigest digest = MessageDigest.getInstance(hashAlgorithm);
+            byte[] hash = digest.digest(orginalString.getBytes());
+            final StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
+                final String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1)
                     hexString.append('0');
                 hexString.append(hex);

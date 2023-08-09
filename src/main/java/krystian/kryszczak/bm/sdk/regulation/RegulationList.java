@@ -3,14 +3,13 @@ package krystian.kryszczak.bm.sdk.regulation;
 import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
 import krystian.kryszczak.bm.sdk.common.ServiceHttpRequestBody;
 import krystian.kryszczak.bm.sdk.hash.HashGenerator;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-@NoArgsConstructor
 public class RegulationList extends ServiceHttpRequestBody implements Serializable {
+
     protected RegulationList(@NotNull String serviceID, @NotNull String messageID, @Nullable String hash) {
         super(serviceID, messageID, hash);
     }
@@ -34,7 +33,7 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
     }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() {
+    public @NotNull Object[] toArray() {
         return new Object[] {
             serviceID,
             messageID

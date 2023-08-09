@@ -9,9 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract sealed class TransactionRequest<T extends Transaction> permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
+public abstract sealed class TransactionRequest<T extends Transaction> implements Serializable permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
     private final @NotNull String gatewayUrl;
     private final @NotNull T transaction;
     private final @NotNull Translations.Language htmlFormLanguage;
@@ -19,7 +21,7 @@ public abstract sealed class TransactionRequest<T extends Transaction> permits T
     public void configure(final @NotNull BlueMediaConfiguration configuration) {
         transaction.setServiceID(configuration.getServiceId());
         final String hash = HashGenerator.generateHash(
-            transaction.toArrayWithoutHash(),
+            transaction.toArray(),
             configuration
         );
         transaction.setHash(hash);

@@ -40,12 +40,6 @@ public abstract class TransactionBackground {
     }
 
     public static @NotNull Map<String, String> getTransactionBackgroundResponseData() {
-        final var xmlSerializer = new XmlSerializer();
-        return Objects.requireNonNull(xmlSerializer.toMap(getTransactionBackgroundResponse()));
-    }
-
-    @SneakyThrows
-    public static String getPaywayFormResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/PaywayFormResponse.txt"));
+        return Objects.requireNonNull(new XmlSerializer().toMap(getTransactionBackgroundResponse()));
     }
 }

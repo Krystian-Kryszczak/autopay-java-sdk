@@ -1,5 +1,7 @@
 package krystian.kryszczak.bm.sdk.confirmation;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
 import lombok.AllArgsConstructor;
@@ -10,46 +12,32 @@ import java.io.Serializable;
 import java.util.Map;
 
 @Getter
+@XmlRootElement
+@XmlType(propOrder = {"serviceID", "messageID", "hash"})
 @AllArgsConstructor
 public final class Confirmation extends Hashable implements Serializable, HttpRequestBody {
-    private final int ServiceID;
-    private final @NotNull String OrderID;
-    private final @NotNull String Hash;
+    private final int serviceID;
+    private final @NotNull String orderID;
+    private final @NotNull String hash;
+
+    public @NotNull String getHash() {
+        return hash.trim();
+    }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() {
+    public @NotNull Object[] toArray() {
         return new Object[] {
-            ServiceID,
-            OrderID,
+            serviceID,
+            orderID
         };
     }
 
     @Override
-    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
+    public @NotNull Map<@NotNull String, @NotNull String> toMap() {
         return Map.of(
-            "ServiceID", String.valueOf(ServiceID),
-            "OrderID", OrderID,
-            "Hash", Hash
+            "serviceID", String.valueOf(serviceID),
+            "orderID", orderID,
+            "hash", hash
         );
-    }
-
-    @Override
-    public @NotNull Map<@NotNull String, @NotNull String> toCapitalizedMap() {
-        return toArray();
-    }
-
-    public enum Status {
-        CONFIRMED("CONFIRMED"),
-        NOT_CONFIRMED("NOTCONFIRMED");
-
-        private final @NotNull String name;
-        Status(@NotNull String name) {
-            this.name = name;
-        }
-
-        @Override
-        public final @NotNull String toString() {
-            return name;
-        }
     }
 }

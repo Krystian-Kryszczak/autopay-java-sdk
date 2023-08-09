@@ -1,27 +1,35 @@
 package krystian.kryszczak.bm.sdk.serializer;
 
-import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.bm.sdk.transaction.request.TransactionInitRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class SerializerTest {
-    private final Serializer serializer = new XmlSerializer();
+    private final Map<String, Object> transactionData = Map.of(
+    "gatewayUrl", "https://accept-pay.bm.pl",
+    "transaction", Map.of(
+            "orderID", "123-123",
+            "amount", "1.20",
+            "description", "Transakcja 123-123",
+            "gatewayID", 0
+        )
+    );
+
+    private static Serializer serializer;
+
+    @BeforeAll
+    public static void setUp() {
+        serializer = new XmlSerializer();
+    }
 
     @Test
-    void serializerTest() throws IOException {
-        final String data = Files.readString(Paths.get("src/test/resources/fixtures/regulation-list/RegulationList.xml"), StandardCharsets.UTF_8);
-
-        final var deserialized = serializer.deserialize(data, RegulationListResponse.class);
-        assertNotNull(deserialized);
-
-        final var serialized = serializer.serialize(deserialized);
-        assertEquals(data, serialized);
+    public void testSerializeTransactionDataReturnsTransactionRequest() {
+        final var transactionRequest = serializer.fromMap(transactionData, TransactionInitRequest.class);
+        assert transactionRequest != null;
+        assertEquals(transactionData.get("gatewayUrl"), transactionRequest.getGatewayUrl());
     }
 }

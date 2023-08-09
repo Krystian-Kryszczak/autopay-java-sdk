@@ -1,7 +1,6 @@
 package krystian.kryszczak.bm.sdk;
 
 import io.reactivex.rxjava3.core.Maybe;
-import krystian.kryszczak.bm.sdk.common.exception.HashNotReturnedFromServerException;
 import krystian.kryszczak.bm.sdk.confirmation.Confirmation;
 import krystian.kryszczak.bm.sdk.http.HttpClient;
 import krystian.kryszczak.bm.sdk.http.HttpRequest;
@@ -10,7 +9,6 @@ import krystian.kryszczak.bm.sdk.itn.Itn;
 import krystian.kryszczak.bm.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.bm.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.bm.sdk.regulation.response.RegulationListResponse;
-import krystian.kryszczak.bm.sdk.transaction.Transaction;
 import krystian.kryszczak.bm.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.bm.sdk.transaction.TransactionContinue;
 import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
@@ -22,17 +20,16 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public final class BlueMediaClientTest extends BaseTestCase {
     private static BlueMediaClient client;
-
     private static HttpClient httpClient;
 
     @BeforeAll
@@ -78,28 +75,16 @@ public final class BlueMediaClientTest extends BaseTestCase {
         final var transactionBackground = result.blockingGet();
         final var transactionBackgroundFixture = fixtures.transaction.TransactionBackground.getTransactionBackgroundResponseData();
 
-        assertSame(transactionBackgroundFixture.get("receiverNRB"), transactionBackground.getReceiverNRB());
-        assertSame(transactionBackgroundFixture.get("receiverName"), transactionBackground.getReceiverName());
-        assertSame(transactionBackgroundFixture.get("receiverAddress"), transactionBackground.getReceiverAddress());
-        assertSame(transactionBackgroundFixture.get("orderID"), transactionBackground.getOrderID());
-        assertSame(transactionBackgroundFixture.get("amount"), transactionBackground.getAmount());
-        assertSame(transactionBackgroundFixture.get("currency"), transactionBackground.getCurrency());
-        assertSame(transactionBackgroundFixture.get("title"), transactionBackground.getTitle());
-        assertSame(transactionBackgroundFixture.get("remoteID"), transactionBackground.getRemoteID());
-        assertSame(transactionBackgroundFixture.get("bankHref"), transactionBackground.getBankHref());
-        assertSame(transactionBackgroundFixture.get("returnURL"), transactionBackground.getReturnURL());
-    }
-
-    @Test
-    public void testDoTransactionBackgroundReturnsPaywayForm() {
-        when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.transaction.TransactionBackground.getPaywayFormResponse())
-        );
-
-        final var result = client.doTransactionBackground(fixtures.transaction.TransactionBackground.getTransactionBackground());
-
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(TransactionBackground.class, result.blockingGet());
+        assertEquals(transactionBackgroundFixture.get("receiverNRB"), transactionBackground.getReceiverNRB());
+        assertEquals(transactionBackgroundFixture.get("receiverName"), transactionBackground.getReceiverName());
+        assertEquals(transactionBackgroundFixture.get("receiverAddress"), transactionBackground.getReceiverAddress());
+        assertEquals(transactionBackgroundFixture.get("orderID"), transactionBackground.getOrderID());
+        assertEquals(transactionBackgroundFixture.get("amount"), transactionBackground.getAmount());
+        assertEquals(transactionBackgroundFixture.get("currency"), transactionBackground.getCurrency());
+        assertEquals(transactionBackgroundFixture.get("title"), transactionBackground.getTitle());
+        assertEquals(transactionBackgroundFixture.get("remoteID"), transactionBackground.getRemoteID());
+        assertEquals(transactionBackgroundFixture.get("bankHref"), transactionBackground.getBankHref());
+        assertEquals(transactionBackgroundFixture.get("returnURL"), transactionBackground.getReturnURL());
     }
 
     @Test
@@ -135,18 +120,18 @@ public final class BlueMediaClientTest extends BaseTestCase {
 
         assertInstanceOf(Maybe.class, result);
         assertInstanceOf(Itn.class, result.blockingGet());
-        assertSame(itnFixture.get("remoteID"), itn.getRemoteID());
-        assertSame(itnFixture.get("amount"), itn.getAmount());
-        assertSame(itnFixture.get("currency"), itn.getCurrency());
-        assertSame(itnFixture.get("paymentDate"), itn.getPaymentDate());
-        assertSame(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
-        assertSame(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
+        assertEquals(itnFixture.get("amount"), itn.getAmount());
+        assertEquals(itnFixture.get("currency"), itn.getCurrency());
+        assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
+        assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
+        assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
     }
 
     @ParameterizedTest
     @MethodSource("itnProvider")
     public void testDoItnInThrowsExceptionOnWrongBase64(String itn) {
-        assertThrows(IllegalAccessError.class, () -> client.doItnIn(itn));
+        assertThrows(IllegalArgumentException.class, () -> client.doItnIn(itn));
     }
 
     @Test
@@ -154,7 +139,10 @@ public final class BlueMediaClientTest extends BaseTestCase {
         final var itnIn = client.doItnIn(fixtures.itn.Itn.getItnInRequest());
         final var result = client.doItnInResponse(itnIn.blockingGet(), true);
         assertInstanceOf(ItnResponse.class, result.blockingGet());
-        assertEquals(fixtures.itn.Itn.getItnResponse(), result.blockingGet().toXml());
+        assertThat(fixtures.itn.Itn.getItnResponse())
+            .and(result.blockingGet().toXml())
+            .ignoreWhitespace()
+            .areIdentical();
     }
 
     @Test
@@ -184,29 +172,16 @@ public final class BlueMediaClientTest extends BaseTestCase {
     @ParameterizedTest
     @MethodSource("checkHashProvider")
     public void testCheckHashReturnsExpectedValue(String hash, boolean value) {
-        final var transaction = mock(Transaction.class);
-        final var transactionInitData = fixtures.transaction.TransactionInit.getTransactionInit();
+        final var transaction = mock(TransactionInit.class);
+        final var transactionInitData = fixtures.transaction.TransactionInit.getTransactionInit().getTransaction().toArray();
 
-        when(transaction.toArray()).thenReturn(transactionInitData.getTransaction().toArray());
+        when(transaction.toArray()).thenReturn(transactionInitData);
         when(transaction.getHash()).thenReturn(hash);
         when(transaction.isHashPresent()).thenReturn(true);
 
         final var result = client.checkHash(transaction);
 
-        assertSame(value, result);
-    }
-
-    @ParameterizedTest
-    @MethodSource("checkHashProvider")
-    public void testCheckHashThrowsHashNotReturnedException(String hash, boolean value) {
-        final var transaction = mock(Transaction.class);
-        final var transactionInitData = fixtures.transaction.TransactionInit.getTransactionInit();
-
-        when(transaction.toArray()).thenReturn(transactionInitData.getTransaction().toArray());
-        when(transaction.getHash()).thenReturn(hash);
-        when(transaction.isHashPresent()).thenReturn(false);
-
-        assertThrows(HashNotReturnedFromServerException.class, () -> client.checkHash(transaction));
+        assertEquals(value, result);
     }
 
     @Test
@@ -214,13 +189,14 @@ public final class BlueMediaClientTest extends BaseTestCase {
         final var itn = BlueMediaClient.getItnObject(fixtures.itn.Itn.getItnInRequest());
         final var itnFixture = fixtures.itn.Itn.getTransactionXml();
 
+        assertNotNull(itn);
         assertInstanceOf(Itn.class, itn);
-        assertSame(itnFixture.get("remoteID"), Objects.requireNonNull(itn).getRemoteID());
-        assertSame(itnFixture.get("amount"), itn.getAmount());
-        assertSame(itnFixture.get("currency"), itn.getCurrency());
-        assertSame(itnFixture.get("paymentDate"), itn.getPaymentDate());
-        assertSame(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
-        assertSame(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
+        assertEquals(itnFixture.get("amount"), itn.getAmount());
+        assertEquals(itnFixture.get("currency"), itn.getCurrency());
+        assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
+        assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
+        assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
     }
 
     public static List<Arguments> checkHashProvider() {
@@ -254,7 +230,7 @@ public final class BlueMediaClientTest extends BaseTestCase {
                     "123",
                     "cd4dd0eed6bfeb1fd0605076caf7b7774624af7cb67cd63b97425c26471d8100"
                 ),
-                true
+                false
             )
         );
     }

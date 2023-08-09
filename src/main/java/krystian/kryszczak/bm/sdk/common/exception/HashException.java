@@ -1,7 +1,11 @@
 package krystian.kryszczak.bm.sdk.common.exception;
 
-public final class HashException extends RuntimeException {
+public sealed class HashException extends RuntimeException permits HashNotReturnedFromServerException {
     public HashException() {
         super("Received wrong Hash!");
+    }
+
+    protected HashException(String message) {
+        super(message);
     }
 }

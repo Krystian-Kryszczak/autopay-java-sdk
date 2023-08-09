@@ -178,7 +178,7 @@ public final class BlueMediaClient {
     }
 
     /**
-     * Checks id Hash is valid.
+     * Checks id hash is valid.
      */
     @ApiStatus.AvailableSince("")
     public boolean checkHash(final @NotNull Hashable hashable) {
@@ -204,8 +204,7 @@ public final class BlueMediaClient {
         final String decoded = itnDecoder.decode(itn);
 
         if (!itnValidator.validate(decoded)) {
-            logger.error("ITN data must be an valid XML, base64 encoded.");
-            return null;
+            throw new IllegalArgumentException("ITN data must be an valid XML, base64 encoded.");
         }
 
         return Itn.buildFormXml(decoded);

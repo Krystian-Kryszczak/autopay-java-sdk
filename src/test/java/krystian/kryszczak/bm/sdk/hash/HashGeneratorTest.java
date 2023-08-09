@@ -1,30 +1,24 @@
 package krystian.kryszczak.bm.sdk.hash;
 
-import krystian.kryszczak.bm.sdk.BlueMediaConfiguration;
+import krystian.kryszczak.bm.sdk.BaseTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HashGeneratorTest {
-
-    private static final BlueMediaConfiguration configuration = BlueMediaConfiguration.builder()
-        .setServiceId(2)
-        .setSharedKey("2test2")
-        .setHashAlgorithm(HashType.SHA256)
-        .setHashSeparator("|")
-        .build();
+public final class HashGeneratorTest extends BaseTestCase {
+    private static final int ORDER_ID = 123;
+    private static final String AMOUNT = "1.20";
 
     @Test
-    void hashGeneratorTest() {
-        final String hash = HashGenerator.generateHash(
-            new Object[] {
-                configuration.getServiceId(),
-                100, // OrderID
-                "1.50", // Amount
-            },
-            configuration
-        );
+    void testGenerateHashReturnsExpectedHash() {
+        final var data = new Object[] {
+            2,
+            ORDER_ID,
+            AMOUNT
+        };
 
-        assertEquals("2ab52e6918c6ad3b69a8228a2ab815f11ad58533eeed963dd990df8d8c3709d1", hash);
+        final String hash = HashGenerator.generateHash(data, getConfigurationStub());
+
+        assertEquals("45f8aeeb99c37571ab1c9d952eb5d92ad4017bc6faaf16a708b995c8ffb8bc44", hash);
     }
 }

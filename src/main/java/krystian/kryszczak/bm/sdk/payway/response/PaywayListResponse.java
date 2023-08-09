@@ -1,30 +1,29 @@
 package krystian.kryszczak.bm.sdk.payway.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlList;
 import krystian.kryszczak.bm.sdk.payway.PaywayList;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
-@NoArgsConstructor
 public final class PaywayListResponse extends PaywayList {
-    @JsonProperty("gateway")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Gateway> gateways;
+    @XmlList
+    private final List<Gateway> gateways;
+
+    private PaywayListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull String hash, List<Gateway> gateways) {
+        super(serviceID, messageID, hash);
+        this.gateways = gateways;
+    }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() {
-        final Object[] base = super.toArrayWithoutHash();
+    public @NotNull Object[] toArray() {
+        final Object[] base = super.toArray();
         final Object[] result = Arrays.copyOf(base, base.length + 1);
 
-        // TODO
+        result[base.length] = gateways;
 
         return result;
     }

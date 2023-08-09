@@ -2,10 +2,13 @@ package krystian.kryszczak.bm.sdk.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
 public final class StringUtils {
+    private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     /**
      * Convert binary data into hexadecimal representation
@@ -21,7 +24,7 @@ public final class StringUtils {
     }
 
     /**
-     * Decodes a hexadecimally encoded binary string
+     * Decodes a hexadecimal encoded binary string
      */
     public static @Nullable String hex2bin(@NotNull String hexString) {
         try {
@@ -31,7 +34,7 @@ public final class StringUtils {
             }
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

@@ -44,7 +44,7 @@ public final class BlueMediaController {
         return blueMediaService.getPaywayList();
     }
 
-    @Get("regulation-list")
+    @Get("regulations-list")
     @NotNull Maybe<RegulationListResponse> regulationList() {
         return blueMediaService.getRegulationList();
     }

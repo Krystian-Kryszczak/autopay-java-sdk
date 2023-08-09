@@ -1,12 +1,21 @@
 package krystian.kryszczak.bm.sdk.transaction.request;
 
+import com.fasterxml.jackson.annotation.JsonClassDescription;
 import krystian.kryszczak.bm.sdk.common.util.Translations;
 import krystian.kryszczak.bm.sdk.transaction.TransactionInit;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
+
+@JsonClassDescription
 public final class TransactionInitRequest extends TransactionRequest<TransactionInit> {
     private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
+    }
+
+    @ConstructorProperties({"gatewayUrl", "transaction", "language"})
+    private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction) {
+        super(gatewayUrl, transaction, Translations.Language.en);
     }
 
     @Override

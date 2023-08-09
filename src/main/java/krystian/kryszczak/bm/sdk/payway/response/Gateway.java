@@ -1,8 +1,8 @@
 package krystian.kryszczak.bm.sdk.payway.response;
 
-import com.fasterxml.jackson.annotation.JsonClassDescription;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-@JsonClassDescription
+@XmlRootElement
 public record Gateway(
     int gatewayID,
     String gatewayName,

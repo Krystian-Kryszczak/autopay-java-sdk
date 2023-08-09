@@ -3,16 +3,18 @@ package krystian.kryszczak.bm.sdk.http;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.beans.Transient;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public interface HttpRequestBody {
-    @NotNull Map<@NotNull String, @NotNull String> toArray();
+    @Transient
+    @NotNull Map<@NotNull String, @NotNull String> toMap();
 
-    @NotNull
-    default Map<@NotNull String, @NotNull String> toCapitalizedMap() {
-        final Map<String, String> result = new HashMap<>();
-        toArray().forEach((key, value) -> result.put(StringUtils.capitalize(key), value));
-        return result;
+    @Transient
+    default @NotNull Map<@NotNull String, @NotNull String> toCapitalizedMap() {
+        return toMap().entrySet().stream()
+            .map(entry -> Map.entry(StringUtils.capitalize(entry.getKey()), entry.getValue()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

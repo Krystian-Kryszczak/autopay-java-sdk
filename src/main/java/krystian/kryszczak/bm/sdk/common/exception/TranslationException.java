@@ -7,7 +7,7 @@ public final class TranslationException extends RuntimeException {
         super("Missing required translation some key(s).");
     }
 
-    public TranslationException(@NotNull String[] array) {
-        super("Missing required translation key(s): " + String.join(", ", array));
+    public TranslationException(@NotNull String[] keys) {
+        super("Missing required translation key(s): " + String.join(", ", keys));
     }
 }

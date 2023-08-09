@@ -38,7 +38,7 @@ public abstract class BaseTestCase {
         when(transaction.getGatewayID()).thenReturn(0);
         when(transaction.getCurrency()).thenReturn("PLN");
         when(transaction.getCustomerEmail()).thenReturn("test@test.test");
-        when(transaction.getReturnURL()).thenReturn("https://google.pl");
+        when(transaction.getReturnURL()).thenReturn("https://google.com");
 
         return transaction;
     }

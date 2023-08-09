@@ -1,7 +1,11 @@
 package krystian.kryszczak.bm.sdk.transaction;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.bm.sdk.hash.Hashable;
 import krystian.kryszczak.bm.sdk.http.HttpRequestBody;
+import krystian.kryszczak.bm.sdk.util.CollectionsUtils;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -13,99 +17,182 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
+@Setter
 @SuperBuilder
-public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionResponse {
+@XmlRootElement
+@XmlType(propOrder = {
+    "serviceID",
+    "orderID",
+    "amount",
+    "description",
+    "gatewayID",
+    "currency",
+    "customerEmail",
+    "customerNRB",
+    "taxCountry",
+    "customerIP",
+    "title",
+    "receiverName",
+    "validityTime",
+    "linkValidityTime",
+    "authorizationCode",
+    "screenType",
+    "blikUIDKey",
+    "blikUIDLabel",
+    "blikAMKey",
+    "returnURL",
+    "defaultRegulationAcceptanceState",
+    "defaultRegulationAcceptanceID",
+    "defaultRegulationAcceptanceTime",
+
+    "receiverNRB",
+    "receiverAddress",
+    "remoteID",
+    "bankHref",
+
+    "hash"
+})
+@AllArgsConstructor
+public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionContinue, TransactionInit {
     @Setter
     protected int serviceID;
     /**
-     * Transaction ID, required
+     Transaction ID, required
      */
     protected final @NotNull String orderID;
     /**
-     * Transaction amount, required
+     Transaction amount, required
      */
     protected final @NotNull String amount;
     /**
-     * Transaction description, optional
+     Transaction description, optional
      */
     protected final @Nullable String description;
 
     protected final @Nullable Integer gatewayID;
     /**
-     * Transaction currency, optional, default PLN
+     Transaction currency, optional, default PLN
      */
     protected final @Nullable String currency;
     /**
-     * Customer's email, optional, recommended due to the automatic completion of the field on the BM service
+     Customer's email, optional, recommended due to the automatic completion of the field on the BM service
      */
     protected final @Nullable String customerEmail;
+    /**
+     * Transaction customer bank account number.
+     */
     protected final @Nullable String customerNRB;
+    /**
+     * Transaction tax country.
+     */
     protected final @Nullable String texCountry;
+    /**
+     * Customer IP address.
+     */
     protected final @Nullable String customerIP;
+    /**
+     * Transaction title.
+     */
     protected final @Nullable String title;
+    /**
+     * Transaction receiver name.
+     */
     protected final @Nullable String receiverName;
+    /**
+     * Transaction validity time.
+     */
     protected final @Nullable LocalDateTime validityTime;
+    /**
+     * Transaction link validity time.
+     */
     protected final @Nullable LocalDateTime linkValidityTime;
+    /**
+     * Transaction authorization code.
+     */
     protected final @Nullable String authorizationCode;
+    /**
+     * Screen tpe for payment authorization (only for card payment).
+     */
     protected final @Nullable String screenType;
+    /**
+     * BLIK Alias UID key.
+     */
     protected final @Nullable String blikUIDKey;
+    /**
+     * BLIK Alias UID label.
+     */
     protected final @Nullable String blikUIDLabel;
+    /**
+     * BLIK banks mobile application key.
+     */
+    protected final @Nullable String blikAMKey;
     protected final @Nullable String returnURL;
     protected final @Nullable String defaultRegulationAcceptanceState;
     protected final @Nullable String defaultRegulationAcceptanceID;
     protected final @Nullable LocalDateTime defaultRegulationAcceptanceTime;
+    /**
+     * Receiver bank account number.
+     */
     protected final @Nullable String receiverNRB;
+    /**
+     * Receiver address.
+     */
     protected final @Nullable String receiverAddress;
+    /**
+     * Remote order id.
+     */
     protected final @Nullable String remoteID;
+    /**
+     * Banks system URL.
+     */
     protected final @Nullable String bankHref;
 
+    /**
+     * Transaction hash.
+     */
     @Setter
     protected @Nullable String hash;
 
     @Override
-    public @NotNull Map<@NotNull String, @NotNull String> toArray() {
-        final Map<@NotNull String, @NotNull String> result = new LinkedHashMap<>();
-        result.put("serviceID", String.valueOf(serviceID));
-        result.put("orderID", orderID);
-        result.put("amount", amount);
-
-        final Map<@NotNull String, @Nullable Object> nullable = new LinkedHashMap<>();
-        nullable.put("description", description);
-        nullable.put("gatewayID", gatewayID);
-        nullable.put("currency", currency);
-        nullable.put("customerEmail", customerEmail);
-        nullable.put("customerNRB", customerNRB);
-        nullable.put("texCountry", texCountry);
-        nullable.put("customerIp", customerIP);
-        nullable.put("title", title);
-        nullable.put("receiverName", receiverName);
-        nullable.put("validityTime", validityTime);
-        nullable.put("linkValidityTime", linkValidityTime);
-        nullable.put("authorizationCode", authorizationCode);
-        nullable.put("screenType", screenType);
-        nullable.put("blikUIDKey", blikUIDKey);
-        nullable.put("blikUIDLabel", blikUIDLabel);
-        nullable.put("returnUrl", returnURL);
-        nullable.put("defaultRegulationAcceptanceState", defaultRegulationAcceptanceState);
-        nullable.put("defaultRegulationAcceptanceID", defaultRegulationAcceptanceID);
-        nullable.put("defaultRegulationAcceptanceTime", defaultRegulationAcceptanceTime);
-        nullable.put("receiverNRB", receiverNRB);
-        nullable.put("receiverAddress", receiverAddress);
-        nullable.put("remoteId", remoteID);
-        nullable.put("bankHref", bankHref);
-
-        nullable.entrySet().stream()
-            .filter(entry -> entry.getValue() != null)
-            .forEach(entry -> result.put(entry.getKey(), String.valueOf(entry.getValue())));
-
-        return result;
+    public @NotNull Map<@NotNull String, @NotNull String> toMap() {
+        return CollectionsUtils.nonNullMapFromArray(
+            "serviceID", String.valueOf(serviceID),
+            "orderID", orderID,
+            "amount", amount,
+            "description", description,
+            "gatewayID", gatewayID,
+            "currency", currency,
+            "customerEmail", customerEmail,
+            "customerNRB", customerNRB,
+            "texCountry", texCountry,
+            "customerIP", customerIP,
+            "title", title,
+            "receiverName", receiverName,
+            "validityTime", validityTime,
+            "linkValidityTime", linkValidityTime,
+            "authorizationCode", authorizationCode,
+            "screenType", screenType,
+            "blikUIDKey", blikUIDKey,
+            "blikUIDLabel", blikUIDLabel,
+            "returnURL", returnURL,
+            "defaultRegulationAcceptanceState", defaultRegulationAcceptanceState,
+            "defaultRegulationAcceptanceID", defaultRegulationAcceptanceID,
+            "defaultRegulationAcceptanceTime", defaultRegulationAcceptanceTime,
+            "receiverNRB", receiverNRB,
+            "receiverAddress", receiverAddress,
+            "remoteID", remoteID,
+            "bankHref", bankHref,
+            "hash", hash
+        );
     }
 
     @Override
-    public @NotNull Object[] toArrayWithoutHash() {
-        final List<Object> list = new LinkedList<>(List.of(serviceID, orderID, amount));
+    public @NotNull Object[] toArray() {
+        return CollectionsUtils.filterNonNull(new Object[] {
+            serviceID,
+            orderID,
+            amount,
 
-        final Object[] nullable = new Object[] {
             description,
             gatewayID,
             currency,
@@ -125,18 +212,11 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             defaultRegulationAcceptanceState,
             defaultRegulationAcceptanceID,
             defaultRegulationAcceptanceTime,
+
             receiverNRB,
             receiverAddress,
             remoteID,
             bankHref
-        };
-
-        for (Object obj : nullable) {
-            if (obj != null) {
-                list.add(obj);
-            }
-        }
-
-        return list.toArray();
+        });
     }
 }

@@ -1,9 +1,17 @@
 package krystian.kryszczak.bm.sdk.itn.response;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
 @JsonClassDescription
-public record TransactionConfirmed(@NotNull String orderID, @NotNull String confirmation) implements Serializable {}
+@XmlRootElement
+@XmlType(propOrder = {"orderID", "confirmation"})
+public record TransactionConfirmed(
+    @NotNull @JacksonXmlCData String orderID,
+    @NotNull @JacksonXmlCData String confirmation
+) implements Serializable {}

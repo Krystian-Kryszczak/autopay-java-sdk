@@ -1,6 +1,5 @@
 package fixtures.itn;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.SneakyThrows;
 
@@ -25,7 +24,7 @@ public abstract class Itn {
     public static Map<String, String> getTransactionXml() {
         final var xml = new XmlMapper().readTree(Files.readString(Path.of(FIXTURES_FOLDER_PATH + "itn/ItnInRequest.xml")));
         final Map<String, String> result = new HashMap<>();
-        final var fields = xml.findValue("transactions").findValue("transaction").fields();
+        final var fields = xml.get("transactions").get("transaction").fields();
         while (fields.hasNext()) {
             final var entry = fields.next();
             result.put(entry.getKey(), entry.getValue().asText());

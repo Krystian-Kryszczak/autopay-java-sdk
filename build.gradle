@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'krystian.kryszczak'
-version '0.4-beta'
+version '0.4.5-beta'
 
 repositories {
     maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
@@ -13,7 +13,7 @@ repositories {
 }
 
 ext {
-    logbackVersion = '1.2.3'
+    logbackVersion = '1.2.9'
     junitVersion = '5.9.3'
 }
 
@@ -27,18 +27,26 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    implementation "io.reactivex.rxjava3:rxjava:3.1.6"
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
     implementation 'io.vertx:vertx-web-client:4.4.1'
     implementation 'io.vertx:vertx-rx-java3:4.4.1'
 
-    implementation "commons-codec:commons-codec:1.15"
+    implementation 'commons-codec:commons-codec:1.15'
 
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.3'
     testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'org.xmlunit:xmlunit-core:2.9.1'
+    testImplementation 'org.xmlunit:xmlunit-parent:2.9.1'
+    testImplementation 'org.xmlunit:xmlunit-placeholders:2.9.1'
+    testImplementation 'org.xmlunit:xmlunit-assertj:2.9.1'
 
     implementation "ch.qos.logback:logback-core:$logbackVersion", "ch.qos.logback:logback-classic:$logbackVersion"
 
