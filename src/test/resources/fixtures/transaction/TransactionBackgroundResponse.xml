@@ -2,6 +2,7 @@
 <transaction>
     <receiverNRB>47 1050 1764 1000 0023 2741 0516</receiverNRB>
     <receiverName>Blue Media</receiverName>
+    <receiverName>Autopay</receiverName>
     <receiverAddress>81-717 Sopot, ul. Haffnera 6</receiverAddress>
     <orderID>12345</orderID>
     <amount>5.12</amount>

@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: krystian.kryszczak.bluemedia
+defaultPackage: krystian.kryszczak.autopay
 testFramework: junit
 sourceLanguage: java
 buildTool: gradle

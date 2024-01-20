@@ -1,6 +1,6 @@
-## BlueMedia Java SDK (Un-official)
+## Autopay Java SDK (Un-official)
 
-Kod zawarty w tym repozytorium umożliwia wykonanie transakcji oraz innych usług oferowanych przez Blue Media S.A.
+Kod zawarty w tym repozytorium umożliwia wykonanie transakcji oraz innych usług oferowanych przez Autopay S.A.
 
 Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
 
@@ -22,11 +22,11 @@ Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
 
 ## Konfiguracja klienta
 
-W celu utworzenia warstwy komunikacji należy utworzyć obiekt klasy `BlueMediaClient` podając id serwisu oraz klucz współdzielony (przyznane przez BlueMedia).
+W celu utworzenia warstwy komunikacji należy utworzyć obiekt klasy `AutopayClient` podając id serwisu oraz klucz współdzielony (przyznane przez Autopay).
 
 ```java
-final BlueMediaClient client = new BlueMediaClient(
-  BlueMediaConfiguration.builder()
+final AutopayClient client = new AutopayClient(
+  AutopayConfiguration.builder()
     .setServiceId("ID SERWISU")
     .setSharedKey("KLUCZ WSPÓŁDZIELONY")
     .build()
@@ -36,8 +36,8 @@ final BlueMediaClient client = new BlueMediaClient(
 Podczas tworzenia obiektu klienta, za argumentami danych serwisu można dodatkowo dodać użyty tryb szyfrowania oraz separator danych (w przypadku kiedy są nadane inne niż domyślne):
 
 ```java
-final BlueMediaClient client = new BlueMediaClient(
-  BlueMediaConfiguration.builder()
+final AutopayClient client = new AutopayClient(
+  AutopayConfiguration.builder()
     .setServiceId("ID SERWISU")
     .setSharedKey("KLUCZ WSPÓŁDZIELONY")
     .setHashAlgorithm(HashType.SHA256) // tryb hashowania, domyślnie sha256, można użyć stałej z HashType
@@ -47,14 +47,14 @@ final BlueMediaClient client = new BlueMediaClient(
 ```
 
 ## Transakcja poprzez przekierowanie na paywall
-Najprostszym typem wykonania transakcji jest przekierowanie do serwisu BlueMedia wraz z danymi o transakcji. Obsługa płatności leży wtedy w całości po stronie serwisu BlueMedia.
+Najprostszym typem wykonania transakcji jest przekierowanie do serwisu Autopay wraz z danymi o transakcji. Obsługa płatności leży wtedy w całości po stronie serwisu Autopay.
 
-Aby wykonać transakcję należy wywołać metodę `getTransactionRedirect`, poprawne wykonanie metody zwróci formularz który wykona przekierowanie do serwisu BlueMedia:
+Aby wykonać transakcję należy wywołać metodę `getTransactionRedirect`, poprawne wykonanie metody zwróci formularz który wykona przekierowanie do serwisu Autopay:
 
 ```java
 final var result = client.getTransactionRedirect(
   TransactionInitRequest.builder()
-    .setGatewayUrl("https://pay-accept.bm.pl") // Adres bramki BlueMedia
+    .setGatewayUrl("https://testpay.autopay.eu") // Adres bramki Autopay
     .setTransaction(
       TransactionInit.builder()
         .orderID("123") // Id transakcji, wymagany
@@ -69,7 +69,7 @@ final var result = client.getTransactionRedirect(
 System.out.println(result);
 ```
 
-Po wykonaniu płatności, serwis BlueMedia wykona przekierowanie na skonfigurowany wcześniej adres powrotu płatności. Przekierowanie następuje poprzez żądanie HTTPS (GET) z trzema parametrami:
+Po wykonaniu płatności, serwis Autopay wykona przekierowanie na skonfigurowany wcześniej adres powrotu płatności. Przekierowanie następuje poprzez żądanie HTTPS (GET) z trzema parametrami:
 - ServiceID - Identyfikator serwisu
 - OrderID - Identyfikator transakcji
 - Hash - Suma kontrolna wyliczona na podstawie ServiceID i OrderID.
@@ -97,7 +97,7 @@ Metoda `doTransactionInit` rozszerza standardowy model rozpoczęcia transakcji o
 - ukrycia danych wrażliwych parametrów linku transakcji – przedtransakcja odbywa się backendowo, a link do kontynuacji transakcji nie zawiera danych wrażliwych, a jedynie identyfikatory kontynuacji
 - użycia SDK w modelu pełnym (bezpiecznym)
 
-Metoda przyjmuje parametry takie jak w przypadku transakcji z przekierowaniem na paywall, z tą różnicą że wysyłany jest inny nagłówek, dzięki czemu serwis BlueMedia obsługuje żądanie w inny sposób.
+Metoda przyjmuje parametry takie jak w przypadku transakcji z przekierowaniem na paywall, z tą różnicą że wysyłany jest inny nagłówek, dzięki czemu serwis Autopay obsługuje żądanie w inny sposób.
 W odpowiedzi otrzymywany jest link do kontynuacji transakcji lub odpowiedź informująca o braku kontynuacji oraz statusem płatności.
 
 #### Przedtransakcja, link do kontynuacji płatności
@@ -105,7 +105,7 @@ W odpowiedzi otrzymywany jest link do kontynuacji transakcji lub odpowiedź info
 ```java
 final var result = client.doTransactionInit(
   TransactionInitRequest.builder()
-    .setGatewayUrl("https://pay-accept.bm.pl")
+    .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
       TransactionInit.builder()
         .orderID("123")
@@ -131,7 +131,7 @@ transactionContinue.toArray(); // [...]
 ```java
 final var result = client.doTransactionInit(
   TransactionInitRequest.builder()
-    .setGatewayUrl("https://pay-accept.bm.pl")
+    .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
       TransactionInit.builder()
         .orderID("123")
@@ -165,7 +165,7 @@ Przykład wywołania (dane do transakcji):
 ```java
 final var result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
-    .setGatewayUrl("https://pay-accept.bm.pl")
+    .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
       TransactionBackground.builder()
         .orderID("12345")
@@ -185,7 +185,7 @@ final var result = client.doTransactionBackground(
 final var transactionBackground = result.blockingGet();
 
 transactionBackground.getReceiverNRB(); // 47 1050 1764 1000 0023 2741 0516
-transactionBackground.getReceiverName(); // Blue Media
+transactionBackground.getReceiverName(); // Autopay
 transactionBackground.getBankHref(); // https://ssl.bsk.com.pl/bskonl/login.html
 transactionBackground.toArray(); // [...]
 // ...
@@ -196,7 +196,7 @@ Przykład wywołania (formularz płatności):
 ```java
 final var result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
-    .setGatewayUrl("https://pay-accept.bm.pl")
+    .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
       TransactionBackground.builder()
         .orderID("12345")
@@ -219,8 +219,8 @@ System.out.println(transactionBackground); // <form action="https://pg-accept.bl
 ```
 
 ## Obsługa ITN (Instant Transaction Notification)
-Serwis BlueMedia po wykonaniu płatności wysyła na wcześniej skonfigurowany adres ITN komunikat o statusie płatności. Dane przesyłane są w formacie XML dodatkowo zakodowanym w base64.
-SDK oferuje metodę `doItnIn` która w wyniku przekazania danych z serwisu BlueMedia zwraca gotowy obiekt `ItnIn` pozwalający na użycie akcesorów lub konwersję do tablicy.
+Serwis Autopay po wykonaniu płatności wysyła na wcześniej skonfigurowany adres ITN komunikat o statusie płatności. Dane przesyłane są w formacie XML dodatkowo zakodowanym w base64.
+SDK oferuje metodę `doItnIn` która w wyniku przekazania danych z serwisu Autopay zwraca gotowy obiekt `ItnIn` pozwalający na użycie akcesorów lub konwersję do tablicy.
 Dzięki temu obiektowi, programista może użyć danych potrzebnych np. do aktualizacji statusu płatności w bazie danych itp.
 
 Po przetworzeniu komunikatu ITN należy przekazać odpowiedź. Służy do tego metoda `doItnInResponse` która przyjmuje obiekt `ItnIn` oraz argument informujący o potwierdzeniu transakcji.
@@ -250,7 +250,7 @@ Podczas implementacji może okazać się że przed wykonaniem obsługi ITN zajdz
 W takim modelu programista może wspomóc się metodą `getItnObject`.
 
 ```java
-final var itn = BlueMediaClient.getItnObject(transactions);
+final var itn = AutopayClient.getItnObject(transactions);
 
 itn.getCurrency(); // PLN
 // ...
@@ -260,12 +260,12 @@ itn.getCurrency(); // PLN
 Metoda `getRegulationList` umożliwia odpytanie o aktualną listę regulaminów wraz linkami do wyświetlenia w serwisie oraz akceptacji przez klienta.
 
 ```java
-final Maybe<PaywayList> result = this.blueMediaClient.getRegulationList("https://pay-accept.bm.pl");
+final Maybe<PaywayList> result = this.AutopayClient.getRegulationList("https://testpay.autopay.eu");
 ```
 
 ## Pobieranie listy kanałów płatności
 Metoda `getPaywayList` umożliwia odpytanie o aktualną listę płatności.
 
 ```java
-final Maybe<PaywayList> result = this.blueMediaClient.getPaywayList("https://pay-accept.bm.pl");
+final Maybe<PaywayList> result = this.AutopayClient.getPaywayList("https://testpay.autopay.eu");
 ```

@@ -18,8 +18,8 @@ netty:
   default:
     allocator:
       max-order: 3
-bluemedia:
-  service-id: ${BM_SERVICE_ID}
-  shared-key: ${BM_SHARED_KEY}
-  gateway-url: ${BM_GATEWAY_URL}
-  itn-endpoint: ${BM_ITN_ENDPOINT}
+autopay:
+  service-id: ${AUTOPAY_SERVICE_ID}
+  shared-key: ${AUTOPAY_SHARED_KEY}
+  gateway-url: ${AUTOPAY_GATEWAY_URL}
+  itn-endpoint: ${AUTOPAY_ITN_ENDPOINT}

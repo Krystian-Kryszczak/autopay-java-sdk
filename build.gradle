@@ -13,7 +13,7 @@ repositories {
 }
 
 ext {
-    logbackVersion = '1.2.9'
+    logbackVersion = '1.4.14'
     junitVersion = '5.9.3'
 }
 
@@ -28,8 +28,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
-    implementation 'io.vertx:vertx-web-client:4.4.1'
-    implementation 'io.vertx:vertx-rx-java3:4.4.1'
+    implementation 'io.vertx:vertx-web-client:4.4.4'
+    implementation 'io.vertx:vertx-rx-java3:4.4.4'
 
     implementation 'commons-codec:commons-codec:1.15'
 
