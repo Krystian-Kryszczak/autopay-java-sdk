@@ -19,7 +19,7 @@ public final class View {
             .append("<p>").append(translationPhrases.get(Translations.REDIRECT)).append("</p>").append(separator)
             .append(
                 String.format(
-                    "<form action=\"%s\" method=\"post\" id=\"BlueMediaPaymentForm\" name=\"BlueMediaPaymentForm\">",
+                    "<form action=\"%s\" method=\"post\" id=\"AutopayPaymentForm\" name=\"AutopayPaymentForm\">",
                     transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE
                 )
             ).append(separator);
@@ -38,7 +38,7 @@ public final class View {
 
         result.append("<input type=\"submit\" />").append(separator)
             .append("</form>").append(separator)
-            .append("<script type=\"text/javascript\">document.BlueMediaPaymentForm.submit();</script>")
+            .append("<script type=\"text/javascript\">document.AutopayPaymentForm.submit();</script>")
             .append("<noscript><p>")
                 .append(translationPhrases.get(Translations.JAVASCRIPT_DISABLED))
                 .append("<br>")

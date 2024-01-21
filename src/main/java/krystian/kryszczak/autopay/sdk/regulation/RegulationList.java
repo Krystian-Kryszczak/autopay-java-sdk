@@ -18,12 +18,12 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
         final String serviceIdStr = String.valueOf(serviceID);
 
         final String hash = HashGenerator.generateHash(
-                new Object[] {
-                    serviceIdStr,
-                    messageID
-                },
-                configuration
-            );
+            new Object[] {
+                serviceIdStr,
+                messageID
+            },
+            configuration
+        );
 
         return new RegulationList(
             serviceIdStr,

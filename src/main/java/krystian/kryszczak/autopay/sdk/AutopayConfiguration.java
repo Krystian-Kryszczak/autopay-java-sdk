@@ -22,16 +22,16 @@ public final class AutopayConfiguration {
     final @NotNull String hashSeparator;
 
     public static @NotNull AutopayConfiguration fromEnvironmentVariables() {
-        final int bmServiceId = Integer.parseInt(System.getenv("BM_SERVICE_ID"));
-        final String sharedKey = Objects.requireNonNull(System.getenv("BM_SHARED_KEY"), "BM_SHARED_KEY is not defined or invalid.");
+        final int autopayServiceId = Integer.parseInt(System.getenv("AUTOPAY_SERVICE_ID"));
+        final String sharedKey = Objects.requireNonNull(System.getenv("AUTOPAY_SHARED_KEY"), "AUTOPAY_SHARED_KEY is not defined or invalid.");
 
         final HashType hashAlgorithm = Arrays.stream(HashType.values())
-            .filter(it -> it.name().equals(System.getenv("BM_SHARED_KEY")))
+            .filter(it -> it.name().equals(System.getenv("AUTOPAY_SHARED_KEY")))
             .findFirst().orElse(HashType.SHA256);
-        final String hashSeparator = Optional.ofNullable(System.getenv("BM_HASH_SEPARATOR")).orElse("|");
+        final String hashSeparator = Optional.ofNullable(System.getenv("AUTOPAY_HASH_SEPARATOR")).orElse("|");
 
         return AutopayConfiguration.builder()
-            .setServiceId(bmServiceId)
+            .setServiceId(autopayServiceId)
             .setSharedKey(sharedKey)
             .setHashAlgorithm(hashAlgorithm)
             .setHashSeparator(hashSeparator)

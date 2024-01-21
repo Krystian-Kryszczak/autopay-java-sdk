@@ -1,7 +1,7 @@
 package krystian.kryszczak.autopay.sdk.http;
 
 import io.reactivex.rxjava3.core.Maybe;
-import krystian.kryszczak.bm.sdk.util.HttpUtils;
+import krystian.kryszczak.autopay.sdk.util.HttpUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public final class NativeHttpClient implements HttpClient {
     @Override
     public @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
         final var body = java.net.http.HttpRequest.BodyPublishers.ofString(
-                HttpUtils.convertMapToFormUrlencoded(httpRequest.body().toCapitalizedMap()),
+            HttpUtils.convertMapToFormUrlencoded(httpRequest.body().toCapitalizedMap()),
             StandardCharsets.UTF_8
         );
 

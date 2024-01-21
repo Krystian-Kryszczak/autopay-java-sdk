@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 
-import static krystian.kryszczak.bm.sdk.util.StringUtils.bin2hex;
+import static krystian.kryszczak.autopay.sdk.util.StringUtils.bin2hex;
 
 public final class RandomUtils {
     static final int MESSAGE_ID_LENGTH = 32;
