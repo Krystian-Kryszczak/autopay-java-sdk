@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
-@ApiStatus.AvailableSince("")
+@ApiStatus.AvailableSince("1.0")
 public final class AutopayClient {
     private static final String HEADER = "BmHeader";
     private static final String PAY_HEADER = "pay-bm";
@@ -58,7 +58,7 @@ public final class AutopayClient {
     /**
      * Perform standard transaction.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull String getTransactionRedirect(final @NotNull TransactionRequest<?> transactionRequest) {
         transactionRequest.configure(configuration);
         return View.createRedirectHtml(transactionRequest);
@@ -68,7 +68,7 @@ public final class AutopayClient {
      * Perform transaction in background.
      * Returns payway form or transaction data for user.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<@NotNull Transaction> doTransactionBackground(final @NotNull TransactionBackgroundRequest transactionRequest) {
         return doTransaction(transactionRequest, false);
     }
@@ -77,7 +77,7 @@ public final class AutopayClient {
      * Initialize transaction.
      * Returns transaction continuation or transaction information.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<@NotNull Transaction> doTransactionInit(final @NotNull TransactionInitRequest transactionRequest) {
         return doTransaction(transactionRequest, true);
     }
@@ -111,7 +111,7 @@ public final class AutopayClient {
      * @param itn string encoded with base64
      */
     @SneakyThrows
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<@NotNull Itn> doItnIn(final @NotNull String itn) {
         return Maybe.fromOptional(Optional.ofNullable(getItnObject(itn)));
     }
@@ -119,7 +119,7 @@ public final class AutopayClient {
     /**
      * Returns response for ITN IN request.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn) {
         return doItnInResponse(itn, true);
     }
@@ -127,7 +127,7 @@ public final class AutopayClient {
     /**
      * Returns response for ITN IN request.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn, final boolean transactionConfirmed) {
         return Maybe.just(ItnResponse.create(itn, transactionConfirmed, this.configuration))
             .onErrorComplete();
@@ -136,13 +136,13 @@ public final class AutopayClient {
     /**
      * Returns payway list.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<PaywayListResponse> getPaywayList(@NotNull String gatewayUrl) {
         final HttpRequest<PaywayList> request = new HttpRequest<>(
             URI.create(gatewayUrl).resolve(Routes.PAYWAY_LIST_ROUTE.getValue()),
             Map.of(),
             PaywayList.create(
-                configuration.getServiceId(),
+                configuration.serviceId(),
                 RandomUtils.randomMessageId(),
                 configuration
             )
@@ -158,13 +158,13 @@ public final class AutopayClient {
     /**
      * Returns payment regulations.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public @NotNull Maybe<RegulationListResponse> getRegulationList(final @NotNull String gatewayUrl) {
         final HttpRequest<RegulationList> request = new HttpRequest<>(
             URI.create(gatewayUrl).resolve(Routes.GET_REGULATIONS_ROUTE.getValue()),
             Map.of(),
             RegulationList.create(
-                configuration.getServiceId(),
+                configuration.serviceId(),
                 RandomUtils.randomMessageId(),
                 configuration
             )
@@ -180,7 +180,7 @@ public final class AutopayClient {
     /**
      * Checks id hash is valid.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public boolean checkHash(final @NotNull Hashable hashable) {
         return HashChecker.checkHash(hashable, configuration);
     }
@@ -188,7 +188,7 @@ public final class AutopayClient {
     /**
      * Method allows to check if gateway returns with valid data.
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public boolean doConfirmationCheck(final @NotNull Confirmation confirmation) {
         return checkHash(confirmation);
     }
@@ -196,7 +196,7 @@ public final class AutopayClient {
     /**
      * Method allows to get Itn object from base64
      */
-    @ApiStatus.AvailableSince("")
+    @ApiStatus.AvailableSince("1.0")
     public static @Nullable Itn getItnObject(final @NotNull String itn) {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();

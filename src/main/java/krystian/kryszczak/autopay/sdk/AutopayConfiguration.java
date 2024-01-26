@@ -3,7 +3,6 @@ package krystian.kryszczak.autopay.sdk;
 import krystian.kryszczak.autopay.sdk.hash.HashType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -12,14 +11,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ApiStatus.AvailableSince("1.0")
-public final class AutopayConfiguration {
-    final int serviceId;
-    final @NotNull String sharedKey;
-    final @NotNull HashType hashAlgorithm;
-    final @NotNull String hashSeparator;
+public record AutopayConfiguration(int serviceId, @NotNull String sharedKey, @NotNull HashType hashAlgorithm, @NotNull String hashSeparator) {
 
     public static @NotNull AutopayConfiguration fromEnvironmentVariables() {
         final int autopayServiceId = Integer.parseInt(System.getenv("AUTOPAY_SERVICE_ID"));

@@ -21,10 +21,10 @@ public abstract class BaseTestCase {
     protected AutopayConfiguration getConfigurationStub() {
         final var configuration = mock(AutopayConfiguration.class);
 
-        when(configuration.getServiceId()).thenReturn(SERVICE_ID);
-        when(configuration.getSharedKey()).thenReturn(SHARED_KEY);
-        when(configuration.getHashAlgorithm()).thenReturn(HASH_SHA256);
-        when(configuration.getHashSeparator()).thenReturn(HASH_SEPARATOR);
+        when(configuration.serviceId()).thenReturn(SERVICE_ID);
+        when(configuration.sharedKey()).thenReturn(SHARED_KEY);
+        when(configuration.hashAlgorithm()).thenReturn(HASH_SHA256);
+        when(configuration.hashSeparator()).thenReturn(HASH_SEPARATOR);
 
         return configuration;
     }

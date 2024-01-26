@@ -1,7 +1,7 @@
 package fixtures.transaction;
 
-import krystian.kryszczak.bm.sdk.serializer.XmlSerializer;
-import krystian.kryszczak.bm.sdk.transaction.request.TransactionBackgroundRequest;
+import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
+import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public abstract class TransactionBackground {
         return TransactionBackgroundRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")
             .setTransaction(
-                krystian.kryszczak.bm.sdk.transaction.TransactionBackground.builder()
+                krystian.kryszczak.autopay.sdk.transaction.TransactionBackground.builder()
                     .orderID("12345")
                     .amount("5.12")
                     .description("Test transaction 12345")

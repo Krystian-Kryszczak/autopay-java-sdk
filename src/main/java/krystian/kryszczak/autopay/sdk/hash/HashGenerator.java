@@ -14,16 +14,16 @@ public final class HashGenerator {
     public static @NotNull String generateHash(@NotNull Object[] array, @NotNull AutopayConfiguration configuration) {
         final StringBuilder builder = new StringBuilder();
 
-        final String separator = configuration.getHashSeparator();
+        final String separator = configuration.hashSeparator();
 
         for (Object obj : array) {
             builder.append(obj)
                 .append(separator);
         }
 
-        builder.append(configuration.getSharedKey());
+        builder.append(configuration.sharedKey());
 
-        return encode(builder.toString(), configuration.getHashAlgorithm().toString());
+        return encode(builder.toString(), configuration.hashAlgorithm().toString());
     }
 
     private static @NotNull String encode(String orginalString, @NotNull String hashAlgorithm) {

@@ -34,13 +34,13 @@ public final class ItnResponse implements Serializable {
         final String orderId = itn.getOrderID();
 
         final var hashData = new Object[] {
-            configuration.getServiceId(),
+            configuration.serviceId(),
             orderId,
             confirmation
         };
 
         return new ItnResponse(
-            String.valueOf(configuration.getServiceId()),
+            String.valueOf(configuration.serviceId()),
             new TransactionsConfirmations(
                 new TransactionConfirmed(
                     orderId,

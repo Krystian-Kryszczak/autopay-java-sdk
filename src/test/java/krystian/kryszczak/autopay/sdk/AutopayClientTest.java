@@ -1,17 +1,17 @@
 package krystian.kryszczak.autopay.sdk;
 
-import fixtures.itn.Itn;
-import fixtures.transaction.TransactionBackground;
-import fixtures.transaction.TransactionInit;
 import io.reactivex.rxjava3.core.Maybe;
 import krystian.kryszczak.autopay.sdk.confirmation.Confirmation;
 import krystian.kryszczak.autopay.sdk.http.HttpClient;
 import krystian.kryszczak.autopay.sdk.http.HttpRequest;
 import krystian.kryszczak.autopay.sdk.http.HttpRequestBody;
+import krystian.kryszczak.autopay.sdk.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Maybe;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.AvailableSince("")
+@ApiStatus.AvailableSince("1.0")
 public interface HttpClient {
     @NotNull <I extends HttpRequestBody> Maybe<@NotNull String> post(@NotNull HttpRequest<I> httpRequest);
 

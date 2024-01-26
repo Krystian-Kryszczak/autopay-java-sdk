@@ -1,6 +1,6 @@
 package krystian.kryszczak.autopay.sdk;
 
-import krystian.kryszczak.bm.sdk.hash.HashType;
+import krystian.kryszczak.autopay.sdk.hash.HashType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,11 +17,11 @@ public final class AutopayConfigurationTest {
 
     private static final HashType HASH_SHA256 = HashType.SHA256;
 
-    private static BlueMediaConfiguration configuration;
+    private static AutopayConfiguration configuration;
 
     @BeforeAll
     public static void setUp() {
-        configuration = BlueMediaConfiguration.builder()
+        configuration = AutopayConfiguration.builder()
             .setServiceId(SERVICE_ID)
             .setSharedKey(SHARED_KEY)
             .setHashAlgorithm(HASH_SHA256)
@@ -32,7 +32,7 @@ public final class AutopayConfigurationTest {
     @Test
     public void testThrowsExceptionOnInvalidHashAlgorithm() {
         assertThrows(IllegalArgumentException.class, () ->
-            BlueMediaConfiguration.builder()
+            AutopayConfiguration.builder()
                 .setServiceId(SERVICE_ID)
                 .setSharedKey(SHARED_KEY)
                 .setHashAlgorithm(HashType.valueOf(WRONG_HASH_ALGO))
@@ -44,7 +44,7 @@ public final class AutopayConfigurationTest {
     @Test
     public void testThrowsExceptionOnInvalidServiceId() {
         assertThrows(IllegalArgumentException.class, () ->
-            BlueMediaConfiguration.builder()
+            AutopayConfiguration.builder()
                 .setServiceId(Integer.parseInt(WRONG_SERVICE_ID))
                 .setSharedKey(SHARED_KEY)
                 .setHashAlgorithm(HASH_SHA256)
@@ -55,21 +55,21 @@ public final class AutopayConfigurationTest {
 
     @Test
     public void testGetServiceIdReturnTypeAndValue() {
-        assertEquals(SERVICE_ID, configuration.getServiceId());
+        assertEquals(SERVICE_ID, configuration.serviceId());
     }
 
     @Test
     public void testGetSharedKeyReturnTypeAndValue() {
-        assertSame(SHARED_KEY, configuration.getSharedKey());
+        assertSame(SHARED_KEY, configuration.sharedKey());
     }
 
     @Test
     public void testGetHashAlgoReturnTypeAndValue() {
-        assertSame(HASH_SHA256, configuration.getHashAlgorithm());
+        assertSame(HASH_SHA256, configuration.hashAlgorithm());
     }
 
     @Test
     public void testGetHashSeparatorReturnTypeAndValue() {
-        assertSame(HASH_SEPARATOR, configuration.getHashSeparator());
+        assertSame(HASH_SEPARATOR, configuration.hashSeparator());
     }
 }

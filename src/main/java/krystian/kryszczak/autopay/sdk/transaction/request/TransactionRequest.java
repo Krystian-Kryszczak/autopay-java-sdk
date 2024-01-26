@@ -19,7 +19,7 @@ public abstract sealed class TransactionRequest<T extends Transaction> implement
     private final @NotNull Translations.Language htmlFormLanguage;
 
     public void configure(final @NotNull AutopayConfiguration configuration) {
-        transaction.setServiceID(configuration.getServiceId());
+        transaction.setServiceID(configuration.serviceId());
         final String hash = HashGenerator.generateHash(
             transaction.toArray(),
             configuration

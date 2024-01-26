@@ -1,6 +1,6 @@
 package fixtures.transaction;
 
-import krystian.kryszczak.bm.sdk.transaction.request.TransactionInitRequest;
+import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ public abstract class TransactionInit {
         return TransactionInitRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")
             .setTransaction(
-                krystian.kryszczak.bm.sdk.transaction.TransactionInit.builder()
+                krystian.kryszczak.autopay.sdk.transaction.TransactionInit.builder()
                     .orderID("123")
                     .amount("1.20")
                     .description("Transakcja 123-123")
@@ -22,15 +22,14 @@ public abstract class TransactionInit {
                     .currency("PLN")
                     .customerEmail("test@hostname.domain")
                     .build()
-            )
-            .build();
+            ).build();
     }
 
     public static @NotNull TransactionInitRequest getTransactionInit() {
         return TransactionInitRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")
             .setTransaction(
-                krystian.kryszczak.bm.sdk.transaction.TransactionInit.builder()
+                krystian.kryszczak.autopay.sdk.transaction.TransactionInit.builder()
                     .orderID("186-1590996507")
                     .amount("22.94")
                     .description("Transakcja testowa")
