@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk;
 
-import io.reactivex.rxjava3.core.Maybe;
 import krystian.kryszczak.autopay.sdk.confirmation.Confirmation;
 import krystian.kryszczak.autopay.sdk.http.HttpClient;
 import krystian.kryszczak.autopay.sdk.http.HttpRequest;
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -64,15 +64,15 @@ public final class AutopayClientTest extends BaseTestCase {
     @Test
     public void testDoTransactionBackgroundReturnsTransactionData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.transaction.TransactionBackground.getTransactionBackgroundResponse())
+            Mono.just(fixtures.transaction.TransactionBackground.getTransactionBackgroundResponse())
         );
 
-        final var result = client.doTransactionBackground(fixtures.transaction.TransactionBackground.getTransactionBackground());
+        final var result = Mono.fromDirect(client.doTransactionBackground(fixtures.transaction.TransactionBackground.getTransactionBackground()));
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(TransactionBackground.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(TransactionBackground.class, result.block());
 
-        final var transactionBackground = result.blockingGet();
+        final var transactionBackground = result.block();
         final var transactionBackgroundFixture = fixtures.transaction.TransactionBackground.getTransactionBackgroundResponseData();
 
         assertEquals(transactionBackgroundFixture.get("receiverNRB"), transactionBackground.getReceiverNRB());
@@ -90,36 +90,36 @@ public final class AutopayClientTest extends BaseTestCase {
     @Test
     public void testDoTransactionInitReturnsTransactionContinueData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.transaction.TransactionInit.getTransactionInitContinueResponse())
+            Mono.just(fixtures.transaction.TransactionInit.getTransactionInitContinueResponse())
         );
 
-        final var result = client.doTransactionInit(fixtures.transaction.TransactionInit.getTransactionInitContinue());
+        final var result = Mono.fromDirect(client.doTransactionInit(fixtures.transaction.TransactionInit.getTransactionInitContinue()));
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(TransactionContinue.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(TransactionContinue.class, result.block());
     }
 
     @Test
     public void testDoTransactionInitReturnsTransactionData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.transaction.TransactionInit.getTransactionInitResponse())
+            Mono.just(fixtures.transaction.TransactionInit.getTransactionInitResponse())
         );
 
-        final var result = client.doTransactionInit(fixtures.transaction.TransactionInit.getTransactionInit());
+        final var result = Mono.fromDirect(client.doTransactionInit(fixtures.transaction.TransactionInit.getTransactionInit()));
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(TransactionInit.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(TransactionInit.class, result.block());
     }
 
     @Test
     public void testDoItnInReturnsItnData() {
-        final var result = client.doItnIn(fixtures.itn.Itn.getItnInRequest());
+        final var result = Mono.fromDirect(client.doItnIn(fixtures.itn.Itn.getItnInRequest()));
 
-        final Itn itn = result.blockingGet();
+        final Itn itn = result.block();
         final var itnFixture = fixtures.itn.Itn.getTransactionXml();
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(Itn.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(Itn.class, result.block());
         assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
         assertEquals(itnFixture.get("amount"), itn.getAmount());
         assertEquals(itnFixture.get("currency"), itn.getCurrency());
@@ -136,11 +136,11 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @Test
     public void testDoItnResponseReturnsConfirmationResponse() {
-        final var itnIn = client.doItnIn(fixtures.itn.Itn.getItnInRequest());
-        final var result = client.doItnInResponse(itnIn.blockingGet(), true);
-        assertInstanceOf(ItnResponse.class, result.blockingGet());
+        final var itnIn = Mono.fromDirect(client.doItnIn(fixtures.itn.Itn.getItnInRequest()));
+        final var result = Mono.fromDirect(client.doItnInResponse(itnIn.block(), true));
+        assertInstanceOf(ItnResponse.class, result.block());
         assertThat(fixtures.itn.Itn.getItnResponse())
-            .and(result.blockingGet().toXml())
+            .and(result.block().toXml())
             .ignoreWhitespace()
             .areIdentical();
     }
@@ -148,25 +148,25 @@ public final class AutopayClientTest extends BaseTestCase {
     @Test
     public void testGetPaywayList() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.payway.PaywayList.getPaywayListResponse())
+            Mono.just(fixtures.payway.PaywayList.getPaywayListResponse())
         );
 
-        final var result = client.getPaywayList(GATEWAY_URL);
+        final var result = Mono.fromDirect(client.getPaywayList(GATEWAY_URL));
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(PaywayListResponse.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(PaywayListResponse.class, result.block());
     }
 
     @Test
     public void testGetRegulationList() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
-            Maybe.just(fixtures.regulation.RegulationList.getRegulationListResponse())
+            Mono.just(fixtures.regulation.RegulationList.getRegulationListResponse())
         );
 
-        final var result = client.getRegulationList(GATEWAY_URL);
+        final var result = Mono.fromDirect(client.getRegulationList(GATEWAY_URL));
 
-        assertInstanceOf(Maybe.class, result);
-        assertInstanceOf(RegulationListResponse.class, result.blockingGet());
+        assertInstanceOf(Mono.class, result);
+        assertInstanceOf(RegulationListResponse.class, result.block());
     }
 
     @ParameterizedTest

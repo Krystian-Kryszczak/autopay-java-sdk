@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public abstract class TransactionBackground {
+public final class TransactionBackground {
     public static @NotNull TransactionBackgroundRequest getTransactionBackground() {
         return TransactionBackgroundRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")

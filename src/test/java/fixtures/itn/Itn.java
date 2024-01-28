@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public abstract class Itn {
+public final class Itn {
     @SneakyThrows
     public static String getItnInRequest() {
         return Base64.getEncoder().encodeToString(

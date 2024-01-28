@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public abstract class TransactionInit {
+public final class TransactionInit {
     public static @NotNull TransactionInitRequest getTransactionInitContinue() {
         return TransactionInitRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")

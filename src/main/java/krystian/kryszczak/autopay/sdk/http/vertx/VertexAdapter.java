@@ -1,7 +1,7 @@
 package krystian.kryszczak.autopay.sdk.http.vertx;
 
-import io.vertx.rxjava3.ext.web.multipart.MultipartForm;
-import io.vertx.rxjava3.uritemplate.UriTemplate;
+import io.vertx.ext.web.multipart.MultipartForm;
+import io.vertx.uritemplate.UriTemplate;
 import krystian.kryszczak.autopay.sdk.http.HttpRequestBody;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,9 +12,9 @@ public final class VertexAdapter {
         return UriTemplate.of(uri.toString());
     }
 
-    public static MultipartForm asMultipartForm(@NotNull HttpRequestBody body) {
+    public static MultipartForm adapt(@NotNull HttpRequestBody body) {
         final MultipartForm multipartForm = MultipartForm.create()
-                .setCharset("UTF-8");
+            .setCharset("UTF-8");
         for (final var entry : body.toCapitalizedMap().entrySet()) {
             multipartForm.attribute(entry.getKey(), entry.getValue());
         }
