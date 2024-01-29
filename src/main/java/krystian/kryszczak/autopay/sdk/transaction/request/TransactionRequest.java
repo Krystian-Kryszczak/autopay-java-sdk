@@ -1,5 +1,6 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.hash.HashGenerator;
@@ -9,14 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
 import java.io.Serializable;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract sealed class TransactionRequest<T extends Transaction> implements Serializable permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
     private final @NotNull String gatewayUrl;
     private final @NotNull T transaction;
     private final @NotNull Translations.Language htmlFormLanguage;
+
+    @JsonCreator
+    @ConstructorProperties({"gatewayUrl", "transaction", "htmlFormLanguage"})
+    public TransactionRequest(@NotNull String gatewayUrl, @NotNull T transaction, @NotNull Translations.Language htmlFormLanguage) {
+        this.gatewayUrl = gatewayUrl;
+        this.transaction = transaction;
+        this.htmlFormLanguage = htmlFormLanguage;
+    }
 
     public void configure(final @NotNull AutopayConfiguration configuration) {
         transaction.setServiceID(configuration.serviceId());

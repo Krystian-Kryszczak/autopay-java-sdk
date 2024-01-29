@@ -1,10 +1,12 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionContinueRequest extends TransactionRequest<TransactionContinue> {
+    @JsonCreator
     private TransactionContinueRequest(@NotNull String gatewayUrl, @NotNull TransactionContinue transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
     }
@@ -12,7 +14,7 @@ public final class TransactionContinueRequest extends TransactionRequest<Transac
     public static Builder.Required builder() {
         return new Builder.Required();
     }
-    
+
     public static final class Builder extends TransactionRequest.Builder<TransactionContinue> {
         public static final class Required extends TransactionRequest.Builder.Required<TransactionContinue> {
 

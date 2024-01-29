@@ -1,22 +1,22 @@
 package krystian.kryszczak.autopay.sdk.itn;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
 import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.ToString;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
+import java.beans.Transient;
 import java.io.Serializable;
 
 @Getter
+@Builder
 @ToString
 @XmlRootElement
 @XmlType(propOrder = {
@@ -32,19 +32,22 @@ import java.io.Serializable;
     "customerData",
     "hash"
 })
-@AllArgsConstructor(onConstructor_ = @ConstructorProperties({
-    "serviceID",
-    "orderID",
-    "remoteID",
-    "amount",
-    "currency",
-    "gatewayID",
-    "paymentDate",
-    "paymentStatus",
-    "paymentStatusDetails",
-    "customerData",
-    "hash"
-}))
+@AllArgsConstructor(onConstructor_ = {
+    @JsonCreator,
+    @ConstructorProperties({
+        "serviceID",
+        "orderID",
+        "remoteID",
+        "amount",
+        "currency",
+        "gatewayID",
+        "paymentDate",
+        "paymentStatus",
+        "paymentStatusDetails",
+        "customerData",
+        "hash"
+    })
+})
 public final class Itn extends Hashable implements Serializable {
     /**
      * Transaction service id.
@@ -97,6 +100,7 @@ public final class Itn extends Hashable implements Serializable {
         return new ObjectMapper().readValue(transaction, Itn.class);
     }
 
+    @Transient
     public boolean isPaymentStatusSuccess() {
         return paymentStatus.equals("SUCCESS");
     }

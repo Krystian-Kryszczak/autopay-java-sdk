@@ -40,6 +40,11 @@ public final class TransactionBackground {
     }
 
     public static @NotNull Map<String, String> getTransactionBackgroundResponseData() {
-        return Objects.requireNonNull(new XmlSerializer().toMap(getTransactionBackgroundResponse()));
+        return Objects.requireNonNull(
+            new XmlSerializer().deserialize(
+                getTransactionBackgroundResponse(),
+                krystian.kryszczak.autopay.sdk.transaction.TransactionBackground.class
+            )
+        ).toMap();
     }
 }

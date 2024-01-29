@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public final class TranslationsTest extends BaseTestCase {
-    private static final String TRANSLATION = "Trwa przekierowanie do Bramki Płatniczej Blue Media...";
+    private static final String TRANSLATION = "Trwa przekierowanie do Bramki Płatniczej Autopay...";
     private static final String TRANSLATION_EXCEPTION = "Missing required translation key(s): form.test.key";
 
     @Test

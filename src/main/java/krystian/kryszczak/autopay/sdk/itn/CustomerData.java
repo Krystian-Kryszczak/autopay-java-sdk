@@ -3,6 +3,7 @@ package krystian.kryszczak.autopay.sdk.itn;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Builder;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.io.Serializable;
  * @param nrb Customer bank account number.
  * @param senderData Merged customer data.
  */
+@Builder
 @JsonClassDescription
 @XmlRootElement
 @XmlType(propOrder = {

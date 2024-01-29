@@ -43,8 +43,8 @@ dependencies {
   testCompileOnly("org.projectlombok:lombok:$lombokVersion")
   testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
-  compileOnly("io.projectreactor:reactor-core:$reactorVersion")
-  testCompileOnly("io.projectreactor:reactor-test:$reactorVersion")
+  implementation("io.projectreactor:reactor-core:$reactorVersion")
+  testImplementation("io.projectreactor:reactor-test:$reactorVersion")
 
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-web-client")

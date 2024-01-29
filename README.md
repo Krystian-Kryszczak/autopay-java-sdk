@@ -18,7 +18,7 @@ Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
 - [Pobieranie listy kanałów płatności](#pobieranie-listy-kanałów-płatności)
 
 ## Wymagania
-- Java 17 lub nowsza.
+- Java 21 lub nowsza.
 
 ## Konfiguracja klienta
 

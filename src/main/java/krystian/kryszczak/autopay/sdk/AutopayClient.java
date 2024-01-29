@@ -96,8 +96,7 @@ public final class AutopayClient {
                     logger.error("An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".", e);
                     return null;
                 }
-            })
-            .flatMapMany(httpClient::post)
+            }).flatMapMany(httpClient::post)
             .flatMap(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
             .doOnError(throwable -> logger.error(
                 "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",

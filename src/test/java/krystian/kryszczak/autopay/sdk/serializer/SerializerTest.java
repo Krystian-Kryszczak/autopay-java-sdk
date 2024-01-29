@@ -1,23 +1,24 @@
 package krystian.kryszczak.autopay.sdk.serializer;
 
+import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class SerializerTest {
-    private final Map<String, Object> transactionData = Map.of(
-    "gatewayUrl", "https://accept-pay.bm.pl",
-    "transaction", Map.of(
-            "orderID", "123-123",
-            "amount", "1.20",
-            "description", "Transakcja 123-123",
-            "gatewayID", 0
-        )
-    );
+    private final TransactionInitRequest transactionRequest = TransactionInitRequest.builder()
+        .setGatewayUrl("https://accept-pay.bm.pl")
+        .setTransaction(
+            TransactionInit.builder()
+                .orderID("123-123")
+                .amount("1.20")
+                .description("Transakcja 123-123")
+                .gatewayID(0)
+                .build()
+        ).build();
 
     private static Serializer serializer;
 
@@ -27,9 +28,12 @@ public final class SerializerTest {
     }
 
     @Test
-    public void testSerializeTransactionDataReturnsTransactionRequest() {
-        final var transactionRequest = serializer.fromMap(transactionData, TransactionInitRequest.class);
-        assert transactionRequest != null;
-        assertEquals(transactionData.get("gatewayUrl"), transactionRequest.getGatewayUrl());
+    public void testSerializedTransactionRequestAndDeserializedTransactionRequestAreEquals() {
+        final String transactionData = serializer.serialize(this.transactionRequest);
+        assertNotNull(transactionData);
+
+        final var transactionRequest = serializer.deserialize(transactionData, TransactionInitRequest.class);
+        assertNotNull(transactionRequest);
+        assertEquals(this.transactionRequest, transactionRequest);
     }
 }

@@ -67,7 +67,9 @@ public final class AutopayClientTest extends BaseTestCase {
             Mono.just(fixtures.transaction.TransactionBackground.getTransactionBackgroundResponse())
         );
 
-        final var result = Mono.fromDirect(client.doTransactionBackground(fixtures.transaction.TransactionBackground.getTransactionBackground()));
+        final var result = Mono.fromDirect(
+            client.doTransactionBackground(fixtures.transaction.TransactionBackground.getTransactionBackground())
+        );
 
         assertInstanceOf(Mono.class, result);
         assertInstanceOf(TransactionBackground.class, result.block());

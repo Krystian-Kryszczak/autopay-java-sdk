@@ -1,5 +1,6 @@
 package krystian.kryszczak.autopay.sdk.transaction;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -18,9 +19,22 @@ public final class TransactionInit extends Transaction {
     private final String reason;
     private final String paymentStatus;
 
+    @JsonCreator
     @ConstructorProperties({"orderID", "remoteID", "confirmation", "reason", "paymentStatus"})
-    public TransactionInit(int serviceID, @NotNull String orderID, @NotNull String amount, @Nullable String description, @Nullable Integer gatewayID, @Nullable String currency, @Nullable String customerEmail, @Nullable String customerNRB, @Nullable String texCountry, @Nullable String customerIP, @Nullable String title, @Nullable String receiverName, @Nullable LocalDateTime validityTime, @Nullable LocalDateTime linkValidityTime, @Nullable String authorizationCode, @Nullable String screenType, @Nullable String blikUIDKey, @Nullable String blikUIDLabel, @Nullable String blikAMKey, @Nullable String returnURL, @Nullable String defaultRegulationAcceptanceState, @Nullable String defaultRegulationAcceptanceID, @Nullable LocalDateTime defaultRegulationAcceptanceTime, @Nullable String receiverNRB, @Nullable String receiverAddress, @Nullable String remoteID, @Nullable String bankHref, @Nullable String hash, String confirmation, String reason, String paymentStatus) {
-        super(serviceID, orderID, amount, description, gatewayID, currency, customerEmail, customerNRB, texCountry, customerIP, title, receiverName, validityTime, linkValidityTime, authorizationCode, screenType, blikUIDKey, blikUIDLabel, blikAMKey, returnURL, defaultRegulationAcceptanceState, defaultRegulationAcceptanceID, defaultRegulationAcceptanceTime, receiverNRB, receiverAddress, remoteID, bankHref, hash);
+    public TransactionInit(int serviceID, @NotNull String orderID, @NotNull String amount, @Nullable String description,
+           @Nullable Integer gatewayID, @Nullable String currency, @Nullable String customerEmail,
+           @Nullable String customerNRB, @Nullable String texCountry, @Nullable String customerIP,
+           @Nullable String title, @Nullable String receiverName, @Nullable LocalDateTime validityTime,
+           @Nullable LocalDateTime linkValidityTime, @Nullable String authorizationCode, @Nullable String screenType,
+           @Nullable String blikUIDKey, @Nullable String blikUIDLabel, @Nullable String blikAMKey,
+           @Nullable String returnURL, @Nullable String defaultRegulationAcceptanceState,
+           @Nullable String defaultRegulationAcceptanceID, @Nullable LocalDateTime defaultRegulationAcceptanceTime,
+           @Nullable String receiverNRB, @Nullable String receiverAddress, @Nullable String remoteID,
+           @Nullable String bankHref, @Nullable String hash, String confirmation, String reason, String paymentStatus) {
+        super(serviceID, orderID, amount, description, gatewayID, currency, customerEmail, customerNRB, texCountry,
+            customerIP, title, receiverName, validityTime, linkValidityTime, authorizationCode, screenType, blikUIDKey,
+            blikUIDLabel, blikAMKey, returnURL, defaultRegulationAcceptanceState, defaultRegulationAcceptanceID,
+            defaultRegulationAcceptanceTime, receiverNRB, receiverAddress, remoteID, bankHref, hash);
         this.confirmation = confirmation;
         this.reason = reason;
         this.paymentStatus = paymentStatus;

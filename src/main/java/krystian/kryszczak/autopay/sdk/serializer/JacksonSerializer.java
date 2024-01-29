@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,28 +38,10 @@ public abstract sealed class JacksonSerializer implements Serializer permits Jso
         return values.toArray();
     }
 
-    @SneakyThrows
     @Override
-    public @Nullable Map<String, String> toMap(@NotNull Serializable data) {
-        final var mapType = TypeFactory.defaultInstance().constructMapType(HashMap.class, String.class, String.class);
-        if (data instanceof String str) {
-            return mapper.readValue(str, mapType);
-        }
-        return mapper.convertValue(data, mapType);
-    }
-
-    @SneakyThrows
-    @Override
-    public <T> @Nullable T fromMap(@NotNull Map<String, Object> data, Class<T> type) {
-        final String content = mapper.writeValueAsString(data)
-            .replaceAll(data.getClass().getSimpleName(), type.getSimpleName());
-        return mapper.readValue(content, type);
-    }
-
-    @Override
-    public <T extends Serializable> @Nullable T deserialize(@NotNull String xml, @NotNull Class<T> type) {
+    public <T extends Serializable> @Nullable T deserialize(@NotNull String data, @NotNull Class<T> type) {
         try {
-            return mapper.readValue(xml, type);
+            return mapper.readValue(data, type);
         } catch (JsonProcessingException e) {
             logger.error(e.getMessage(), e);
             return null;

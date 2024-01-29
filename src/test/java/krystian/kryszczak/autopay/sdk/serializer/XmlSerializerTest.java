@@ -1,7 +1,7 @@
-package krystian.kryszczak.autopay.sdk.common.util;
+package krystian.kryszczak.autopay.sdk.serializer;
 
+import fixtures.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
-import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,23 +13,23 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public final class XMLParserTest {
+public final class XmlSerializerTest {
     @Test
-    public void testDeserializeReturnsItnResponse () {
-        final String itnResponse = fixtures.itn.Itn.getItnResponse();
-        final ItnResponse xmlElement = new XmlSerializer().deserialize(itnResponse, ItnResponse.class);
+    public void testDeserializeReturnsItnResponse() {
+        final String itnResponse = Itn.getItnResponse();
+        final ItnResponse deserialized = new XmlSerializer().deserialize(itnResponse, ItnResponse.class);
 
-        assertNotNull(xmlElement);
-        assertInstanceOf(ItnResponse.class, xmlElement);
-        assertThat(itnResponse)
-            .and(xmlElement.toXml())
+        assertNotNull(deserialized);
+        assertInstanceOf(ItnResponse.class, deserialized);
+        assertThat(deserialized.toXml())
+            .and(itnResponse)
             .ignoreWhitespace()
             .areIdentical();
     }
 
     @ParameterizedTest
     @MethodSource("wrongXmlProvider")
-    public void testParseReturnsEmptyMaybeOnWrongXml(String wrongXml) {
+    public void testParseReturnsNullOnWrongXml(String wrongXml) {
         assertNull(new XmlSerializer().deserialize(wrongXml, Serializable.class));
     }
 

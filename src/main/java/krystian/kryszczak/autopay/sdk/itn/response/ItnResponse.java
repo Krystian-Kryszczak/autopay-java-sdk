@@ -1,6 +1,9 @@
 package krystian.kryszczak.autopay.sdk.itn.response;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
@@ -17,7 +20,9 @@ import java.beans.ConstructorProperties;
 import java.io.Serializable;
 
 @Getter
+@JsonRootName("confirmationList")
 @XmlRootElement(name = "confirmationList")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = {"serviceID", "transactionsConfirmations", "hash"})
 @AllArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @ConstructorProperties({"serviceID", "transactionsConfirmations", "hash"}))
 public final class ItnResponse implements Serializable {

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class RandomUtilsTest {
+public final class RandomUtilsTest {
 
     @Test
     public void randomMessageIdTest() throws InterruptedException {

@@ -19,14 +19,12 @@ public abstract class BaseTestCase {
     protected static final HashType HASH_SHA256 = HashType.SHA256;
 
     protected AutopayConfiguration getConfigurationStub() {
-        final var configuration = mock(AutopayConfiguration.class);
-
-        when(configuration.serviceId()).thenReturn(SERVICE_ID);
-        when(configuration.sharedKey()).thenReturn(SHARED_KEY);
-        when(configuration.hashAlgorithm()).thenReturn(HASH_SHA256);
-        when(configuration.hashSeparator()).thenReturn(HASH_SEPARATOR);
-
-        return configuration;
+        return new AutopayConfiguration(
+            SERVICE_ID,
+            SHARED_KEY,
+            HASH_SHA256,
+            HASH_SEPARATOR
+        );
     }
 
     protected Transaction getTransactionDtoStub() {

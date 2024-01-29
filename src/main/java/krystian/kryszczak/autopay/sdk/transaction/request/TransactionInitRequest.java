@@ -1,21 +1,23 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
+@JsonRootName("TransactionInitRequest")
+@XmlRootElement(name = "TransactionInitRequest")
 @JsonClassDescription
 public final class TransactionInitRequest extends TransactionRequest<TransactionInit> {
-    private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction, @NotNull Translations.Language language) {
-        super(gatewayUrl, transaction, language);
-    }
-
+    @JsonCreator
     @ConstructorProperties({"gatewayUrl", "transaction", "language"})
-    private TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction) {
-        super(gatewayUrl, transaction, Translations.Language.en);
+    public TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction, @NotNull Translations.Language language) {
+        super(gatewayUrl, transaction, language);
     }
 
     @Override
@@ -47,7 +49,7 @@ public final class TransactionInitRequest extends TransactionRequest<Transaction
             }
 
             public @NotNull Completer setTransaction(@NotNull TransactionInit transaction) {
-                return new TransactionInitRequest.Builder.Completer(super.getGatewayUrl(), transaction);
+                return new Completer(super.getGatewayUrl(), transaction);
             }
         }
 

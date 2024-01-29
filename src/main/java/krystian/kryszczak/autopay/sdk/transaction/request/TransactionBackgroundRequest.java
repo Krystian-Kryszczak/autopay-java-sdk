@@ -1,11 +1,13 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import org.jetbrains.annotations.NotNull;
 
 public final class TransactionBackgroundRequest extends TransactionRequest<TransactionBackground> {
-    private TransactionBackgroundRequest(@NotNull String gatewayUrl, @NotNull TransactionBackground transaction, @NotNull Translations.Language language) {
+    @JsonCreator
+    public TransactionBackgroundRequest(@NotNull String gatewayUrl, @NotNull TransactionBackground transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
     }
 
