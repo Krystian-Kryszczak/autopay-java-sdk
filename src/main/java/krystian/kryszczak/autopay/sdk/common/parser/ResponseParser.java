@@ -4,6 +4,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
 import krystian.kryszczak.autopay.sdk.common.AutopayPattern;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -14,14 +15,14 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ResponseParser<T extends Serializable> {
     private static final Logger logger = LoggerFactory.getLogger(ResponseParser.class);
 
     protected final @NotNull String responseBody;
     protected final @NotNull AutopayConfiguration configuration;
 
-    protected boolean isResponseValid() {
+    protected boolean isResponseInvalid() {
         if (Pattern.compile(AutopayPattern.PATTERN_XML_ERROR).matcher(this.responseBody).matches()) {
             final var xmlData = new XmlMapper().valueToTree(this.responseBody);
 
@@ -30,7 +31,7 @@ public abstract class ResponseParser<T extends Serializable> {
             } catch (XmlException e) {
                 logger.error(e.getMessage(), e);
             }
-            return false;
+            return true;
         }
 
         if (Pattern.compile(AutopayPattern.PATTERN_GENERAL_ERROR).matcher(this.responseBody).matches()) {
@@ -39,9 +40,9 @@ public abstract class ResponseParser<T extends Serializable> {
             } catch (XmlException e) {
                 logger.error(e.getMessage(), e);
             }
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

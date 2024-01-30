@@ -1,11 +1,13 @@
 package krystian.kryszczak.autopay.sdk.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public final class HttpUtils {
-    public static String convertMapToFormUrlencoded(Map<String, String> params) {
+    public static @NotNull String convertMapToFormUrlencoded(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for(Map.Entry<String, String> entry : params.entrySet()){

@@ -1,3 +1,5 @@
 package krystian.kryszczak.autopay.sdk.util;
 
-public final class HttpUtilsTest {}
+public final class HttpUtilsTest {
+    // TODO
+}

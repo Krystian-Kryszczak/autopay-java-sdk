@@ -1,4 +1,4 @@
-package krystian.kryszczak.autopay.sdk.http;
+package krystian.kryszczak.autopay.sdk.http.request;
 
 import org.jetbrains.annotations.NotNull;
 

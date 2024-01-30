@@ -18,6 +18,7 @@ import java.io.Serializable;
 @Getter
 @Builder
 @ToString
+@EqualsAndHashCode(callSuper = false)
 @XmlRootElement
 @XmlType(propOrder = {
     "serviceID",

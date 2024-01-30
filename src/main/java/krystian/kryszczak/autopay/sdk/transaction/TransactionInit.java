@@ -2,7 +2,12 @@ package krystian.kryszczak.autopay.sdk.transaction;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,14 +18,18 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
+@XmlRootElement
+@XmlType(propOrder = {"orderID", "remoteID", "confirmation", "reason", "blikAMKey", "blikAMLabel", "paymentStatus"})
 public final class TransactionInit extends Transaction {
     private final String confirmation;
     private final String reason;
     private final String paymentStatus;
 
     @JsonCreator
-    @ConstructorProperties({"orderID", "remoteID", "confirmation", "reason", "paymentStatus"})
+    @ConstructorProperties({"orderID", "remoteID", "confirmation", "reason", "blikAMKey", "blikAMLabel", "paymentStatus"})
     public TransactionInit(int serviceID, @NotNull String orderID, @NotNull String amount, @Nullable String description,
            @Nullable Integer gatewayID, @Nullable String currency, @Nullable String customerEmail,
            @Nullable String customerNRB, @Nullable String texCountry, @Nullable String customerIP,
@@ -64,7 +73,7 @@ public final class TransactionInit extends Transaction {
     @Override
     @JsonIgnore
     @Transient
-    public @NotNull Object[] toArray() {
+    public @NotNull Object @NotNull [] toArray() {
         final Object[] nullable = new Object[] {
             orderID,
             remoteID,

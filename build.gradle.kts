@@ -8,13 +8,14 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.0-beta"
+version = "0.7.1-beta"
 
 repositories {
   mavenCentral()
 }
 
 val jetbrainsAnnotationsVersion = "24.1.0"
+val jakartaInjectApiVersion = "2.0.1"
 val logbackVersion = "1.4.14"
 val junitVersion = "5.9.3"
 val lombokVersion = "1.18.30"
@@ -37,6 +38,8 @@ dependencies {
   testImplementation("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")
   compileOnly("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")
 
+  implementation("jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion")
+
   compileOnly("org.projectlombok:lombok:$lombokVersion")
   annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 
@@ -48,7 +51,6 @@ dependencies {
 
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-web-client")
-  implementation("io.vertx:vertx-circuit-breaker")
   implementation("io.vertx:vertx-reactive-streams")
 
   testImplementation("io.vertx:vertx-junit5")

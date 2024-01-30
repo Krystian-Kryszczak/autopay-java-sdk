@@ -1,12 +1,14 @@
 package krystian.kryszczak.autopay.sdk;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import krystian.kryszczak.autopay.sdk.common.Routes;
 import krystian.kryszczak.autopay.sdk.common.parser.ServiceResponseParser;
 import krystian.kryszczak.autopay.sdk.confirmation.Confirmation;
 import krystian.kryszczak.autopay.sdk.hash.HashChecker;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
-import krystian.kryszczak.autopay.sdk.http.HttpClient;
-import krystian.kryszczak.autopay.sdk.http.HttpRequest;
+import krystian.kryszczak.autopay.sdk.http.client.HttpClient;
+import krystian.kryszczak.autopay.sdk.http.request.HttpRequest;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.decoder.Base64ItnDecoder;
 import krystian.kryszczak.autopay.sdk.itn.decoder.ItnDecoder;
@@ -38,7 +40,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-@AllArgsConstructor
+@Singleton
+@AllArgsConstructor(onConstructor_ = @Inject)
 @ApiStatus.AvailableSince("1.0")
 public final class AutopayClient {
     private static final String HEADER = "BmHeader";
@@ -51,8 +54,7 @@ public final class AutopayClient {
     private final HttpClient httpClient;
 
     public AutopayClient(final @NotNull AutopayConfiguration configuration) {
-        this.configuration = configuration;
-        this.httpClient = HttpClient.getDefaultHttpClient();
+        this(configuration, HttpClient.createDefaultHttpClient());
     }
 
     /**
@@ -85,7 +87,7 @@ public final class AutopayClient {
     @SneakyThrows
     private @NotNull <T extends Transaction> Flux<? extends @NotNull Transaction> doTransaction(final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
         return Mono.fromRunnable(() -> transactionRequest.configure(configuration))
-            .mapNotNull(it -> {
+            .then(Mono.fromSupplier(() -> {
                 try {
                     return new HttpRequest<>(
                         new URI(transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE),
@@ -96,8 +98,8 @@ public final class AutopayClient {
                     logger.error("An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".", e);
                     return null;
                 }
-            }).flatMapMany(httpClient::post)
-            .flatMap(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
+            })).flatMapMany(httpClient::post).doOnNext(System.out::println)
+            .mapNotNull(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
             .doOnError(throwable -> logger.error(
                 "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
                 throwable
@@ -146,8 +148,8 @@ public final class AutopayClient {
             )
         );
 
-        return Flux.from(httpClient.post(request))
-            .flatMap(it ->
+        return Flux.from(httpClient.post(request))//.doOnNext(System.out::println)
+            .mapNotNull(it ->
                 new ServiceResponseParser(it, this.configuration)
                     .parseListResponse(PaywayListResponse.class)
             );
@@ -169,7 +171,7 @@ public final class AutopayClient {
         );
 
         return Flux.from(httpClient.post(request))
-            .flatMap(it ->
+            .mapNotNull(it ->
                 new ServiceResponseParser(it, this.configuration)
                     .parseListResponse(RegulationListResponse.class)
             );

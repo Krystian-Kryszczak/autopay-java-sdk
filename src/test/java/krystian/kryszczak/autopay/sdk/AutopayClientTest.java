@@ -1,16 +1,20 @@
 package krystian.kryszczak.autopay.sdk;
 
 import krystian.kryszczak.autopay.sdk.confirmation.Confirmation;
-import krystian.kryszczak.autopay.sdk.http.HttpClient;
-import krystian.kryszczak.autopay.sdk.http.HttpRequest;
-import krystian.kryszczak.autopay.sdk.http.HttpRequestBody;
+import krystian.kryszczak.autopay.sdk.http.client.HttpClient;
+import krystian.kryszczak.autopay.sdk.http.request.HttpRequest;
+import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.autopay.sdk.transaction.Transaction;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -110,7 +114,9 @@ public final class AutopayClientTest extends BaseTestCase {
         final var result = Mono.fromDirect(client.doTransactionInit(fixtures.transaction.TransactionInit.getTransactionInit()));
 
         assertInstanceOf(Mono.class, result);
-        assertInstanceOf(TransactionInit.class, result.block());
+        final Transaction transaction = result.block();
+        assertNotNull(transaction);
+        assertInstanceOf(TransactionInit.class, transaction);
     }
 
     @Test
@@ -201,14 +207,16 @@ public final class AutopayClientTest extends BaseTestCase {
         assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
     }
 
-    public static List<Arguments> checkHashProvider() {
+    @Contract(" -> new")
+    public static @NotNull @Unmodifiable List<Arguments> checkHashProvider() {
         return List.of(
             Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f17e7", true),
             Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f1111", false)
         );
     }
 
-    public static List<Arguments> itnProvider() {
+    @Contract(" -> new")
+    public static @Unmodifiable List<Arguments> itnProvider() {
         return List.of(
             Arguments.of("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiP"),
             Arguments.of("nope"),
@@ -216,7 +224,8 @@ public final class AutopayClientTest extends BaseTestCase {
         );
     }
 
-    public static List<Arguments> checkConfirmationProvider() {
+    @Contract(" -> new")
+    public static @NotNull @Unmodifiable List<Arguments> checkConfirmationProvider() {
         return List.of(
             Arguments.of(
                 new Confirmation(

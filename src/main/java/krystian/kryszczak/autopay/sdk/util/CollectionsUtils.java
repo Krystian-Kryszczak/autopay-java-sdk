@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class CollectionsUtils {
-    public static @NotNull Object[] filterNonNull(final Object[] array) {
+    public static @NotNull Object @NotNull [] filterNonNull(final Object[] array) {
         return Arrays.stream(Objects.requireNonNull(array)).filter(Objects::nonNull).toArray();
     }
 
-    public static @NotNull Map<@NotNull String, String> nonNullMapFromArray(Object... input) {
+    public static @NotNull Map<@NotNull String, String> nonNullMapFromArray(Object @NotNull ... input) {
         if (input.length % 2 != 0)
             throw new InvalidParameterException();
 

@@ -1,23 +1,26 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public final class TransactionContinueRequest extends TransactionRequest<TransactionContinue> {
-    @JsonCreator
     private TransactionContinueRequest(@NotNull String gatewayUrl, @NotNull TransactionContinue transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
     }
 
-    public static Builder.Required builder() {
+    @Contract(value = " -> new", pure = true)
+    public static Builder.@NotNull Required builder() {
         return new Builder.Required();
     }
 
     public static final class Builder extends TransactionRequest.Builder<TransactionContinue> {
         public static final class Required extends TransactionRequest.Builder.Required<TransactionContinue> {
-
             @Override
             public @NotNull WithGatewayUrl setGatewayUrl(@NotNull String gatewayUrl) {
                 return new WithGatewayUrl(gatewayUrl);

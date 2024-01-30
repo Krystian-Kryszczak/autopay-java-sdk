@@ -3,11 +3,9 @@ package krystian.kryszczak.autopay.sdk.transaction;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
-import krystian.kryszczak.autopay.sdk.http.HttpRequestBody;
+import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
 import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +16,8 @@ import java.util.*;
 
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @XmlRootElement
 @XmlType(propOrder = {

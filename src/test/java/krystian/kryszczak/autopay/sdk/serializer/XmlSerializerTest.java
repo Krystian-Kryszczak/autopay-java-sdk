@@ -2,6 +2,8 @@ package krystian.kryszczak.autopay.sdk.serializer;
 
 import fixtures.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +35,8 @@ public final class XmlSerializerTest {
         assertNull(new XmlSerializer().deserialize(wrongXml, Serializable.class));
     }
 
-    public String[] wrongXmlProvider() {
+    @Contract(value = " -> new", pure = true)
+    public String @NotNull [] wrongXmlProvider() {
         return new String[] {
             "ERROR",
             "",

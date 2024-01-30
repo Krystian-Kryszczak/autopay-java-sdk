@@ -2,6 +2,8 @@ package krystian.kryszczak.autopay.sdk.serializer;
 
 import krystian.kryszczak.autopay.sdk.itn.CustomerData;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +40,8 @@ public final class SerializerItnTest {
         assertEquals(itn.getHash(), deserialized.getHash());
     }
 
-    public Itn[] getItns() {
+    @Contract(" -> new")
+    public Itn @NotNull [] getItns() {
         return new Itn[] {
             Itn.builder()
                 .serviceID("service_1")

@@ -4,7 +4,9 @@ import krystian.kryszczak.autopay.sdk.hash.HashType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -31,7 +33,8 @@ public record AutopayConfiguration(int serviceId, @NotNull String sharedKey, @No
             .build();
     }
 
-    public static @NotNull Builder.Required builder() {
+    @Contract(" -> new")
+    public static Builder.@NotNull Required builder() {
         return new Builder.Required();
     }
 

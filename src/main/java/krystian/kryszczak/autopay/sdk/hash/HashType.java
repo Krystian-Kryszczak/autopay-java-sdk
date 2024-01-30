@@ -1,5 +1,7 @@
 package krystian.kryszczak.autopay.sdk.hash;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum HashType {
     MD5,
     SHA1,
@@ -7,7 +9,7 @@ public enum HashType {
     SHA512;
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return this.name().toLowerCase();
     }
 }

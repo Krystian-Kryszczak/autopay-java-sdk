@@ -6,17 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class AutopayConfigurationTest {
-    private static final int SERVICE_ID = 123456;
-    private static final String WRONG_SERVICE_ID = "123456789012";
-
-    private static final String SHARED_KEY = "QCBm3N0oFjzQAWsTIVN8mPLK12TW6HU6InSfjvnF";
-
-    private static final String WRONG_HASH_ALGO = "wrong_algorithm";
-    private static final String HASH_SEPARATOR = "|";
-
-    private static final HashType HASH_SHA256 = HashType.SHA256;
-
+public final class AutopayConfigurationTest extends BaseTestCase {
     private static AutopayConfiguration configuration;
 
     @BeforeAll

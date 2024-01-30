@@ -11,7 +11,7 @@ public final class HashGenerator {
     /**
      * Generates hash.
      */
-    public static @NotNull String generateHash(@NotNull Object[] array, @NotNull AutopayConfiguration configuration) {
+    public static @NotNull String generateHash(@NotNull Object @NotNull [] array, @NotNull AutopayConfiguration configuration) {
         final StringBuilder builder = new StringBuilder();
 
         final String separator = configuration.hashSeparator();
@@ -26,7 +26,7 @@ public final class HashGenerator {
         return encode(builder.toString(), configuration.hashAlgorithm().toString());
     }
 
-    private static @NotNull String encode(String orginalString, @NotNull String hashAlgorithm) {
+    private static @NotNull String encode(@NotNull String orginalString, @NotNull String hashAlgorithm) {
         try {
             final MessageDigest digest = MessageDigest.getInstance(hashAlgorithm);
             byte[] hash = digest.digest(orginalString.getBytes());

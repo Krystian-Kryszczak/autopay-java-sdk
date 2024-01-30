@@ -1,6 +1,10 @@
 package krystian.kryszczak.autopay.sdk.transaction;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +16,11 @@ import java.util.LinkedList;
 import java.util.Map;
 
 @Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
+@XmlRootElement
+@XmlType(propOrder = {"status", "redirecturl", "orderID", "remoteID"})
 public final class TransactionContinue extends Transaction {
     private final String status;
     private final String redirecturl;
@@ -43,7 +51,7 @@ public final class TransactionContinue extends Transaction {
     }
 
     @Override
-    public @NotNull Object[] toArray() {
+    public @NotNull Object @NotNull [] toArray() {
         final Object[] nullable = new Object[] {
             status,
             redirecturl,

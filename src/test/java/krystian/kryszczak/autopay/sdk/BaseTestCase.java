@@ -27,7 +27,7 @@ public abstract class BaseTestCase {
         );
     }
 
-    protected Transaction getTransactionDtoStub() {
+    protected Transaction getTransactionDtoStub() { // TODO check if this is needed
         final var transaction = mock(Transaction.class);
 
         when(transaction.getOrderID()).thenReturn("123-1234");

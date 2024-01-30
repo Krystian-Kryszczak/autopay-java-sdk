@@ -1,5 +1,6 @@
 package krystian.kryszczak.autopay.sdk.hash;
 
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.beans.Transient;
 
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Hashable {
     public static @NotNull Hashable create(@NotNull Object[] data, @NotNull String hash) {
         return new Hashable() {
@@ -25,7 +26,7 @@ public abstract class Hashable {
     }
 
     /**
-     * Array must not have hash!
+     * @return Array without hash.
      */
     @Transient
     public abstract @NotNull Object[] toArray();

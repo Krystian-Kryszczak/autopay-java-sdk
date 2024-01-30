@@ -14,7 +14,7 @@ public final class RandomUtils {
     }
 
     private static byte @NotNull [] randomBytes() {
-        final var bytes = new byte[MESSAGE_ID_LENGTH/2];
+        final var bytes = new byte[MESSAGE_ID_LENGTH / 2];
 
         new SecureRandom()
             .nextBytes(bytes);
