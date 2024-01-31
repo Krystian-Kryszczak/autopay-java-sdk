@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public final class Itn {
+public final class ItnFixture {
     @SneakyThrows
     public static String getItnInRequest() {
         return Base64.getEncoder().encodeToString(

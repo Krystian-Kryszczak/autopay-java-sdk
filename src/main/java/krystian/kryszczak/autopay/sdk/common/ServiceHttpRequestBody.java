@@ -23,6 +23,10 @@ public abstract class ServiceHttpRequestBody extends Hashable implements HttpReq
     protected final @NotNull String messageID;
     protected final @Nullable String hash;
 
+    public @Nullable String getHash() {
+        return hash != null ? hash.trim() : null;
+    }
+
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
         return CollectionsUtils.nonNullMapFromArray(

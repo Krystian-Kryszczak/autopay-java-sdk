@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public final class PaywayList {
+public final class PaywayListFixture {
     @SneakyThrows
     public static String getPaywayListResponse() {
         return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "payway-list/PaywayListResponse.xml"));

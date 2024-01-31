@@ -16,7 +16,7 @@ import java.util.*;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @XmlRootElement
@@ -63,7 +63,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     /**
      Transaction amount, required
      */
-    protected final @NotNull String amount;
+    protected final @Nullable String amount;
     /**
      Transaction description, optional
      */
@@ -152,6 +152,10 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
      */
     @Setter
     protected @Nullable String hash;
+
+    public @Nullable String getHash() {
+        return hash != null ? hash.trim() : null;
+    }
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {

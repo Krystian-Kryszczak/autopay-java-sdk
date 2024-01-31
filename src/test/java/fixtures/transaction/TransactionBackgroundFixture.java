@@ -1,6 +1,7 @@
 package fixtures.transaction;
 
 import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -13,12 +14,12 @@ import java.util.Objects;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
-public final class TransactionBackground {
+public final class TransactionBackgroundFixture {
     public static @NotNull TransactionBackgroundRequest getTransactionBackground() {
         return TransactionBackgroundRequest.builder()
             .setGatewayUrl("https://pay-accept.bm.pl")
             .setTransaction(
-                krystian.kryszczak.autopay.sdk.transaction.TransactionBackground.builder()
+                TransactionBackground.builder()
                     .orderID("12345")
                     .amount("5.12")
                     .description("Test transaction 12345")
@@ -43,8 +44,13 @@ public final class TransactionBackground {
         return Objects.requireNonNull(
             new XmlSerializer().deserialize(
                 getTransactionBackgroundResponse(),
-                krystian.kryszczak.autopay.sdk.transaction.TransactionBackground.class
+                TransactionBackground.class
             )
         ).toMap();
+    }
+
+    @SneakyThrows
+    public static String getPaywayFormResponse() {
+        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/PaywayFormResponse.txt"));
     }
 }

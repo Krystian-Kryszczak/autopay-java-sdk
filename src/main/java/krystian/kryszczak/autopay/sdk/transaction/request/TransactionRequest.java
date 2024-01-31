@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public abstract sealed class TransactionRequest<T extends Transaction> implements Serializable permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
     private final @NotNull String gatewayUrl;
     private final @NotNull T transaction;

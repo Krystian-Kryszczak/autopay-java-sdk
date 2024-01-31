@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.1-beta"
+version = "0.7.2-beta"
 
 repositories {
   mavenCentral()
@@ -63,6 +63,7 @@ dependencies {
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.0")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
   implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.0")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")

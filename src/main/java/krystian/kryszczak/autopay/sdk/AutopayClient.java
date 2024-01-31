@@ -3,6 +3,7 @@ package krystian.kryszczak.autopay.sdk;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.autopay.sdk.common.Routes;
+import krystian.kryszczak.autopay.sdk.common.exception.HashNotReturnedFromServerException;
 import krystian.kryszczak.autopay.sdk.common.parser.ServiceResponseParser;
 import krystian.kryszczak.autopay.sdk.confirmation.Confirmation;
 import krystian.kryszczak.autopay.sdk.hash.HashChecker;
@@ -98,7 +99,7 @@ public final class AutopayClient {
                     logger.error("An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".", e);
                     return null;
                 }
-            })).flatMapMany(httpClient::post).doOnNext(System.out::println)
+            })).flatMapMany(httpClient::post)
             .mapNotNull(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
             .doOnError(throwable -> logger.error(
                 "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
@@ -181,7 +182,7 @@ public final class AutopayClient {
      * Checks id hash is valid.
      */
     @ApiStatus.AvailableSince("1.0")
-    public boolean checkHash(final @NotNull Hashable hashable) {
+    public boolean checkHash(final @NotNull Hashable hashable) throws HashNotReturnedFromServerException {
         return HashChecker.checkHash(hashable, configuration);
     }
 
@@ -189,7 +190,7 @@ public final class AutopayClient {
      * Method allows to check if gateway returns with valid data.
      */
     @ApiStatus.AvailableSince("1.0")
-    public boolean doConfirmationCheck(final @NotNull Confirmation confirmation) {
+    public boolean doConfirmationCheck(final @NotNull Confirmation confirmation) throws HashNotReturnedFromServerException {
         return checkHash(confirmation);
     }
 

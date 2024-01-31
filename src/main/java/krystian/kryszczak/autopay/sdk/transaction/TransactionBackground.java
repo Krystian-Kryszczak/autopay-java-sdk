@@ -7,16 +7,19 @@ import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
+import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@SuperBuilder
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Jacksonized
+@SuperBuilder
 @XmlRootElement
 @XmlType(propOrder = {"receiverNRB", "receiverName", "receiverAddress", "orderID", "amount", "currency", "title", "remoteID", "bankHref", "returnURL"})
 public final class TransactionBackground extends Transaction {
@@ -26,6 +29,7 @@ public final class TransactionBackground extends Transaction {
         super(serviceID, orderID, amount, description, gatewayID, currency, customerEmail, customerNRB, texCountry, customerIP, title, receiverName, validityTime, linkValidityTime, authorizationCode, screenType, blikUIDKey, blikUIDLabel, blikAMKey, returnURL, defaultRegulationAcceptanceState, defaultRegulationAcceptanceID, defaultRegulationAcceptanceTime, receiverNRB, receiverAddress, remoteID, bankHref, hash);
     }
 
+    @Transient
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
         return CollectionsUtils.nonNullMapFromArray(
@@ -43,6 +47,7 @@ public final class TransactionBackground extends Transaction {
         );
     }
 
+    @Transient
     @Override
     public @NotNull Object[] toArray() {
         return CollectionsUtils.filterNonNull(new Object[] {

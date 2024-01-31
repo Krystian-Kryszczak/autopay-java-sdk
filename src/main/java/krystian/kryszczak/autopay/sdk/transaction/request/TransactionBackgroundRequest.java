@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public final class TransactionBackgroundRequest extends TransactionRequest<TransactionBackground> {
     public TransactionBackgroundRequest(@NotNull String gatewayUrl, @NotNull TransactionBackground transaction, @NotNull Translations.Language language) {

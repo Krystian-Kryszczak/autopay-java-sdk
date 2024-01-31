@@ -1,6 +1,6 @@
 package krystian.kryszczak.autopay.sdk.serializer;
 
-import fixtures.itn.Itn;
+import fixtures.itn.ItnFixture;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import static org.xmlunit.assertj.XmlAssert.assertThat;
 public final class XmlSerializerTest {
     @Test
     public void testDeserializeReturnsItnResponse() {
-        final String itnResponse = Itn.getItnResponse();
+        final String itnResponse = ItnFixture.getItnResponse();
         final ItnResponse deserialized = new XmlSerializer().deserialize(itnResponse, ItnResponse.class);
 
         assertNotNull(deserialized);

@@ -1,13 +1,17 @@
 package krystian.kryszczak.autopay.sdk.hash;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.Transient;
 
+@ToString
+@EqualsAndHashCode
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Hashable {
@@ -20,7 +24,7 @@ public abstract class Hashable {
 
             @Override
             public @NotNull String getHash() {
-                return hash;
+                return hash.trim();
             }
         };
     }
