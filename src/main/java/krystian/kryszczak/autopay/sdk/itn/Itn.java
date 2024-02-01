@@ -6,7 +6,6 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
-import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.beans.ConstructorProperties;
 import java.beans.Transient;
 import java.io.Serializable;
+
+import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
 
 @Getter
 @Builder
@@ -112,7 +113,7 @@ public final class Itn extends Hashable implements Serializable {
 
     @Override
     public @NotNull Object[] toArray() {
-        return CollectionsUtils.filterNonNull(new Object[] {
+        return filterNotNull(
             serviceID,
             orderID,
             remoteID,
@@ -123,6 +124,6 @@ public final class Itn extends Hashable implements Serializable {
             paymentStatus,
             paymentStatusDetails,
             customerData
-        });
+        );
     }
 }

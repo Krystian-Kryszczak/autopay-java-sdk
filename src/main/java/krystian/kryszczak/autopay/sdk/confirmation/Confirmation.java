@@ -32,15 +32,6 @@ public final class Confirmation extends Hashable implements Serializable, HttpRe
         return hash.trim();
     }
 
-    @Contract(value = " -> new", pure = true)
-    @Override
-    public @NotNull Object @NotNull [] toArray() {
-        return new Object[] {
-            serviceID,
-            orderID
-        };
-    }
-
     @Contract(" -> new")
     @Override
     public @NotNull @Unmodifiable Map<@NotNull String, @NotNull String> toMap() {
@@ -49,5 +40,14 @@ public final class Confirmation extends Hashable implements Serializable, HttpRe
             "orderID", orderID,
             "hash", hash
         );
+    }
+
+    @Contract(value = " -> new", pure = true)
+    @Override
+    public @NotNull Object @NotNull [] toArray() {
+        return new Object[] {
+            serviceID,
+            orderID
+        };
     }
 }

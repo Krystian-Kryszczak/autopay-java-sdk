@@ -29,6 +29,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public final class AutopayClientTest extends BaseTestCase {
             client.doTransactionBackground(TransactionBackgroundFixture.getTransactionBackground())
         );
 
-        final TransactionBackground transactionBackground = result.block();
+        final TransactionBackground transactionBackground = assertDoesNotThrow(() -> result.block());
         assertNotNull(transactionBackground);
 
         final Map<String, String> transactionBackgroundFixture = TransactionBackgroundFixture.getTransactionBackgroundResponseData();
@@ -109,7 +110,7 @@ public final class AutopayClientTest extends BaseTestCase {
             client.doTransactionInit(TransactionInitFixture.getTransactionInitContinue())
         );
 
-        final Transaction transaction = result.block();
+        final Transaction transaction = assertDoesNotThrow(() -> result.block());
         assertNotNull(transaction);
         assertInstanceOf(TransactionContinue.class, transaction);
     }
@@ -124,7 +125,7 @@ public final class AutopayClientTest extends BaseTestCase {
             client.doTransactionInit(TransactionInitFixture.getTransactionInit())
         );
 
-        final Transaction transaction = result.block();
+        final Transaction transaction = assertDoesNotThrow(() -> result.block());
         assertNotNull(transaction);
         assertInstanceOf(TransactionInit.class, transaction);
     }
@@ -133,8 +134,8 @@ public final class AutopayClientTest extends BaseTestCase {
     public void testDoItnInReturnsItnData() {
         final Mono<Itn> result = Mono.fromDirect(client.doItnIn(ItnFixture.getItnInRequest()));
 
-        final Itn itn = result.block();
-        final Map<String, String> itnFixture = ItnFixture.getTransactionXml();
+        final Itn itn = assertDoesNotThrow(() -> result.block());
+        final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
 
         assertNotNull(itn);
         assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
@@ -154,8 +155,10 @@ public final class AutopayClientTest extends BaseTestCase {
     @Test
     public void testDoItnResponseReturnsConfirmationResponse() {
         final Mono<Itn> itnIn = Mono.fromDirect(client.doItnIn(ItnFixture.getItnInRequest()));
-        final Mono<ItnResponse> result = Mono.fromDirect(client.doItnInResponse(itnIn.block(), true));
-        final ItnResponse itnResponse = result.block();
+        final Itn itn = itnIn.block();
+        assertNotNull(itn);
+        final Mono<ItnResponse> result = Mono.fromDirect(client.doItnInResponse(itn, true));
+        final ItnResponse itnResponse = assertDoesNotThrow(() -> result.block());
         assertNotNull(itnResponse);
         assertThat(ItnFixture.getItnResponse())
             .and(itnResponse.toXml())
@@ -171,7 +174,7 @@ public final class AutopayClientTest extends BaseTestCase {
 
         final Mono<PaywayListResponse> result = Mono.fromDirect(client.getPaywayList(GATEWAY_URL));
 
-        assertNotNull(result.block());
+        assertNotNull(assertDoesNotThrow(() -> result.block()));
     }
 
     @Test
@@ -182,14 +185,14 @@ public final class AutopayClientTest extends BaseTestCase {
 
         final Mono<RegulationListResponse> result = Mono.fromDirect(client.getRegulationList(GATEWAY_URL));
 
-        assertNotNull(result.block());
+        assertNotNull(assertDoesNotThrow(() -> result.block()));
     }
 
     @ParameterizedTest
     @MethodSource("checkHashProvider")
     public void testCheckHashReturnsExpectedValue(String hash, boolean value) {
-        final TransactionInit transaction = mock(TransactionInit.class);
-        final Object[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
+        final Transaction transaction = mock(TransactionInit.class);
+        final String[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
 
         when(transaction.toArray()).thenReturn(transactionInitData);
         when(transaction.getHash()).thenReturn(hash);
@@ -201,10 +204,11 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @ParameterizedTest
+    @SuppressWarnings("unused")
     @MethodSource("checkHashProvider")
     public void testCheckHashThrowsHashNotReturnedException(String hash, boolean value) {
         final Transaction transaction = mock(TransactionInit.class);
-        final Object[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
+        final String[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
 
         when(transaction.toArray()).thenReturn(transactionInitData);
         when(transaction.getHash()).thenReturn(hash);
@@ -216,7 +220,7 @@ public final class AutopayClientTest extends BaseTestCase {
     @Test
     public void testGetItnObject() {
         final Itn itn = AutopayClient.getItnObject(ItnFixture.getItnInRequest());
-        final Map<String, String> itnFixture = ItnFixture.getTransactionXml();
+        final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
 
         assertNotNull(itn);
         assertInstanceOf(Itn.class, itn);

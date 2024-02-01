@@ -4,7 +4,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
 import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
-import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +13,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
+
 @Getter
-@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
@@ -53,7 +54,7 @@ import java.util.*;
     "hash"
 })
 @AllArgsConstructor
-public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionContinue, TransactionInit {
+public abstract class Transaction extends Hashable implements HttpRequestBody, Serializable {//permits TransactionBackground, TransactionContinue, TransactionInit {
     @Setter
     protected int serviceID;
     /**
@@ -159,8 +160,8 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return CollectionsUtils.nonNullMapFromArray(
-            "serviceID", String.valueOf(serviceID),
+        return notNullMapOf(
+            "serviceID", serviceID,
             "orderID", orderID,
             "amount", amount,
             "description", description,
@@ -178,6 +179,7 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             "screenType", screenType,
             "blikUIDKey", blikUIDKey,
             "blikUIDLabel", blikUIDLabel,
+            "blikAMKey", blikAMKey,
             "returnURL", returnURL,
             "defaultRegulationAcceptanceState", defaultRegulationAcceptanceState,
             "defaultRegulationAcceptanceID", defaultRegulationAcceptanceID,
@@ -191,14 +193,13 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
     }
 
     @Override
-    public @NotNull Object[] toArray() {
-        return CollectionsUtils.filterNonNull(new Object[] {
-            serviceID,
+    public @NotNull String[] toArray() {
+        return filterNotNull(
+            String.valueOf(serviceID),
             orderID,
             amount,
-
             description,
-            gatewayID,
+            gatewayID != null ? String.valueOf(gatewayID) : null,
             currency,
             customerEmail,
             customerNRB,
@@ -206,21 +207,22 @@ public abstract sealed class Transaction extends Hashable implements HttpRequest
             customerIP,
             title,
             receiverName,
-            validityTime,
-            linkValidityTime,
+            validityTime != null ? String.valueOf(validityTime) : null,
+            linkValidityTime != null ? String.valueOf(linkValidityTime) : null,
             authorizationCode,
             screenType,
             blikUIDKey,
             blikUIDLabel,
+            blikAMKey,
             returnURL,
             defaultRegulationAcceptanceState,
             defaultRegulationAcceptanceID,
-            defaultRegulationAcceptanceTime,
+            defaultRegulationAcceptanceTime != null ? String.valueOf(defaultRegulationAcceptanceTime) : null,
 
             receiverNRB,
             receiverAddress,
             remoteID,
             bankHref
-        });
+        );
     }
 }

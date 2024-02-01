@@ -33,12 +33,4 @@ public class PaywayList extends ServiceHttpRequestBody implements Serializable {
             hash
         );
     }
-
-    @Override
-    public @NotNull Object[] toArray() {
-        return new Object[] {
-            serviceID,
-            messageID
-        };
-    }
 }

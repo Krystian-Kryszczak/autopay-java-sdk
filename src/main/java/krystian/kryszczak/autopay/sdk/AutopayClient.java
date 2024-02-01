@@ -149,7 +149,7 @@ public final class AutopayClient {
             )
         );
 
-        return Flux.from(httpClient.post(request))//.doOnNext(System.out::println)
+        return Flux.from(httpClient.post(request))
             .mapNotNull(it ->
                 new ServiceResponseParser(it, this.configuration)
                     .parseListResponse(PaywayListResponse.class)

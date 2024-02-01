@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
 import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
-import krystian.kryszczak.autopay.sdk.util.CollectionsUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
 import java.util.Map;
+
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
 @XmlRootElement
@@ -29,10 +30,18 @@ public abstract class ServiceHttpRequestBody extends Hashable implements HttpReq
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return CollectionsUtils.nonNullMapFromArray(
+        return notNullMapOf(
             "serviceID", serviceID,
             "messageID", messageID,
             "hash", hash
         );
+    }
+
+    @Override
+    public @NotNull Object[] toArray() {
+        return new Object[] {
+            serviceID,
+            messageID
+        };
     }
 }

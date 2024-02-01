@@ -1,10 +1,10 @@
 package krystian.kryszczak.autopay.sdk.common.parser;
 
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
+import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
 import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +24,17 @@ public final class ServiceResponseParser extends ResponseParser<String> {
         this(responseBody, configuration, new XmlSerializer());
     }
 
-    public <T extends Serializable> @Nullable T parseListResponse(Class<T> type) {
-        if (isResponseInvalid()) {
-            logger.info("Received invalid service response (type: {}): {}", type.getSimpleName(), this.responseBody);
-            return null;
-        }
+    public <T extends Serializable> @NotNull T parseListResponse(Class<T> type) throws XmlException {
+        checkResponseError();
 
         try {
-            return serializer.deserialize(this.responseBody, type);
+            final T result = serializer.deserialize(this.responseBody, type);
+            if (result == null) throw XmlException.xmlGeneralError("Parsing ListResponse failed!");
+            return result;
         } catch (RuntimeException e) {
-            logger.error(e.getMessage(), e);
-            return null;
+            final XmlException xmlException = XmlException.xmlParseError(e);
+            logger.error(xmlException.getMessage(), xmlException);
+            throw xmlException;
         }
     }
 }

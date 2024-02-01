@@ -13,10 +13,10 @@ public final class HashCheckerTest extends BaseTestCase {
 
         final Hashable hashable =  Hashable.create(
             fieldsValues,
-            HashGenerator.generateHash(fieldsValues, getConfigurationStub())
+            HashGenerator.generateHash(fieldsValues, getTestConfiguration())
         );
 
-        final boolean checkedHash = HashChecker.checkHash(hashable, getConfigurationStub());
+        final boolean checkedHash = HashChecker.checkHash(hashable, getTestConfiguration());
 
         Assertions.assertTrue(checkedHash);
     }

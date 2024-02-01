@@ -1,11 +1,11 @@
 package krystian.kryszczak.autopay.sdk.http.request;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.Transient;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.capitalizeMap;
 
 public interface HttpRequestBody {
     @Transient
@@ -13,8 +13,6 @@ public interface HttpRequestBody {
 
     @Transient
     default @NotNull Map<@NotNull String, @NotNull String> toCapitalizedMap() {
-        return toMap().entrySet().stream()
-            .map(entry -> Map.entry(StringUtils.capitalize(entry.getKey()), entry.getValue()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return capitalizeMap(toMap());
     }
 }

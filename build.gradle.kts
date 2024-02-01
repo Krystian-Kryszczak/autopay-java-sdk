@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.2-beta"
+version = "0.7.3-beta"
 
 repositories {
   mavenCentral()
@@ -76,8 +76,6 @@ dependencies {
 
   implementation("ch.qos.logback:logback-core:$logbackVersion")
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
-
-  implementation("org.apache.commons:commons-text:1.10.0")
 }
 
 java {

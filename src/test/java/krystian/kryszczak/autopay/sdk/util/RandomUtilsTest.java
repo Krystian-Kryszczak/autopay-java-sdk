@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public final class RandomUtilsTest {
-
     @Test
     public void randomMessageIdTest() throws InterruptedException {
         String previously = null;

@@ -22,27 +22,15 @@ public abstract class ResponseParser<T extends Serializable> {
     protected final @NotNull String responseBody;
     protected final @NotNull AutopayConfiguration configuration;
 
-    protected boolean isResponseInvalid() {
+    protected void checkResponseError() throws XmlException {
         if (Pattern.compile(AutopayPattern.PATTERN_XML_ERROR).matcher(this.responseBody).matches()) {
             final var xmlData = new XmlMapper().valueToTree(this.responseBody);
 
-            try {
-                throw XmlException.xmlBodyContainsError(xmlData.get("name").asText());
-            } catch (XmlException e) {
-                logger.error(e.getMessage(), e);
-            }
-            return true;
+            throw XmlException.xmlBodyContainsError(xmlData.get("name").asText());
         }
 
         if (Pattern.compile(AutopayPattern.PATTERN_GENERAL_ERROR).matcher(this.responseBody).matches()) {
-            try {
-                throw XmlException.xmlGeneralError(this.responseBody);
-            } catch (XmlException e) {
-                logger.error(e.getMessage(), e);
-            }
-            return true;
+            throw XmlException.xmlGeneralError(this.responseBody);
         }
-
-        return false;
     }
 }

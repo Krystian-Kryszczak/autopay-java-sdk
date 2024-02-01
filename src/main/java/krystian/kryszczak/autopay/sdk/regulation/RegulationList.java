@@ -13,7 +13,6 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class RegulationList extends ServiceHttpRequestBody implements Serializable {
-
     protected RegulationList(@NotNull String serviceID, @NotNull String messageID, @Nullable String hash) {
         super(serviceID, messageID, hash);
     }
@@ -34,13 +33,5 @@ public class RegulationList extends ServiceHttpRequestBody implements Serializab
             messageID,
             hash
         );
-    }
-
-    @Override
-    public @NotNull Object[] toArray() {
-        return new Object[] {
-            serviceID,
-            messageID
-        };
     }
 }

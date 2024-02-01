@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public final class StringUtils {
     private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
@@ -26,16 +27,27 @@ public final class StringUtils {
     /**
      * Decodes a hexadecimal encoded binary string
      */
-    public static @Nullable String hex2bin(@NotNull String hexString) {
+    public static @Nullable String hex2bin(@NotNull String hex) {
         try {
-            byte[] bytes = new byte[hexString.length() / 2];
+            byte[] bytes = new byte[hex.length() / 2];
             for (int i = 0; i < bytes.length; i++) {
-                bytes[i] = (byte) Integer.parseInt(hexString.substring(i * 2, (i + 1) * 2), 16);
+                bytes[i] = (byte) Integer.parseInt(hex.substring(i * 2, (i + 1) * 2), 16);
             }
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    /**
+     * Make a string's first character uppercase
+     * @param text The input string.
+     * @return Returns a string with the first character of string capitalized.
+     */
+    public static @NotNull String capitalize(@NotNull String text) {
+        Objects.requireNonNull(text);
+        if (text.isBlank()) return text;
+        return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }

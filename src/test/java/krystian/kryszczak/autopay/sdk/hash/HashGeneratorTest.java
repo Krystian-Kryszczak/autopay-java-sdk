@@ -17,7 +17,7 @@ public final class HashGeneratorTest extends BaseTestCase {
             AMOUNT
         };
 
-        final String hash = HashGenerator.generateHash(data, getConfigurationStub());
+        final String hash = HashGenerator.generateHash(data, getTestConfiguration());
 
         assertEquals("45f8aeeb99c37571ab1c9d952eb5d92ad4017bc6faaf16a708b995c8ffb8bc44", hash);
     }
