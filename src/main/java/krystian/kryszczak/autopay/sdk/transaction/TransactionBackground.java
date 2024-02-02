@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
-import static krystian.kryszczak.autopay.sdk.util.MapUtils.mergeIfAbsent;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @ToString(callSuper = true)
@@ -34,7 +33,7 @@ public final class TransactionBackground extends Transaction {
             @Nullable String customerIP, @Nullable String title, @Nullable String receiverName,
             @Nullable LocalDateTime validityTime, @Nullable LocalDateTime linkValidityTime,
             @Nullable String authorizationCode, @Nullable String screenType, @Nullable String blikUIDKey,
-             @Nullable String blikUIDLabel, @Nullable String blikAMKey, @Nullable String returnURL,
+            @Nullable String blikUIDLabel, @Nullable String blikAMKey, @Nullable String returnURL,
             @Nullable String defaultRegulationAcceptanceState, @Nullable String defaultRegulationAcceptanceID,
             @Nullable LocalDateTime defaultRegulationAcceptanceTime, @Nullable String receiverNRB,
             @Nullable String receiverAddress, @Nullable String remoteID, @Nullable String bankHref, @Nullable String hash) {
@@ -47,7 +46,7 @@ public final class TransactionBackground extends Transaction {
     @Transient
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return mergeIfAbsent(notNullMapOf(
+        return notNullMapOf(
             "receiverNRB", receiverNRB,
             "receiverName", receiverName,
             "receiverAddress", receiverAddress,
@@ -59,7 +58,7 @@ public final class TransactionBackground extends Transaction {
             "bankHref", bankHref,
             "returnURL", returnURL,
             "hash", hash
-        ), super.toMap());
+        );
     }
 
     @Transient

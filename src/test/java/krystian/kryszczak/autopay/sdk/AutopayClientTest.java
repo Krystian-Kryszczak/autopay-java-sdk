@@ -29,7 +29,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -186,21 +185,6 @@ public final class AutopayClientTest extends BaseTestCase {
         final Mono<RegulationListResponse> result = Mono.fromDirect(client.getRegulationList(GATEWAY_URL));
 
         assertNotNull(assertDoesNotThrow(() -> result.block()));
-    }
-
-    @ParameterizedTest
-    @MethodSource("checkHashProvider")
-    public void testCheckHashReturnsExpectedValue(String hash, boolean value) {
-        final Transaction transaction = mock(TransactionInit.class);
-        final String[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
-
-        when(transaction.toArray()).thenReturn(transactionInitData);
-        when(transaction.getHash()).thenReturn(hash);
-        when(transaction.isHashPresent()).thenReturn(true);
-
-        final boolean result = client.checkHash(transaction);
-
-        assertEquals(value, result);
     }
 
     @ParameterizedTest

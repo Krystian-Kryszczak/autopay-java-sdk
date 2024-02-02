@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
-import static krystian.kryszczak.autopay.sdk.util.MapUtils.mergeIfAbsent;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
@@ -56,7 +55,7 @@ public final class TransactionInit extends Transaction {
     @Transient
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return mergeIfAbsent(notNullMapOf(
+        return notNullMapOf(
             "orderID", orderID,
             "remoteID", remoteID,
             "confirmation", confirmation,
@@ -64,7 +63,7 @@ public final class TransactionInit extends Transaction {
             "blikAMKey", blikAMKey,
             "paymentStatus", paymentStatus,
             "hash", hash
-        ), super.toMap());
+        );
     }
 
     @Transient

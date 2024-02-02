@@ -51,6 +51,33 @@ public final class ArrayUtils {
     }
 
     @SafeVarargs
+    public static <T> @NotNull T @NotNull [] flatMap(final @NotNull T[]... src) {
+        @SuppressWarnings("unchecked")
+        final Class<T> dstComponentType = (Class<T>) src.getClass().getComponentType().getComponentType();
+        final int srcLength = src.length;
+        if (srcLength < 1) return newArrayOf(dstComponentType, 0);
+        int totalLength = 0;
+        final int[] lengths = new int[srcLength];
+        for (int i = 0; i < srcLength; i++) {
+            final T[] e = src[i];
+            final int length = e.length;
+            totalLength += length;
+            lengths[i] = length;
+        }
+        final T[] dst = newArrayOf(dstComponentType, totalLength);
+        int written = 0;
+        for (int i = 0; i < srcLength; i++) {
+            final T[] array = src[i];
+            final int length = lengths[i];
+            if (length > 0) {
+                System.arraycopy(array, 0, dst, written, length);
+                written += length;
+            }
+        }
+        return dst;
+    }
+
+    @SafeVarargs
     public static <T> @NotNull T @NotNull [] reverse(@NotNull T @NotNull... src) {
         @SuppressWarnings("unchecked")
         final Class<T> componentType = (Class<T>) src.getClass().getComponentType();

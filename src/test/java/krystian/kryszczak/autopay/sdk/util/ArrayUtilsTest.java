@@ -2,6 +2,8 @@ package krystian.kryszczak.autopay.sdk.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public final class ArrayUtilsTest {
@@ -25,7 +27,7 @@ public final class ArrayUtilsTest {
 
     @Test
     public void testMergeArraysIfAbsentReturnsExceptedArray() {
-        final Object[] mergedArray = ArrayUtils.mergeArraysIfAbsent(
+        final String[] mergedArray = ArrayUtils.mergeArraysIfAbsent(
             new String[] { "zero", "one", "two" },
             "one", "two", "zero", "three", "four", "four"
         );
@@ -33,6 +35,18 @@ public final class ArrayUtilsTest {
         assertNotNull(mergedArray);
         assertEquals(5, mergedArray.length);
         assertArrayEquals(new String[] { "zero", "one", "two", "three", "four" }, mergedArray);
+    }
+
+    @Test
+    public void testFlatMapArraysReturnsExceptedArray() {
+        final String[] flattedArray = ArrayUtils.flatMap(
+            new String[] { "zero", "one", "two" },
+            new String[] { "three", "four", "five" }
+        );
+
+        assertNotNull(flattedArray);
+        assertEquals(6, flattedArray.length);
+        assertArrayEquals(new String[] { "zero", "one", "two", "three", "four", "five" }, flattedArray);
     }
 
     @Test
