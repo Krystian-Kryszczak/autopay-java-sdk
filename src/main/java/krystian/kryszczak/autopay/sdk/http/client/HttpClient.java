@@ -14,7 +14,7 @@ public interface HttpClient {
     @NotNull <I extends HttpRequestBody> Publisher<@NotNull String> post(@NotNull HttpRequest<I> httpRequest);
 
     @Contract(" -> new")
-    static @NotNull HttpClient createDefaultHttpClient() {
+    static @NotNull HttpClient createDefault() {
         return new VertxHttpClient(Vertx.vertx());
     }
 }

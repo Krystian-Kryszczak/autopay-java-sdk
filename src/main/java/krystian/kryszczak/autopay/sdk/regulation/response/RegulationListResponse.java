@@ -12,19 +12,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
-import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.merge;
-
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonRootName("regulationList")
 @XmlRootElement
-@XmlType(propOrder = {"serviceID", "messageID", "regulations", "hash"})
+@XmlType(propOrder = { "serviceID", "messageID", "regulations", "hash" })
 public final class RegulationListResponse extends RegulationList {
     private final Regulations regulations;
 
     @JsonCreator
-    @ConstructorProperties({"serviceID", "messageID", "regulations", "hash"})
+    @ConstructorProperties({ "serviceID", "messageID", "regulations", "hash" })
     public RegulationListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull Regulations regulations, @NotNull String hash) {
         super(serviceID, messageID, hash);
         this.regulations = regulations;
@@ -32,6 +30,10 @@ public final class RegulationListResponse extends RegulationList {
 
     @Override
     public @NotNull Object @NotNull [] toArray() {
-        return merge(super.toArray(), regulations);
+        return new Object[] {
+            serviceID,
+            messageID,
+            regulations
+        };
     }
 }

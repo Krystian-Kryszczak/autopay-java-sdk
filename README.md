@@ -260,12 +260,12 @@ itn.getCurrency(); // PLN
 Metoda `getRegulationList` umożliwia odpytanie o aktualną listę regulaminów wraz linkami do wyświetlenia w serwisie oraz akceptacji przez klienta.
 
 ```java
-final Maybe<PaywayList> result = this.AutopayClient.getRegulationList("https://testpay.autopay.eu");
+final Publisher<PaywayList> result = this.AutopayClient.getRegulationList("https://testpay.autopay.eu");
 ```
 
 ## Pobieranie listy kanałów płatności
 Metoda `getPaywayList` umożliwia odpytanie o aktualną listę płatności.
 
 ```java
-final Maybe<PaywayList> result = this.AutopayClient.getPaywayList("https://testpay.autopay.eu");
+final Publisher<PaywayList> result = this.AutopayClient.getPaywayList("https://testpay.autopay.eu");
 ```

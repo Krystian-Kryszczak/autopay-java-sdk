@@ -21,8 +21,8 @@ import java.util.Map;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @XmlRootElement
-@XmlType(propOrder = {"serviceID", "messageID", "hash"})
-@AllArgsConstructor(onConstructor_ = {@JsonCreator, @ConstructorProperties({"serviceID", "messageID", "hash"})})
+@XmlType(propOrder = { "serviceID", "messageID", "hash" })
+@AllArgsConstructor(onConstructor_ = { @JsonCreator, @ConstructorProperties({ "serviceID", "messageID", "hash" }) })
 public final class Confirmation extends Hashable implements Serializable, HttpRequestBody {
     private final int serviceID;
     private final @NotNull String orderID;

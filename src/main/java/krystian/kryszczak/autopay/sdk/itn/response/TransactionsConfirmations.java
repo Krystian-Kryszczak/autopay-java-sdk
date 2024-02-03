@@ -8,4 +8,4 @@ import java.io.Serializable;
 
 @JsonClassDescription
 @XmlRootElement
-public record TransactionsConfirmations(@NotNull TransactionConfirmed transactionConfirmed) implements Serializable {}
+public record TransactionsConfirmations(@NotNull TransactionConfirmed[] transactionConfirmed) implements Serializable {}

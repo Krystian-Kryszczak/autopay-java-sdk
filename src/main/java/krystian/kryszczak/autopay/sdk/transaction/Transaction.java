@@ -1,5 +1,6 @@
 package krystian.kryszczak.autopay.sdk.transaction;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
@@ -20,6 +21,7 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
+@JsonRootName("transaction")
 @XmlRootElement
 @XmlType(propOrder = {
     "serviceID",
@@ -54,13 +56,13 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
     "hash"
 })
 @AllArgsConstructor
-public abstract class Transaction extends Hashable implements HttpRequestBody, Serializable {//permits TransactionBackground, TransactionContinue, TransactionInit {
+public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionContinue, TransactionInit {
     @Setter
-    protected int serviceID;
+    protected @Nullable Integer serviceID;
     /**
      Transaction ID, required
      */
-    protected final @NotNull String orderID;
+    protected final @Nullable String orderID;
     /**
      Transaction amount, required
      */
@@ -195,7 +197,7 @@ public abstract class Transaction extends Hashable implements HttpRequestBody, S
     @Override
     public @NotNull String[] toArray() {
         return filterNotNull(
-            String.valueOf(serviceID),
+            serviceID != null ? String.valueOf(serviceID) : null,
             orderID,
             amount,
             description,

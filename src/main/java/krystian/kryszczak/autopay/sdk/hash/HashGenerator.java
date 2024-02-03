@@ -25,7 +25,7 @@ public final class HashGenerator {
         return encode(builder.toString(), configuration.hashAlgorithm().toString());
     }
 
-    private static @NotNull String encode(@NotNull String orginalString, @NotNull String hashAlgorithm) {
+    static @NotNull String encode(@NotNull String orginalString, @NotNull String hashAlgorithm) {
         try {
             final MessageDigest digest = MessageDigest.getInstance(hashAlgorithm);
             byte[] hash = digest.digest(orginalString.getBytes());

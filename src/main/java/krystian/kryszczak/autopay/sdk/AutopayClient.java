@@ -20,6 +20,7 @@ import krystian.kryszczak.autopay.sdk.payway.PaywayList;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.regulation.RegulationList;
 import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import krystian.kryszczak.autopay.sdk.transaction.*;
 import krystian.kryszczak.autopay.sdk.transaction.parser.TransactionResponseParser;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
@@ -27,6 +28,7 @@ import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionRequest;
 import krystian.kryszczak.autopay.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -53,9 +55,11 @@ public final class AutopayClient {
 
     private final AutopayConfiguration configuration;
     private final HttpClient httpClient;
+    @Getter
+    private final Serializer serializer;
 
     public AutopayClient(final @NotNull AutopayConfiguration configuration) {
-        this(configuration, HttpClient.createDefaultHttpClient());
+        this(configuration, HttpClient.createDefault(), Serializer.createDefault());
     }
 
     /**
@@ -113,8 +117,8 @@ public final class AutopayClient {
      */
     @SneakyThrows
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull Itn> doItnIn(final @NotNull String itn) {
-        return Mono.justOrEmpty(getItnObject(itn));
+    public @Nullable Itn doItnIn(final @NotNull String itn) {
+        return getItnObject(itn);
     }
 
     /**

@@ -1,6 +1,5 @@
 package fixtures.transaction;
 
-import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import lombok.SneakyThrows;
@@ -9,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Objects;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
@@ -31,26 +28,11 @@ public final class TransactionBackgroundFixture {
                     .validityTime(LocalDateTime.now().plusHours(5))
                     .linkValidityTime(LocalDateTime.now().plusHours(5))
                     .build()
-            )
-            .build();
+            ).build();
     }
 
     @SneakyThrows
     public static String getTransactionBackgroundResponse() {
         return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/TransactionBackgroundResponse.xml"));
-    }
-
-    public static @NotNull Map<String, String> getTransactionBackgroundResponseData() {
-        return Objects.requireNonNull(
-            new XmlSerializer().deserialize(
-                getTransactionBackgroundResponse(),
-                TransactionBackground.class
-            )
-        ).toMap();
-    }
-
-    @SneakyThrows
-    public static String getPaywayFormResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/PaywayFormResponse.txt"));
     }
 }

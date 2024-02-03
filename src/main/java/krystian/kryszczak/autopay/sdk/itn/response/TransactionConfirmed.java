@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @JsonClassDescription
 @XmlRootElement
-@XmlType(propOrder = {"orderID", "confirmation"})
+@XmlType(propOrder = { "orderID", "confirmation" })
 public record TransactionConfirmed(
     @NotNull @JacksonXmlCData String orderID,
     @NotNull @JacksonXmlCData String confirmation

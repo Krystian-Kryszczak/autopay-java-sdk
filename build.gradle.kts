@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.4-beta"
+version = "0.7.5-beta"
 
 repositories {
   mavenCentral()

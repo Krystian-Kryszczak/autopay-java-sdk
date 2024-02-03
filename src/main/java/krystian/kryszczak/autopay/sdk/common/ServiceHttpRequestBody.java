@@ -17,8 +17,8 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
 @XmlRootElement
-@XmlType(propOrder = {"serviceID", "messageID", "hash"})
-@AllArgsConstructor(onConstructor_ = {@JsonCreator, @ConstructorProperties({"serviceID", "messageID", "hash"})})
+@XmlType(propOrder = { "serviceID", "messageID", "hash" })
+@AllArgsConstructor(onConstructor_ = { @JsonCreator, @ConstructorProperties({ "serviceID", "messageID", "hash" }) })
 public abstract class ServiceHttpRequestBody extends Hashable implements HttpRequestBody {
     protected final @NotNull String serviceID;
     protected final @NotNull String messageID;

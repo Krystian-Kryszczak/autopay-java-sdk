@@ -38,8 +38,8 @@ public final class Translations {
     public enum Language {
         pl, en, de;
 
-        static boolean exists(@NotNull String languageName) {
-            for (var language : Language.values()) {
+        public static boolean exists(@NotNull String languageName) {
+            for (final Language language : Language.values()) {
                 if (language.name().equals(languageName)) {
                     return true;
                 }
@@ -55,9 +55,9 @@ public final class Translations {
     public static @NotNull Map<String, String> getTranslations(@NotNull Language language, final @NotNull String[] requiredTranslations) {
         final Map<String, String> translationPhrases = translations.get(language);
 
-        final var missingTranslationKeys = Arrays.stream(requiredTranslations)
-                .filter(it -> !translationPhrases.containsKey(it))
-                .toArray(String[]::new);
+        final String[] missingTranslationKeys = Arrays.stream(requiredTranslations)
+            .filter(it -> !translationPhrases.containsKey(it))
+            .toArray(String[]::new);
 
         if (missingTranslationKeys.length > 0) {
             throw new TranslationException(missingTranslationKeys);

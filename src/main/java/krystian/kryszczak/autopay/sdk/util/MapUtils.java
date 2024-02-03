@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import java.security.InvalidParameterException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public final class MapUtils {
     public static @NotNull Map<@NotNull String, @NotNull String> notNullMapOf(@Nullable Object... input) {
@@ -15,14 +14,12 @@ public final class MapUtils {
 
         final Map<String, String> result = new LinkedHashMap<>();
         for (int i = 0; i < input.length / 2; i += 2) {
+            final Object key = input[i];
             final Object value = input[i + 1];
 
-            if (value == null) continue;
+            if (key == null || value == null) continue;
 
-            result.put(
-                String.valueOf(Objects.requireNonNull(input[i])),
-                String.valueOf(value)
-            );
+            result.put(key.toString(), value.toString());
         }
         return result;
     }
