@@ -11,11 +11,11 @@ import krystian.kryszczak.autopay.sdk.http.client.HttpClient;
 import krystian.kryszczak.autopay.sdk.http.request.HttpRequest;
 import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
+import krystian.kryszczak.autopay.sdk.itn.request.ItnRequest;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.autopay.sdk.serializer.Serializer;
-import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
 import krystian.kryszczak.autopay.sdk.transaction.Transaction;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
@@ -88,16 +88,28 @@ public final class AutopayClientTest extends BaseTestCase {
         final TransactionBackground transactionBackground = assertDoesNotThrow(() -> result.block());
         assertNotNull(transactionBackground);
 
+        final var transactionBackgroundFixture = TransactionBackgroundFixture.getTransactionBackgroundResponseData();
+
         assertNotNull(transactionBackground.getReceiverNRB());
+        assertEquals(transactionBackgroundFixture.get("receiverNRB"), transactionBackground.getReceiverNRB());
         assertNotNull(transactionBackground.getReceiverName());
+        assertEquals(transactionBackgroundFixture.get("receiverName"), transactionBackground.getReceiverName());
         assertNotNull(transactionBackground.getReceiverAddress());
+        assertEquals(transactionBackgroundFixture.get("receiverAddress"), transactionBackground.getReceiverAddress());
         assertNotNull(transactionBackground.getOrderID());
+        assertEquals(transactionBackgroundFixture.get("orderID"), transactionBackground.getOrderID());
         assertNotNull(transactionBackground.getAmount());
+        assertEquals(transactionBackgroundFixture.get("amount"), transactionBackground.getAmount());
         assertNotNull(transactionBackground.getCurrency());
+        assertEquals(transactionBackgroundFixture.get("currency"), transactionBackground.getCurrency());
         assertNotNull(transactionBackground.getTitle());
+        assertEquals(transactionBackgroundFixture.get("title"), transactionBackground.getTitle());
         assertNotNull(transactionBackground.getRemoteID());
+        assertEquals(transactionBackgroundFixture.get("remoteID"), transactionBackground.getRemoteID());
         assertNotNull(transactionBackground.getBankHref());
+        assertEquals(transactionBackgroundFixture.get("bankHref"), transactionBackground.getBankHref());
         assertNotNull(transactionBackground.getReturnURL());
+        assertEquals(transactionBackgroundFixture.get("returnURL"), transactionBackground.getReturnURL());
 
         assertThat(client.getSerializer().serialize(transactionBackground))
             .and(TransactionBackgroundFixture.getTransactionBackgroundResponse())
@@ -137,16 +149,18 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @Test
     public void testDoItnInReturnsItnData() {
-        final Itn itn = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
+        final ItnRequest itnRequest = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
         final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
 
-        assertNotNull(itn);
-        assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
-        assertEquals(itnFixture.get("amount"), itn.getAmount());
-        assertEquals(itnFixture.get("currency"), itn.getCurrency());
-        assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
-        assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
-        assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        assertNotNull(itnRequest);
+        for (final Itn itn : itnRequest.getTransactions().transaction()) {
+            assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
+            assertEquals(itnFixture.get("amount"), itn.getAmount());
+            assertEquals(itnFixture.get("currency"), itn.getCurrency());
+            assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
+            assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
+            assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        }
     }
 
     @ParameterizedTest
@@ -157,13 +171,13 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @Test
     public void testDoItnResponseReturnsConfirmationResponse() {
-        final Itn itn = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
+        final ItnRequest itn = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
         assertNotNull(itn);
-        final Mono<ItnResponse> result = Mono.fromDirect(client.doItnInResponse(itn, true));
+        final Mono<ItnResponse> result = Mono.fromDirect(client.doItnInResponse(itn, it -> true));
         final ItnResponse itnResponse = assertDoesNotThrow(() -> result.block());
         assertNotNull(itnResponse);
         assertThat(ItnFixture.getItnResponse())
-            .and(new XmlSerializer().serialize(itnResponse))
+            .and(client.getSerializer().serialize(itnResponse))
             .ignoreWhitespace()
             .areIdentical();
     }
@@ -205,18 +219,20 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetItnObject() {
-        final Itn itn = AutopayClient.getItnObject(ItnFixture.getItnInRequestBase64Encoded());
+    public void testGetItnRequestObject() {
+        final ItnRequest itnRequest = AutopayClient.getItnRequestObject(
+            ItnFixture.getItnInRequestBase64Encoded(), client.getSerializer());
         final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
 
-        assertNotNull(itn);
-        assertInstanceOf(Itn.class, itn);
-        assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
-        assertEquals(itnFixture.get("amount"), itn.getAmount());
-        assertEquals(itnFixture.get("currency"), itn.getCurrency());
-        assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
-        assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
-        assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        assertNotNull(itnRequest);
+        for (final Itn itn : itnRequest.getTransactions().transaction()) {
+            assertEquals(itnFixture.get("remoteID"), itn.getRemoteID());
+            assertEquals(itnFixture.get("amount"), itn.getAmount());
+            assertEquals(itnFixture.get("currency"), itn.getCurrency());
+            assertEquals(itnFixture.get("paymentDate"), itn.getPaymentDate());
+            assertEquals(itnFixture.get("paymentStatus"), itn.getPaymentStatus());
+            assertEquals(itnFixture.get("paymentStatusDetails"), itn.getPaymentStatusDetails());
+        }
     }
 
     @Contract(" -> new")

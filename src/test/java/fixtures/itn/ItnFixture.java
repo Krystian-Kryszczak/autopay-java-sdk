@@ -28,14 +28,14 @@ public final class ItnFixture {
 
     @SneakyThrows
     public static @NotNull Map<String, String> getTransactionDataFromXml() {
-        final var xml = new XmlMapper().readTree(Files.readString(Path.of(FIXTURES_FOLDER_PATH + "itn/ItnInRequest.xml")));
-        final Map<String, String> result = new HashMap<>();
+        final var xml = new XmlMapper().readTree(getItnInRequest());
+        final Map<String, String> dst = new HashMap<>();
         final var fields = xml.get("transactions").get("transaction").fields();
         while (fields.hasNext()) {
             final var entry = fields.next();
-            result.put(entry.getKey(), entry.getValue().asText());
+            dst.put(entry.getKey(), entry.getValue().asText());
         }
-        return result;
+        return dst;
     }
 
     @SneakyThrows

@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.common;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.beans.ConstructorProperties;
 import java.util.Map;
 
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
@@ -18,7 +16,7 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 @Getter
 @XmlRootElement
 @XmlType(propOrder = { "serviceID", "messageID", "hash" })
-@AllArgsConstructor(onConstructor_ = { @JsonCreator, @ConstructorProperties({ "serviceID", "messageID", "hash" }) })
+@AllArgsConstructor
 public abstract class ServiceHttpRequestBody extends Hashable implements HttpRequestBody {
     protected final @NotNull String serviceID;
     protected final @NotNull String messageID;

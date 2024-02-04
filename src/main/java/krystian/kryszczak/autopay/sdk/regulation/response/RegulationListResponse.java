@@ -11,6 +11,7 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
+import java.util.Arrays;
 
 @Getter
 @ToString
@@ -30,10 +31,28 @@ public final class RegulationListResponse extends RegulationList {
 
     @Override
     public @NotNull Object @NotNull [] toArray() {
-        return new Object[] {
-            serviceID,
-            messageID,
-            regulations
-        };
+        final Object[] base = super.toArray();
+        final Regulation[] regulations = this.regulations.regulation();
+        final Object[] dst = new Object[base.length + (regulations.length * 6)];
+        System.arraycopy(base, 0, dst, 0, base.length);
+        int dstPos = base.length;
+        for (final Regulation regulation : regulations) {
+            dst[dstPos] = regulation.regulationID(); dstPos++;
+            final String url = regulation.url();
+            if (url != null) {
+                dst[dstPos] = url; dstPos++;
+            }
+            dst[dstPos] = regulation.type(); dstPos++;
+            dst[dstPos] = regulation.language(); dstPos++;
+            final String inputLabel = regulation.inputLabel();
+            if (inputLabel != null) {
+                dst[dstPos] = inputLabel; dstPos++;
+            }
+            final String gatewayID = regulation.gatewayID();
+            if (gatewayID != null) {
+                dst[dstPos] = gatewayID; dstPos++;
+            }
+        }
+        return Arrays.copyOf(dst, dstPos);
     }
 }

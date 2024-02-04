@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.5-beta"
+version = "0.7.8-beta"
 
 repositories {
   mavenCentral()
@@ -24,7 +24,6 @@ val reactorVersion = "3.6.2"
 val vertxVersion = "4.5.1"
 val junitJupiterVersion = "5.9.1"
 
-val mainVerticleName = "com.example.starter.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
 
 val watchForChange = "src/**/*"
@@ -85,9 +84,6 @@ java {
 
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
-  manifest {
-    attributes(mapOf("Main-Verticle" to mainVerticleName))
-  }
   mergeServiceFiles()
 }
 
@@ -96,8 +92,4 @@ tasks.withType<Test> {
   testLogging {
     events = setOf(PASSED, SKIPPED, FAILED)
   }
-}
-
-tasks.withType<JavaExec> {
-  args = listOf("run", mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$launcherClassName", "--on-redeploy=$doOnChange")
 }

@@ -1,5 +1,6 @@
 package fixtures.transaction;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import lombok.SneakyThrows;
@@ -8,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 
@@ -34,5 +37,17 @@ public final class TransactionBackgroundFixture {
     @SneakyThrows
     public static String getTransactionBackgroundResponse() {
         return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/TransactionBackgroundResponse.xml"));
+    }
+
+    @SneakyThrows
+    public static @NotNull Map<String, String> getTransactionBackgroundResponseData() {
+        final var xml = new XmlMapper().readTree(getTransactionBackgroundResponse());
+        final Map<String, String> dst = new HashMap<>();
+        final var fields = xml.fields();
+        while (fields.hasNext()) {
+            final var entry = fields.next();
+            dst.put(entry.getKey(), entry.getValue().asText());
+        }
+        return dst;
     }
 }

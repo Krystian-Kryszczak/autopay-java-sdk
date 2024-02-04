@@ -3,6 +3,7 @@ package krystian.kryszczak.autopay.sdk.common.parser;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.BaseTestCase;
+import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.TestInstance;
@@ -18,7 +19,8 @@ public final class ServiceResponseParserTest extends BaseTestCase {
     public void testParseListResponseReturnsEmptyMonoOnWrongXml(String responseBody) {
         final var parser = new ServiceResponseParser(
             responseBody,
-            getTestConfiguration()
+            getTestConfiguration(),
+            Serializer.createDefault()
         );
 
         assertThrows(XmlException.class, () -> parser.parseListResponse(PaywayListResponse.class));

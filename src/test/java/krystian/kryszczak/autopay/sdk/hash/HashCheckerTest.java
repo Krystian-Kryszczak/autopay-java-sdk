@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 public final class HashCheckerTest extends BaseTestCase {
     @Test
-    void testCheckHashReturnsTrue() {
+    public void testCheckHashReturnsTrue() {
         final Object[] fieldsValues = new Object[] {
             "Hello", "world", '!', 55
         };
 
-        final Hashable hashable =  Hashable.create(
+        final Hashable hashable = Hashable.create(
             fieldsValues,
             HashGenerator.generateHash(fieldsValues, getTestConfiguration())
         );

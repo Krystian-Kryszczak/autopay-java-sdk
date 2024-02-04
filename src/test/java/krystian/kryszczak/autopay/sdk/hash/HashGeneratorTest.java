@@ -1,15 +1,116 @@
 package krystian.kryszczak.autopay.sdk.hash;
 
+import fixtures.itn.ItnFixture;
+import fixtures.payway.PaywayListFixture;
+import fixtures.regulation.RegulationListFixture;
+import fixtures.transaction.TransactionBackgroundFixture;
+import fixtures.transaction.TransactionInitFixture;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
 import krystian.kryszczak.autopay.sdk.BaseTestCase;
+import krystian.kryszczak.autopay.sdk.itn.request.ItnRequest;
+import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
+import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
+import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
+import krystian.kryszczak.autopay.sdk.serializer.Serializer;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
+import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class HashGeneratorTest extends BaseTestCase {
+    private static Serializer serializer;
+
+    @BeforeAll
+    public static void setUp() {
+        serializer = Serializer.createDefault();
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsItnInRequestFixture() {
+        final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
+        assertHashIsValid(itnRequest);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsItnResponseFixture() {
+        final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
+        assertNotNull(itnRequest);
+
+        final ItnResponse itnResponse = serializer.deserialize(ItnFixture.getItnResponse(), ItnResponse.class);
+        assertNotNull(itnResponse);
+
+        final String exceptedHash = itnResponse.getHash();
+        assertNotNull(exceptedHash);
+        final String hash = ItnResponse.create(itnRequest.getTransactions().transaction()[0], true, getTestConfiguration()).getHash();
+        assertEquals(exceptedHash, hash);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsItnResponse2Fixture() {
+        final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
+        assertNotNull(itnRequest);
+
+        final ItnResponse itnResponse = serializer.deserialize(ItnFixture.getItnResponse(), ItnResponse.class);
+        assertNotNull(itnResponse);
+
+        final String exceptedHash = itnResponse.getHash();
+        assertNotNull(exceptedHash);
+        final String hash = ItnResponse.create(itnRequest, itn -> true, getTestConfiguration()).getHash();
+        assertEquals(exceptedHash, hash);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsPaywayListResponseFixture() {
+        final PaywayListResponse paywayListResponse = serializer.deserialize(
+            PaywayListFixture.getPaywayListResponse(), PaywayListResponse.class);
+        assertHashIsValid(paywayListResponse);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsRegulationListFixture() {
+        final RegulationListResponse regulationListResponse = serializer.deserialize(
+            RegulationListFixture.getRegulationListResponse(), RegulationListResponse.class);
+        assertHashIsValid(regulationListResponse);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsTransactionBackgroundResponseFixture() {
+        final TransactionBackground transactionBackground = serializer.deserialize(
+            TransactionBackgroundFixture.getTransactionBackgroundResponse(), TransactionBackground.class);
+        assertHashIsValid(transactionBackground);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsTransactionInitContinueResponseFixture() {
+        final TransactionContinue transactionContinue = serializer.deserialize(
+            TransactionInitFixture.getTransactionInitContinueResponse(), TransactionContinue.class);
+        assertHashIsValid(transactionContinue);
+    }
+
+    @Test
+    public void testGenerateHashReturnsHashEqualsTransactionInitResponseFixture() {
+        final TransactionInit transactionInit = serializer.deserialize(
+            TransactionInitFixture.getTransactionInitResponse(), TransactionInit.class);
+        assertHashIsValid(transactionInit);
+    }
+
+    private void assertHashIsValid(Hashable hashable) {
+        assertNotNull(hashable);
+        final String exceptedHash = hashable.getHash();
+        assertNotNull(exceptedHash);
+        final var array = hashable.toArray();
+        final String hash = HashGenerator.generateHash(array, getTestConfiguration());
+        assertEquals(exceptedHash, hash);
+    }
+
     @Test
     public void testGenerateHashReturnsExpectedHash() {
         final Object[] data = new Object[] {
@@ -25,7 +126,7 @@ public final class HashGeneratorTest extends BaseTestCase {
         assertEquals(exceptedHash, hash);
     }
 
-    private String generateHash(Object[] array) {
+    private @NotNull String generateHash(Object[] array) {
         final AutopayConfiguration configuration = getTestConfiguration();
         final String hashSeparator = configuration.hashSeparator();
         final String data = Arrays.stream(array).map(Object::toString)

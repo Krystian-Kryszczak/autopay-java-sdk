@@ -13,7 +13,6 @@ import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
-import java.util.List;
 
 @Getter
 @ToString
@@ -24,21 +23,30 @@ import java.util.List;
 public final class PaywayListResponse extends PaywayList {
     @XmlList
     @JsonProperty("gateway")
-    private final @NotNull List<Gateway> gateways;
+    private final @NotNull Gateway @NotNull [] gateways;
 
     @JsonCreator
     @ConstructorProperties({ "serviceID", "messageID", "gateways", "hash" })
-    public PaywayListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull List<Gateway> gateways, @NotNull String hash) {
+    public PaywayListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull Gateway @NotNull [] gateways, @NotNull String hash) {
         super(serviceID, messageID, hash);
         this.gateways = gateways;
     }
 
     @Override
     public @NotNull Object @NotNull [] toArray() {
-        return new Object[] {
-            serviceID,
-            messageID,
-            gateways
-        };
+        final Object[] base = new Object[] { serviceID, messageID };
+        final Object[] dst = new Object[base.length + (gateways.length * 6)];
+        System.arraycopy(base, 0, dst, 0, base.length);
+        for (int i = 0; i < gateways.length; i++) {
+            final Gateway gateway = gateways[i];
+            final int j = (i * 6) + base.length;
+            dst[j] = gateway.gatewayID();
+            dst[j + 1] = gateway.gatewayName();
+            dst[j + 2] = gateway.gatewayType();
+            dst[j + 3] = gateway.bankName();
+            dst[j + 4] = gateway.iconURL();
+            dst[j + 5] = gateway.statusDate();
+        }
+        return dst;
     }
 }

@@ -13,6 +13,7 @@ import krystian.kryszczak.autopay.sdk.http.request.HttpRequest;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.decoder.Base64ItnDecoder;
 import krystian.kryszczak.autopay.sdk.itn.decoder.ItnDecoder;
+import krystian.kryszczak.autopay.sdk.itn.request.ItnRequest;
 import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.autopay.sdk.itn.validator.ItnValidator;
 import krystian.kryszczak.autopay.sdk.itn.validator.XmlItnValidator;
@@ -42,6 +43,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.function.Function;
 
 @Singleton
 @AllArgsConstructor(onConstructor_ = @Inject)
@@ -113,28 +115,28 @@ public final class AutopayClient {
 
     /**
      * Process ITN requests.
-     * @param itn string encoded with base64
+     * @param itnRequestBase64 string encoded with base64
      */
     @SneakyThrows
     @ApiStatus.AvailableSince("1.0")
-    public @Nullable Itn doItnIn(final @NotNull String itn) {
-        return getItnObject(itn);
+    public @Nullable ItnRequest doItnIn(final @NotNull String itnRequestBase64) {
+        return getItnRequestObject(itnRequestBase64, this.serializer);
     }
 
     /**
      * Returns response for ITN IN request.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn) {
-        return doItnInResponse(itn, true);
+    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest) {
+        return doItnInResponse(itnRequest, itn -> true);
     }
 
     /**
      * Returns response for ITN IN request.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull Itn itn, final boolean transactionConfirmed) {
-        return Mono.just(ItnResponse.create(itn, transactionConfirmed, this.configuration))
+    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest, final Function<@NotNull Itn, @NotNull Boolean> transactionConfirmed) {
+        return Mono.just(ItnResponse.create(itnRequest, transactionConfirmed, this.configuration))
             .onErrorComplete();
     }
 
@@ -155,7 +157,7 @@ public final class AutopayClient {
 
         return Flux.from(httpClient.post(request))
             .mapNotNull(it ->
-                new ServiceResponseParser(it, this.configuration)
+                new ServiceResponseParser(it, this.configuration, this.serializer)
                     .parseListResponse(PaywayListResponse.class)
             );
     }
@@ -177,7 +179,7 @@ public final class AutopayClient {
 
         return Flux.from(httpClient.post(request))
             .mapNotNull(it ->
-                new ServiceResponseParser(it, this.configuration)
+                new ServiceResponseParser(it, this.configuration, this.serializer)
                     .parseListResponse(RegulationListResponse.class)
             );
     }
@@ -202,16 +204,16 @@ public final class AutopayClient {
      * Method allows to get Itn object from base64
      */
     @ApiStatus.AvailableSince("1.0")
-    public static @Nullable Itn getItnObject(final @NotNull String itn) {
+    public static @Nullable ItnRequest getItnRequestObject(final @NotNull String encodedItnRequest, final Serializer serializer) {
         final ItnDecoder itnDecoder = new Base64ItnDecoder();
         final ItnValidator itnValidator = new XmlItnValidator();
 
-        final String decoded = itnDecoder.decode(itn);
+        final String decoded = itnDecoder.decode(encodedItnRequest);
 
         if (!itnValidator.validate(decoded)) {
             throw new IllegalArgumentException("ITN data must be an valid XML, base64 encoded.");
         }
 
-        return Itn.buildFormXml(decoded);
+        return serializer.deserialize(decoded, ItnRequest.class);
     }
 }

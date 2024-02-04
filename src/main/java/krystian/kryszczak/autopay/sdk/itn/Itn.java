@@ -1,8 +1,6 @@
 package krystian.kryszczak.autopay.sdk.itn;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
@@ -95,12 +93,6 @@ public final class Itn extends Hashable implements Serializable {
      * Itn hash.
      */
     private final @Nullable String hash;
-
-    @SneakyThrows
-    public static @Nullable Itn buildFormXml(@NotNull String decoded) {
-        final String transaction = new XmlMapper().readTree(decoded).get("transactions").get("transaction").toString();
-        return new ObjectMapper().readValue(transaction, Itn.class);
-    }
 
     @Transient
     public boolean isPaymentStatusSuccess() {
