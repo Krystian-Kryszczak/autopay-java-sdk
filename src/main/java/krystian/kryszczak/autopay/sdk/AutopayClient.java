@@ -43,7 +43,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Singleton
 @AllArgsConstructor(onConstructor_ = @Inject)
@@ -78,7 +78,8 @@ public final class AutopayClient {
      * Returns payway form or transaction data for user.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull TransactionBackground> doTransactionBackground(final @NotNull TransactionBackgroundRequest transactionRequest) {
+    public @NotNull Publisher<@NotNull TransactionBackground> doTransactionBackground(
+            final @NotNull TransactionBackgroundRequest transactionRequest) {
         return doTransaction(transactionRequest, false).cast(TransactionBackground.class);
     }
 
@@ -87,12 +88,14 @@ public final class AutopayClient {
      * Returns transaction continuation or transaction information.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<? extends @NotNull Transaction> doTransactionInit(final @NotNull TransactionInitRequest transactionRequest) {
+    public @NotNull Publisher<? extends @NotNull Transaction> doTransactionInit(
+            final @NotNull TransactionInitRequest transactionRequest) {
         return doTransaction(transactionRequest, true);
     }
 
     @SneakyThrows
-    private @NotNull <T extends Transaction> Flux<? extends @NotNull Transaction> doTransaction(final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
+    private @NotNull <T extends Transaction> Flux<? extends @NotNull Transaction> doTransaction(
+            final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
         return Mono.fromRunnable(() -> transactionRequest.configure(configuration))
             .then(Mono.fromSupplier(() -> {
                 try {
@@ -102,7 +105,8 @@ public final class AutopayClient {
                         transactionRequest.getTransaction()
                     );
                 } catch (URISyntaxException e) {
-                    logger.error("An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".", e);
+                    logger.error("An error occurred while executing doTransaction"
+                        + (transactionInit ? "Init" : "Background") + ".", e);
                     return null;
                 }
             })).flatMapMany(httpClient::post)
@@ -135,8 +139,9 @@ public final class AutopayClient {
      * Returns response for ITN IN request.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest, final Function<@NotNull Itn, @NotNull Boolean> transactionConfirmed) {
-        return Mono.just(ItnResponse.create(itnRequest, transactionConfirmed, this.configuration))
+    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest,
+            final Predicate<@NotNull Itn> confirmTransactionPredicate) {
+        return Mono.just(ItnResponse.create(itnRequest, confirmTransactionPredicate, this.configuration))
             .onErrorComplete();
     }
 

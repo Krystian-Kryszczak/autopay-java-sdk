@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Getter
 @ToString
@@ -34,7 +34,8 @@ public final class ItnResponse implements Serializable {
     private static final String STATUS_CONFIRMED = "CONFIRMED";
     private static final String STATUS_NOT_CONFIRMED = "NOTCONFIRMED";
 
-    public static @NotNull ItnResponse create(final @NotNull Itn itn, final boolean transactionConfirmed, final @NotNull AutopayConfiguration configuration) {
+    public static @NotNull ItnResponse create(final @NotNull Itn itn,
+            final boolean transactionConfirmed, final @NotNull AutopayConfiguration configuration) {
         final String confirmation = transactionConfirmed ? STATUS_CONFIRMED : STATUS_NOT_CONFIRMED;
 
         final String orderId = itn.getOrderID();
@@ -60,7 +61,7 @@ public final class ItnResponse implements Serializable {
     }
 
     public static @NotNull ItnResponse create(final @NotNull ItnRequest request,
-          final Function<@NotNull Itn, @NotNull Boolean> transactionConfirmed,
+          final Predicate<@NotNull Itn> confirmTransactionPredicate,
           final @NotNull AutopayConfiguration configuration) {
         final Itn[] transactions = request.getTransactions().transaction();
 
@@ -71,7 +72,7 @@ public final class ItnResponse implements Serializable {
         for (int i = 0; i < transactions.length; i++) {
             final Itn transaction = transactions[i];
             final String orderID = transaction.getOrderID();
-            final String confirmation = transactionConfirmed.apply(transaction)
+            final String confirmation = confirmTransactionPredicate.test(transaction)
                 ? STATUS_CONFIRMED : STATUS_NOT_CONFIRMED;
             confirmations[i] = new TransactionConfirmed(orderID, confirmation);
             final int j = (i * 2) + 1;

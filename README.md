@@ -52,7 +52,7 @@ Najprostszym typem wykonania transakcji jest przekierowanie do serwisu Autopay w
 Aby wykonać transakcję należy wywołać metodę `getTransactionRedirect`, poprawne wykonanie metody zwróci formularz który wykona przekierowanie do serwisu Autopay:
 
 ```java
-final var result = client.getTransactionRedirect(
+final String result = client.getTransactionRedirect(
   TransactionInitRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu") // Adres bramki Autopay
     .setTransaction(
@@ -77,7 +77,7 @@ Po wykonaniu płatności, serwis Autopay wykona przekierowanie na skonfigurowany
 Wymagane jest, aby strona powrotu z płatności weryfikowała poprawność Hash, służy do tego metoda `doConfirmationCheck`. Należy przekazać do niej dane przesłane w żądaniu GET:
 
 ```java
-final var data = Hashable.create(
+final Hashable data = Hashable.create(
   new Object[] {
     "123456", // ServiceID
     "123" // OrderID
@@ -85,7 +85,7 @@ final var data = Hashable.create(
   "df5f737f48bcef93361f590b460cc633b28f91710a60415527221f9cb90da52a" // Hash
 );
 
-final var result = client.doConfirmationCheck(data); // true | false
+final boolean result = client.doConfirmationCheck(data);
 ```
 
 ## Przedtransakcja
@@ -103,7 +103,7 @@ W odpowiedzi otrzymywany jest link do kontynuacji transakcji lub odpowiedź info
 #### Przedtransakcja, link do kontynuacji płatności
 
 ```java
-final var result = client.doTransactionInit(
+final Publisher<? extends Transaction> result = client.doTransactionInit(
   TransactionInitRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -117,7 +117,7 @@ final var result = client.doTransactionInit(
     ).build()
 );
 
-final var transactionContinue = result.blockingGet();
+final Transaction transactionContinue = result.blockFirst();
 
 transactionContinue.getRedirectUrl(); // https://pay-accept.bm.pl/payment/continue/9IA2UISN/718GTV5E
 transactionContinue.getStatus(); // PENDING
@@ -129,7 +129,7 @@ transactionContinue.toArray(); // [...]
 #### Przedtransakcja, brak kontynuacji
 
 ```java
-final var result = client.doTransactionInit(
+final Publisher<? extends Transaction> result = client.doTransactionInit(
   TransactionInitRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -146,7 +146,7 @@ final var result = client.doTransactionInit(
     ).build()
 );
 
-final var transactionInit = result.blockingGet();
+final Transaction transactionInit = result.blockFirst();
 
 transactionInit.getConfirmation(); // NOTCONFIRMED
 transactionInit.getReason(); // MULTIPLY_PAID_TRANSACTION
@@ -163,7 +163,7 @@ W zależności od kanału płatności jaki zostanie wybrany w kontekście transa
 Przykład wywołania (dane do transakcji):
 
 ```java
-final var result = client.doTransactionBackground(
+final Publisher<TransactionBackground> result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -182,40 +182,13 @@ final var result = client.doTransactionBackground(
     ).build()
 );
 
-final var transactionBackground = result.blockingGet();
+final TransactionBackground transactionBackground = result.blockFirst();
 
 transactionBackground.getReceiverNRB(); // 47 1050 1764 1000 0023 2741 0516
 transactionBackground.getReceiverName(); // Autopay
 transactionBackground.getBankHref(); // https://ssl.bsk.com.pl/bskonl/login.html
 transactionBackground.toArray(); // [...]
 // ...
-```
-
-Przykład wywołania (formularz płatności):
-
-```java
-final var result = client.doTransactionBackground(
-  TransactionBackgroundRequest.builder()
-    .setGatewayUrl("https://testpay.autopay.eu")
-    .setTransaction(
-      TransactionBackground.builder()
-        .orderID("12345")
-        .amount("5.12")
-        .description("Test transaction 12345")
-        .gatewayID(1500)
-        .currency("PLN")
-        .customerEmail("test@test.test")
-        .customerIP("127.0.0.1")
-        .title("Test")
-        .validityTime(LocalDateTime.now().plusHours(5))
-        .linkValidityTime(LocalDateTime.now().plusHours(5))
-        .build()
-    ).build()
-);
-
-final var transactionBackground = result.blockingGet();
-
-System.out.println(transactionBackground); // <form action="https://pg-accept.blue.pl/gateway/test/index.jsp" name="formGoPBL" method="POST"><input type="hidden" name="transaction" value="758519"> (...)
 ```
 
 ## Obsługa ITN (Instant Transaction Notification)
@@ -228,31 +201,38 @@ Po przetworzeniu komunikatu ITN należy przekazać odpowiedź. Służy do tego m
 Poniżej przykład zastosowania obsługi ITN:
 
 ```java
-final var result = client.doItnIn(transactions);
+final ItnRequest itnIn = client.doItnIn(transactions);
 
-final var itnIn = result.blockingGet();
-final var transactionConfirmed = client.checkHash(itnIn);
+final Map<Itn, Boolean> predicates = new HashMap<>();
 
-// Jeżeli status płatności z ITN jest potwierdzony i hash jest poprawny - zakończ płatność w systemie
-if (itnIn.getPaymentStatus() == "SUCCESS" && transactionConfirmed) {
-    final var order = this.orderRepository.find($itnIn.getOrderId());
+for (final Itn itn : itnIn.transactions.transaction) {
+  final boolean transactionConfirmed = client.checkHash(itn);
+  
+  // Jeżeli status płatności z ITN jest potwierdzony i hash jest poprawny - zakończ płatność w systemie
+  if (itn.getPaymentStatus() == "SUCCESS" && transactionConfirmed) {
+    final var order = orderRepository.find(itn.getOrderId());
 
     order.setPaymentCompleted();
+    predicates.put(itn, true);
+  } else {
+    predicates.put(itn, false);
+  }
 }
 
-final var itnResponse = client.doItnInResponse(itnIn, transactionConfirmed);
-
-return new Response(itnResponse.blockingGet().toXml());
+final Publisher<ItnResponse> itnResponse = client.doItnInResponse(itnIn, predicates::get);
+// Then return itnResponse as XML
 ```
 
 #### Obsługa ITN, utworzenie obiektu komunikatu
 Podczas implementacji może okazać się że przed wykonaniem obsługi ITN zajdzie potrzeba np. konfiguracji klienta na podstawie danych dostępowych w oparciu o walutę.
-W takim modelu programista może wspomóc się metodą `getItnObject`.
+W takim modelu programista może wspomóc się metodą `getItnRequestObject`.
 
 ```java
-final var itn = AutopayClient.getItnObject(transactions);
+final ItnRequest itnRequest = AutopayClient.getItnRequestObject(encodedItnRequest, serializer);
 
-itn.getCurrency(); // PLN
+for (final Itn itn : itnRequest.transactions.transaction) {
+  itn.getCurrency(); // PLN
+}
 // ...
 ```
 
@@ -260,12 +240,12 @@ itn.getCurrency(); // PLN
 Metoda `getRegulationList` umożliwia odpytanie o aktualną listę regulaminów wraz linkami do wyświetlenia w serwisie oraz akceptacji przez klienta.
 
 ```java
-final Publisher<PaywayList> result = this.AutopayClient.getRegulationList("https://testpay.autopay.eu");
+final Publisher<PaywayList> result = client.getRegulationList("https://testpay.autopay.eu");
 ```
 
 ## Pobieranie listy kanałów płatności
 Metoda `getPaywayList` umożliwia odpytanie o aktualną listę płatności.
 
 ```java
-final Publisher<PaywayList> result = this.AutopayClient.getPaywayList("https://testpay.autopay.eu");
+final Publisher<PaywayList> result = client.getPaywayList("https://testpay.autopay.eu");
 ```
