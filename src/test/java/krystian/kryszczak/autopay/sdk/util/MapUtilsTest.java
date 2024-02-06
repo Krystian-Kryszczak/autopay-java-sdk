@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.security.InvalidParameterException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,21 @@ public final class MapUtilsTest {
     @Test
     public void testNotNullMapOfWithNullsInputDoesNotThrowsException() {
         assertDoesNotThrow(() -> MapUtils.notNullMapOf(null, null));
+    }
+
+    @Test
+    public void testNotNullMapOfWithUnpairedInputThrowsException() {
+        assertThrows(InvalidParameterException.class, () -> MapUtils.notNullMapOf(null, null, null));
+    }
+
+    @Test
+    public void testNotNullMapOfReturnsExceptedMap() {
+        final Map<String, String> excepted = new LinkedHashMap<>();
+        excepted.put("Hello", "world!");
+        excepted.put("Autopay", "SDK");
+        excepted.put("Java", "VM");
+
+        assertEquals(excepted, MapUtils.notNullMapOf("Hello", "world!", "Autopay", "SDK", "Java", "VM"));
     }
 
     @Test

@@ -44,7 +44,7 @@ public final class SerializerItnTest {
     public Itn @NotNull [] getItns() {
         return new Itn[] {
             Itn.builder()
-                .serviceID("service_1")
+                .serviceID(1)
                 .orderID("order_1")
                 .remoteID("remote_1")
                 .amount("123")
@@ -69,7 +69,7 @@ public final class SerializerItnTest {
                 ).hash("123asd123asd")
                 .build(),
             Itn.builder()
-                .serviceID("service_2")
+                .serviceID(2)
                 .orderID("order_2")
                 .remoteID("remote_2")
                 .amount("321")
@@ -91,7 +91,7 @@ public final class SerializerItnTest {
                 ).hash("56465as4d65465")
                 .build(),
             Itn.builder()
-                .serviceID("service_3")
+                .serviceID(3)
                 .orderID("order_3")
                 .remoteID("remote_3")
                 .amount("13")
