@@ -1,10 +1,10 @@
 package krystian.kryszczak.autopay.sdk.http.client.vertx;
 
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.impl.headers.HeadersMultiMap;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
-import io.vertx.ext.web.multipart.MultipartForm;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import krystian.kryszczak.autopay.sdk.http.client.HttpClient;
@@ -35,21 +35,13 @@ public final class VertxHttpClient implements HttpClient {
     @Override
     public @NotNull <I extends HttpRequestBody> Publisher<@NotNull String> post(@NotNull HttpRequest<I> httpRequest) {
         return Flux.create(sink ->
-            client.post(httpRequest.uri().toString())
+            client.postAbs(httpRequest.uri().toString())
                 .putHeaders(HeadersMultiMap.httpHeaders().addAll(httpRequest.headers()))
-                .sendMultipartForm(adapt(httpRequest.body()))
+                .putHeader("Content-Type", "application/x-www-form-urlencoded")
+                .sendForm(MultiMap.caseInsensitiveMultiMap().addAll(httpRequest.body().toCapitalizedMap()))
                 .onSuccess(response -> sink.next(response.bodyAsString("UTF-8")))
                 .onFailure(throwable -> sink.error(throwable.getCause()))
                 .onComplete(it -> sink.complete())
         );
-    }
-
-    private MultipartForm adapt(@NotNull HttpRequestBody body) {
-        final MultipartForm multipartForm = MultipartForm.create()
-                .setCharset("UTF-8");
-        for (final var entry : body.toCapitalizedMap().entrySet()) {
-            multipartForm.attribute(entry.getKey(), entry.getValue());
-        }
-        return multipartForm;
     }
 }
