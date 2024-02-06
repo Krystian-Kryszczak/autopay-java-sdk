@@ -17,6 +17,8 @@ import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.Map;
 
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
+
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -35,7 +37,7 @@ public final class Confirmation extends Hashable implements Serializable, HttpRe
     @Contract(" -> new")
     @Override
     public @NotNull @Unmodifiable Map<@NotNull String, @NotNull String> toMap() {
-        return Map.of(
+        return notNullMapOf(
             "serviceID", String.valueOf(serviceID),
             "orderID", orderID,
             "hash", hash

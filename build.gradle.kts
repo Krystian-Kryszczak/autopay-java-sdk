@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.8-beta"
+version = "0.7.9-beta"
 
 repositories {
   mavenCentral()
@@ -52,7 +52,6 @@ dependencies {
   implementation("io.vertx:vertx-web-client")
   implementation("io.vertx:vertx-reactive-streams")
 
-  testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
 
   implementation("commons-codec:commons-codec:1.15")

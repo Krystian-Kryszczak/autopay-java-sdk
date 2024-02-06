@@ -10,10 +10,10 @@ import java.util.Map;
 public final class MapUtils {
     public static @NotNull Map<@NotNull String, @NotNull String> notNullMapOf(@Nullable Object... input) {
         if (input == null) return Map.of();
-        if (input.length % 2 != 0) throw new InvalidParameterException();
+        if (input.length % 2 != 0) throw new InvalidParameterException("Odd number of parameters! (" + input.length + ")");
 
         final Map<String, String> result = new LinkedHashMap<>();
-        for (int i = 0; i < input.length / 2; i += 2) {
+        for (int i = 0; i < input.length; i += 2) {
             final Object key = input[i];
             final Object value = input[i + 1];
 

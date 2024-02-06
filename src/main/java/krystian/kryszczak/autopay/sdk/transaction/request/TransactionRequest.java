@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract sealed class TransactionRequest<T extends Transaction> implements Serializable permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
+public abstract sealed class TransactionRequest<T extends Transaction> implements Serializable
+        permits TransactionBackgroundRequest, TransactionInitRequest, TransactionContinueRequest {
     private final @NotNull String gatewayUrl;
     private final @NotNull T transaction;
     private final @NotNull Translations.Language htmlFormLanguage;
@@ -32,14 +33,17 @@ public abstract sealed class TransactionRequest<T extends Transaction> implement
         transaction.setHash(hash);
     }
 
-    protected abstract sealed static class Builder<T extends Transaction> permits TransactionBackgroundRequest.Builder, TransactionContinueRequest.Builder, TransactionInitRequest.Builder {
-        protected abstract static sealed class Required<T extends Transaction> permits TransactionBackgroundRequest.Builder.Required, TransactionContinueRequest.Builder.Required, TransactionInitRequest.Builder.Required {
+    protected abstract sealed static class Builder<T extends Transaction> permits TransactionBackgroundRequest.Builder,
+            TransactionContinueRequest.Builder, TransactionInitRequest.Builder {
+        protected abstract static sealed class Required<T extends Transaction> permits TransactionBackgroundRequest.Builder.Required,
+                TransactionContinueRequest.Builder.Required, TransactionInitRequest.Builder.Required {
             public abstract @NotNull WithGatewayUrl<T> setGatewayUrl(@NotNull String gatewayUrl);
             public abstract @NotNull WithTransaction<T> setTransaction(@NotNull T transaction);
         }
 
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
-        public abstract static sealed class WithGatewayUrl<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithGatewayUrl, TransactionContinueRequest.Builder.WithGatewayUrl, TransactionInitRequest.Builder.WithGatewayUrl {
+        protected abstract static sealed class WithGatewayUrl<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithGatewayUrl,
+                TransactionContinueRequest.Builder.WithGatewayUrl, TransactionInitRequest.Builder.WithGatewayUrl {
             @Getter(AccessLevel.PROTECTED)
             private String gatewayUrl;
 
@@ -52,7 +56,8 @@ public abstract sealed class TransactionRequest<T extends Transaction> implement
         }
 
         @AllArgsConstructor(access = AccessLevel.PROTECTED)
-        public abstract static sealed class WithTransaction<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithTransaction, TransactionContinueRequest.Builder.WithTransaction, TransactionInitRequest.Builder.WithTransaction {
+        protected abstract static sealed class WithTransaction<T extends Transaction> permits TransactionBackgroundRequest.Builder.WithTransaction,
+                TransactionContinueRequest.Builder.WithTransaction, TransactionInitRequest.Builder.WithTransaction {
             @Getter(AccessLevel.PROTECTED)
             private @NotNull T transaction;
 
@@ -64,7 +69,8 @@ public abstract sealed class TransactionRequest<T extends Transaction> implement
             }
         }
 
-        protected abstract static sealed class Completer<T extends Transaction> permits TransactionBackgroundRequest.Builder.Completer, TransactionContinueRequest.Builder.Completer, TransactionInitRequest.Builder.Completer {
+        protected abstract static sealed class Completer<T extends Transaction> permits TransactionBackgroundRequest.Builder.Completer,
+                TransactionContinueRequest.Builder.Completer, TransactionInitRequest.Builder.Completer {
             protected @NotNull String gatewayUrl;
             protected @NotNull T transaction;
             protected @NotNull Translations.Language language = Translations.Language.pl;

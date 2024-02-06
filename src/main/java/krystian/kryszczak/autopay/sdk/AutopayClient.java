@@ -131,14 +131,6 @@ public final class AutopayClient {
      * Returns response for ITN IN request.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest) {
-        return doItnInResponse(itnRequest, itn -> true);
-    }
-
-    /**
-     * Returns response for ITN IN request.
-     */
-    @ApiStatus.AvailableSince("1.0")
     public @NotNull Publisher<@NotNull ItnResponse> doItnInResponse(final @NotNull ItnRequest itnRequest,
             final Predicate<@NotNull Itn> confirmTransactionPredicate) {
         return Mono.just(ItnResponse.create(itnRequest, confirmTransactionPredicate, this.configuration))

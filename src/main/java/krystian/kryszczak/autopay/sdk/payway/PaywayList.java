@@ -9,26 +9,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 public class PaywayList extends ServiceHttpRequestBody implements Serializable {
-    protected PaywayList(@NotNull String serviceID, @NotNull String messageID, @NotNull String hash) {
+    protected PaywayList(int serviceID, @NotNull String messageID, @NotNull String hash) {
         super(serviceID, messageID, hash);
     }
 
     public static @NotNull PaywayList create(int serviceID, @NotNull String messageID, @NotNull AutopayConfiguration configuration) {
-        final String serviceIdStr = String.valueOf(serviceID);
-
         final String hash = HashGenerator.generateHash(
             new Object[] {
-                serviceIdStr,
+                serviceID,
                 messageID
             },
             configuration
         );
 
         return new PaywayList(
-            serviceIdStr,
+            serviceID,
             messageID,
             hash
         );

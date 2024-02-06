@@ -10,26 +10,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class RegulationList extends ServiceHttpRequestBody implements Serializable {
-    protected RegulationList(@NotNull String serviceID, @NotNull String messageID, @Nullable String hash) {
+    protected RegulationList(int serviceID, @NotNull String messageID, @Nullable String hash) {
         super(serviceID, messageID, hash);
     }
 
     public static @NotNull RegulationList create(int serviceID, @NotNull String messageID, @NotNull AutopayConfiguration configuration) {
-        final String serviceIdStr = String.valueOf(serviceID);
-
         final String hash = HashGenerator.generateHash(
             new Object[] {
-                serviceIdStr,
+                serviceID,
                 messageID
             },
             configuration
         );
 
         return new RegulationList(
-            serviceIdStr,
+            serviceID,
             messageID,
             hash
         );

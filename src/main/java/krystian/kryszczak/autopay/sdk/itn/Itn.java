@@ -52,7 +52,7 @@ public final class Itn extends Hashable implements Serializable {
     /**
      * Transaction service id.
      */
-    private final @Nullable String serviceID;
+    private final @Nullable Integer serviceID;
     /**
      * Transaction order id.
      */

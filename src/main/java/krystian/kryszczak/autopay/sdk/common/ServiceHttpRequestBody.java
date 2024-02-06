@@ -6,6 +6,7 @@ import krystian.kryszczak.autopay.sdk.hash.Hashable;
 import krystian.kryszczak.autopay.sdk.http.request.HttpRequestBody;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,11 +15,12 @@ import java.util.Map;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
+@ToString
 @XmlRootElement
 @XmlType(propOrder = { "serviceID", "messageID", "hash" })
 @AllArgsConstructor
 public abstract class ServiceHttpRequestBody extends Hashable implements HttpRequestBody {
-    protected final @NotNull String serviceID;
+    protected final int serviceID;
     protected final @NotNull String messageID;
     protected final @Nullable String hash;
 

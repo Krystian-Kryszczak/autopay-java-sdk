@@ -9,13 +9,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.payway.PaywayList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
 @Getter
-@ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonRootName("list")
 @XmlRootElement
@@ -27,7 +25,7 @@ public final class PaywayListResponse extends PaywayList {
 
     @JsonCreator
     @ConstructorProperties({ "serviceID", "messageID", "gateways", "hash" })
-    public PaywayListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull Gateway @NotNull [] gateways, @NotNull String hash) {
+    public PaywayListResponse(int serviceID, @NotNull String messageID, @NotNull Gateway @NotNull [] gateways, @NotNull String hash) {
         super(serviceID, messageID, hash);
         this.gateways = gateways;
     }

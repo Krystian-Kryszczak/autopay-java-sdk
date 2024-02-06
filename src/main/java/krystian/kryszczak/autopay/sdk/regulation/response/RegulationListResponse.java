@@ -7,14 +7,12 @@ import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.regulation.RegulationList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Arrays;
 
 @Getter
-@ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonRootName("regulationList")
 @XmlRootElement
@@ -24,7 +22,7 @@ public final class RegulationListResponse extends RegulationList {
 
     @JsonCreator
     @ConstructorProperties({ "serviceID", "messageID", "regulations", "hash" })
-    public RegulationListResponse(@NotNull String serviceID, @NotNull String messageID, @NotNull Regulations regulations, @NotNull String hash) {
+    public RegulationListResponse(int serviceID, @NotNull String messageID, @NotNull Regulations regulations, @NotNull String hash) {
         super(serviceID, messageID, hash);
         this.regulations = regulations;
     }
