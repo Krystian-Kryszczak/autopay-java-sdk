@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "krystian.kryszczak"
-version = "0.7.9-beta"
+version = "0.8.0-beta"
 
 repositories {
   mavenCentral()
@@ -71,6 +71,8 @@ dependencies {
   testImplementation("org.xmlunit:xmlunit-parent:2.9.1")
   testImplementation("org.xmlunit:xmlunit-placeholders:2.9.1")
   testImplementation("org.xmlunit:xmlunit-assertj:2.9.1")
+
+  testImplementation("org.wiremock:wiremock:3.3.1")
 
   implementation("ch.qos.logback:logback-core:$logbackVersion")
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
