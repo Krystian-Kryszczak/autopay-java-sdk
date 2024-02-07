@@ -18,9 +18,9 @@ import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
+@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 @JsonRootName("transaction")
 @XmlRootElement
 @XmlType(propOrder = {
@@ -56,7 +56,8 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
     "hash"
 })
 @AllArgsConstructor
-public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable permits TransactionBackground, TransactionContinue, TransactionInit {
+public abstract sealed class Transaction extends Hashable implements HttpRequestBody, Serializable
+        permits TransactionBackground, TransactionContinue, TransactionInit, PaywayFormResponse {
     @Setter
     protected @Nullable Integer serviceID;
     /**

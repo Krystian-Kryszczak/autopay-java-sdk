@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 @JsonClassDescription
 public record Regulation(
     @NotNull String regulationID,
-    @Nullable String url, // TODO sprawdzić czy jest wogóle szansa, że to występuje w jakiejś sytuacji
+    @Nullable String url,
     @NotNull String type,
     @NotNull String language,
     @Nullable String inputLabel,

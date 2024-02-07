@@ -4,6 +4,8 @@ import krystian.kryszczak.autopay.sdk.BaseTestCase;
 import krystian.kryszczak.autopay.sdk.common.exception.TranslationException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public final class TranslationsTest extends BaseTestCase {
@@ -12,7 +14,7 @@ public final class TranslationsTest extends BaseTestCase {
 
     @Test
     public void testGetTranslationReturnsTranslation() {
-        final var translation = Translations.getTranslations(Translations.Language.pl);
+        final Map<String, String> translation = Translations.getTranslations(Translations.Language.pl);
 
         assertFalse(translation.isEmpty());
         assertSame(translation.get("form.paywall.redirect"), TRANSLATION);
@@ -20,7 +22,7 @@ public final class TranslationsTest extends BaseTestCase {
 
     @Test
     public void testGetTranslationThrowsExceptionOnMissingTranslationKey() {
-        final var required_translation_keys = new String[] {
+        final String[] required_translation_keys = new String[] {
             "form.test.key"
         };
 

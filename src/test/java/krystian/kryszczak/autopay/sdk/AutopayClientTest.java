@@ -16,10 +16,8 @@ import krystian.kryszczak.autopay.sdk.itn.response.ItnResponse;
 import krystian.kryszczak.autopay.sdk.payway.response.PaywayListResponse;
 import krystian.kryszczak.autopay.sdk.regulation.response.RegulationListResponse;
 import krystian.kryszczak.autopay.sdk.serializer.Serializer;
-import krystian.kryszczak.autopay.sdk.transaction.Transaction;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
+import krystian.kryszczak.autopay.sdk.transaction.*;
+import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -34,6 +32,8 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.merge;
+import static krystian.kryszczak.autopay.sdk.util.StringUtils.unescapeHtml;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
@@ -81,12 +81,13 @@ public final class AutopayClientTest extends BaseTestCase {
             Mono.just(TransactionBackgroundFixture.getTransactionBackgroundResponse())
         );
 
-        final Mono<TransactionBackground> result = Mono.fromDirect(
+        final Mono<Transaction> result = Mono.fromDirect(
             client.doTransactionBackground(TransactionBackgroundFixture.getTransactionBackground())
         );
 
-        final TransactionBackground transactionBackground = assertDoesNotThrow(() -> result.block());
+        final Transaction transactionBackground = assertDoesNotThrow(() -> result.block());
         assertNotNull(transactionBackground);
+        assertInstanceOf(TransactionBackground.class, transactionBackground);
 
         final var transactionBackgroundFixture = TransactionBackgroundFixture.getTransactionBackgroundResponseData();
 
@@ -115,6 +116,23 @@ public final class AutopayClientTest extends BaseTestCase {
             .and(TransactionBackgroundFixture.getTransactionBackgroundResponse())
             .ignoreWhitespace()
             .areIdentical();
+    }
+
+    @Test
+    public void testDoTransactionBackgroundReturnsPaywayForm() {
+        when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
+            Mono.just(TransactionBackgroundFixture.getPaywayFormResponse())
+        );
+
+        final Mono<Transaction> result = Mono.fromDirect(
+            client.doTransactionBackground(TransactionBackgroundFixture.getTransactionBackground())
+        );
+
+        final Transaction transaction = assertDoesNotThrow(() -> result.block());
+
+        assertNotNull(transaction);
+        assertInstanceOf(PaywayFormResponse.class, transaction);
+        assertEquals(unescapeHtml(TransactionBackgroundFixture.getPaywayFormResponse()), transaction.toString());
     }
 
     @Test
@@ -205,11 +223,34 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @ParameterizedTest
+    @MethodSource("checkHashProvider")
+    public void testCheckHashReturnsExpectedValue(String hash, boolean value) {
+        final Transaction transaction = mock(TransactionInit.class);
+        final TransactionInitRequest fixture = TransactionInitFixture.getTransactionInit();
+        final String[] transactionInitData = merge(
+            new String[] { fixture.getGatewayUrl() },
+            fixture.getTransaction().toMap().values().toArray(String[]::new)
+        );
+
+        when(transaction.toArray()).thenReturn(transactionInitData);
+        when(transaction.getHash()).thenReturn(hash);
+        when(transaction.isHashPresent()).thenReturn(true);
+
+        final boolean result = client.checkHash(transaction);
+
+        assertEquals(value, result);
+    }
+
+    @ParameterizedTest
     @SuppressWarnings("unused")
     @MethodSource("checkHashProvider")
     public void testCheckHashThrowsHashNotReturnedException(String hash, boolean value) {
         final Transaction transaction = mock(TransactionInit.class);
-        final String[] transactionInitData = TransactionInitFixture.getTransactionInit().getTransaction().toArray();
+        final TransactionInitRequest fixture = TransactionInitFixture.getTransactionInit();
+        final String[] transactionInitData = merge(
+            new String[] { fixture.getGatewayUrl() },
+            fixture.getTransaction().toMap().values().toArray(String[]::new)
+        );
 
         when(transaction.toArray()).thenReturn(transactionInitData);
         when(transaction.getHash()).thenReturn(hash);

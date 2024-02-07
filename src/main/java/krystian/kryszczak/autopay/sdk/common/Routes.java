@@ -10,6 +10,7 @@ public enum Routes {
     GET_REGULATIONS_ROUTE("/webapi/regulationsGet");
 
     private final @NotNull String value;
+
     Routes(@NotNull String value) {
         this.value = value;
     }

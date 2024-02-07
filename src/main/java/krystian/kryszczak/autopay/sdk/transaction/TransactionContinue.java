@@ -17,12 +17,13 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.mergeIfAbsent;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
 @Getter
+@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 @JsonClassDescription
 @XmlRootElement
 @XmlType(propOrder = {
@@ -75,13 +76,13 @@ public final class TransactionContinue extends Transaction {
     @Transient
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return notNullMapOf(
+        return mergeIfAbsent(notNullMapOf(
             "status", status,
             "redirecturl", redirecturl,
             "orderID", orderID,
             "remoteID", remoteID,
             "hash", hash
-        );
+        ), super.toMap());
     }
 
     @Transient

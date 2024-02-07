@@ -16,11 +16,12 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
+import static krystian.kryszczak.autopay.sdk.util.MapUtils.mergeIfAbsent;
 import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 
+@SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 @JsonClassDescription
 @XmlRootElement
 @XmlType(propOrder = {
@@ -71,7 +72,7 @@ public final class TransactionBackground extends Transaction {
     @Transient
     @Override
     public @NotNull Map<@NotNull String, @NotNull String> toMap() {
-        return notNullMapOf(
+        return mergeIfAbsent(notNullMapOf(
             "receiverNRB", receiverNRB,
             "receiverName", receiverName,
             "receiverAddress", receiverAddress,
@@ -83,7 +84,7 @@ public final class TransactionBackground extends Transaction {
             "bankHref", bankHref,
             "returnURL", returnURL,
             "hash", hash
-        );
+        ), super.toMap());
     }
 
     @Transient

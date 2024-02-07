@@ -2,17 +2,19 @@ package krystian.kryszczak.autopay.sdk.transaction.parser;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
+import krystian.kryszczak.autopay.sdk.common.AutopayPattern;
 import krystian.kryszczak.autopay.sdk.common.exception.HashException;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
 import krystian.kryszczak.autopay.sdk.common.parser.ResponseParser;
 import krystian.kryszczak.autopay.sdk.hash.HashChecker;
 import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
-import krystian.kryszczak.autopay.sdk.transaction.Transaction;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionBackground;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionContinue;
-import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
+import krystian.kryszczak.autopay.sdk.transaction.*;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Pattern;
+
+import static krystian.kryszczak.autopay.sdk.util.StringUtils.unescapeHtml;
 
 public final class TransactionResponseParser<T extends Transaction> extends ResponseParser<T> {
     public TransactionResponseParser(@NotNull String response, @NotNull AutopayConfiguration configuration) {
@@ -25,11 +27,18 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
 
     public @NotNull Transaction parse(boolean transactionInit) throws RuntimeException {
         checkResponseError();
-        if (transactionInit) {
+
+        if (isPaywayFormResponse()) {
+            return new PaywayFormResponse(unescapeHtml(this.responseBody));
+        } else if (transactionInit) {
             return this.parseTransactionInitResponse();
         } else {
             return this.parseTransactionBackgroundResponse();
         }
+    }
+
+    private boolean isPaywayFormResponse() {
+        return Pattern.compile(AutopayPattern.PATTERN_PAYWAY, Pattern.DOTALL).matcher(this.responseBody).find();
     }
 
     @SneakyThrows

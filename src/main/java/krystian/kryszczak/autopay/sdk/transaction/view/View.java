@@ -1,7 +1,8 @@
-package krystian.kryszczak.autopay.sdk.transaction;
+package krystian.kryszczak.autopay.sdk.transaction.view;
 
 import krystian.kryszczak.autopay.sdk.common.Routes;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
+import krystian.kryszczak.autopay.sdk.transaction.Transaction;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionRequest;
 import org.jetbrains.annotations.NotNull;
 

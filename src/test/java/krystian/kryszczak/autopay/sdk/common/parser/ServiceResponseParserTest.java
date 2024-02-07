@@ -17,7 +17,7 @@ public final class ServiceResponseParserTest extends BaseTestCase {
     @ParameterizedTest
     @MethodSource("wrongXmlProvider")
     public void testParseListResponseReturnsEmptyMonoOnWrongXml(String responseBody) {
-        final var parser = new ServiceResponseParser(
+        final ServiceResponseParser parser = new ServiceResponseParser(
             responseBody,
             getTestConfiguration(),
             Serializer.createDefault()

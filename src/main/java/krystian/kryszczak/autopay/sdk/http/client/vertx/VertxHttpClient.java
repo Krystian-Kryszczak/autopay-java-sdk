@@ -2,7 +2,9 @@ package krystian.kryszczak.autopay.sdk.http.client.vertx;
 
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.impl.headers.HeadersMultiMap;
+import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
 import jakarta.inject.Inject;
@@ -39,9 +41,14 @@ public final class VertxHttpClient implements HttpClient {
                 .putHeaders(HeadersMultiMap.httpHeaders().addAll(httpRequest.headers()))
                 .putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .sendForm(MultiMap.caseInsensitiveMultiMap().addAll(httpRequest.body().toCapitalizedMap()))
-                .onSuccess(response -> sink.next(response.bodyAsString("UTF-8")))
+                .onSuccess(response -> sink.next(getBody(response)))
                 .onFailure(throwable -> sink.error(throwable.getCause()))
                 .onComplete(it -> sink.complete())
         );
+    }
+
+    private @NotNull String getBody(@NotNull HttpResponse<Buffer> response) {
+        final String body = response.bodyAsString("UTF-8");
+        return body != null ? body : "";
     }
 }

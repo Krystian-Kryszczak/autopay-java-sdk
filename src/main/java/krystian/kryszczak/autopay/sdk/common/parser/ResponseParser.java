@@ -23,13 +23,13 @@ public abstract class ResponseParser<T extends Serializable> {
     protected final @NotNull AutopayConfiguration configuration;
 
     protected void checkResponseError() throws XmlException {
-        if (Pattern.compile(AutopayPattern.PATTERN_XML_ERROR).matcher(this.responseBody).matches()) {
+        if (Pattern.compile(AutopayPattern.PATTERN_XML_ERROR).matcher(this.responseBody).find()) {
             final var xmlData = new XmlMapper().valueToTree(this.responseBody);
 
             throw XmlException.xmlBodyContainsError(xmlData.get("name").asText());
         }
 
-        if (Pattern.compile(AutopayPattern.PATTERN_GENERAL_ERROR).matcher(this.responseBody).matches()) {
+        if (Pattern.compile(AutopayPattern.PATTERN_GENERAL_ERROR).matcher(this.responseBody).find()) {
             throw XmlException.xmlGeneralError(this.responseBody);
         }
     }

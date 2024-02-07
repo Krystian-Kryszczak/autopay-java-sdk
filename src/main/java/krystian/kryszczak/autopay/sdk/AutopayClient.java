@@ -27,6 +27,7 @@ import krystian.kryszczak.autopay.sdk.transaction.parser.TransactionResponsePars
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionRequest;
+import krystian.kryszczak.autopay.sdk.transaction.view.View;
 import krystian.kryszczak.autopay.sdk.util.RandomUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,7 +42,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -78,9 +78,9 @@ public final class AutopayClient {
      * Returns payway form or transaction data for user.
      */
     @ApiStatus.AvailableSince("1.0")
-    public @NotNull Publisher<@NotNull TransactionBackground> doTransactionBackground(
+    public @NotNull Publisher<? extends @NotNull Transaction> doTransactionBackground(
             final @NotNull TransactionBackgroundRequest transactionRequest) {
-        return doTransaction(transactionRequest, false).cast(TransactionBackground.class);
+        return doTransaction(transactionRequest, false);
     }
 
     /**
@@ -97,19 +97,13 @@ public final class AutopayClient {
     private @NotNull <T extends Transaction> Flux<? extends @NotNull Transaction> doTransaction(
             final @NotNull TransactionRequest<T> transactionRequest, final boolean transactionInit) {
         return Mono.fromRunnable(() -> transactionRequest.configure(configuration))
-            .then(Mono.fromSupplier(() -> {
-                try {
-                    return new HttpRequest<>(
-                        new URI(transactionRequest.getGatewayUrl() + Routes.PAYMENT_ROUTE),
-                        Map.of(HEADER, !transactionInit ? PAY_HEADER : CONTINUE_HEADER),
-                        transactionRequest.getTransaction()
-                    );
-                } catch (URISyntaxException e) {
-                    logger.error("An error occurred while executing doTransaction"
-                        + (transactionInit ? "Init" : "Background") + ".", e);
-                    return null;
-                }
-            })).flatMapMany(httpClient::post)
+            .then(Mono.fromSupplier(
+                () -> new HttpRequest<>(
+                    URI.create(transactionRequest.getGatewayUrl()).resolve(Routes.PAYMENT_ROUTE.getValue()),
+                    Map.of(HEADER, !transactionInit ? PAY_HEADER : CONTINUE_HEADER),
+                    transactionRequest.getTransaction()
+                )
+            )).flatMapMany(httpClient::post)
             .mapNotNull(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
             .doOnError(throwable -> logger.error(
                 "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
