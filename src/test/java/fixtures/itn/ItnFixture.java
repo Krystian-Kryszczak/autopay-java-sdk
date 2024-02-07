@@ -15,10 +15,7 @@ import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 public final class ItnFixture {
     @SneakyThrows
     public static String getItnInRequestBase64Encoded() {
-        return Base64.getEncoder().encodeToString(
-            Files.readString(Path.of(FIXTURES_FOLDER_PATH + "itn/ItnInRequest.xml"))
-                .getBytes()
-        );
+        return Base64.getEncoder().encodeToString(getItnInRequest().getBytes());
     }
 
     @SneakyThrows

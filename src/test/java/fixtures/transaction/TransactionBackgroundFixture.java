@@ -50,4 +50,9 @@ public final class TransactionBackgroundFixture {
         }
         return dst;
     }
+
+    @SneakyThrows
+    public static String getPaywayFormResponse() {
+        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/PaywayFormResponse.txt"));
+    }
 }
