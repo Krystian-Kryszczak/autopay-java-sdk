@@ -12,9 +12,9 @@ public final class StringUtils {
     private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     /**
-     * Convert binary data into hexadecimal representation
+     * Convert binary data into hexadecimal representation.
      */
-    public static @NotNull String bin2hex(@NotNull String binary) {
+    public static @NotNull String bin2hex(final @NotNull String binary) {
         final byte[] bytes = binary.getBytes(StandardCharsets.US_ASCII);
 
         final StringBuilder sb = new StringBuilder();
@@ -25,9 +25,9 @@ public final class StringUtils {
     }
 
     /**
-     * Decodes a hexadecimal encoded binary string
+     * Decodes a hexadecimal encoded binary string.
      */
-    public static @Nullable String hex2bin(@NotNull String hex) {
+    public static @Nullable String hex2bin(final @NotNull String hex) {
         try {
             byte[] bytes = new byte[hex.length() / 2];
             for (int i = 0; i < bytes.length; i++) {
@@ -41,13 +41,25 @@ public final class StringUtils {
     }
 
     /**
-     * Make a string's first character uppercase
-     * @param text The input string.
-     * @return Returns a string with the first character of string capitalized.
+     * Make a string's first character uppercase.
+     * @param text The input string
+     * @return Returns a string with the first character of string capitalized
      */
-    public static @NotNull String capitalize(@NotNull String text) {
+    public static @NotNull String capitalize(final @NotNull String text) {
         Objects.requireNonNull(text);
         if (text.isBlank()) return text;
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
+    }
+
+    /**
+     * Decodes HTML-encoded entities to their corresponding characters.
+     * @param input The input string
+     * @return a new unescaped String
+     */
+    public static @NotNull String unescapeHtml(final @NotNull String input) {
+        return input.replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">")
+            .replaceAll("&quot;", "\"")
+            .replaceAll("&amp;", "&");
     }
 }
