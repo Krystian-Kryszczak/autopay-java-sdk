@@ -1,5 +1,8 @@
 ## Autopay Java SDK (Un-official)
 
+[![CodeQL](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/codeql.yml/badge.svg)](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/codeql.yml)
+[![Java CI](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/gradle.yml/badge.svg)](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/gradle.yml)
+
 Kod zawarty w tym repozytorium umożliwia wykonanie transakcji oraz innych usług oferowanych przez Autopay S.A.
 
 Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
@@ -77,15 +80,13 @@ Po wykonaniu płatności, serwis Autopay wykona przekierowanie na skonfigurowany
 Wymagane jest, aby strona powrotu z płatności weryfikowała poprawność Hash, służy do tego metoda `doConfirmationCheck`. Należy przekazać do niej dane przesłane w żądaniu GET:
 
 ```java
-final Hashable data = Hashable.create(
-  new Object[] {
-    "123456", // ServiceID
-    "123" // OrderID
-  },
+final Confirmation confirmation = new Confirmation(
+  123456, // ServiceID
+  "123", // OrderID
   "df5f737f48bcef93361f590b460cc633b28f91710a60415527221f9cb90da52a" // Hash
 );
 
-final boolean result = client.doConfirmationCheck(data);
+final boolean result = client.doConfirmationCheck(Confirmation);
 ```
 
 ## Przedtransakcja
@@ -117,7 +118,7 @@ final Publisher<? extends Transaction> result = client.doTransactionInit(
     ).build()
 );
 
-final Transaction transactionContinue = result.blockFirst();
+final Transaction transactionContinue = Flux.from(result).blockFirst();
 
 transactionContinue.getRedirectUrl(); // https://pay-accept.bm.pl/payment/continue/9IA2UISN/718GTV5E
 transactionContinue.getStatus(); // PENDING
@@ -146,7 +147,7 @@ final Publisher<? extends Transaction> result = client.doTransactionInit(
     ).build()
 );
 
-final Transaction transactionInit = result.blockFirst();
+final Transaction transactionInit = Flux.from(result).blockFirst();
 
 transactionInit.getConfirmation(); // NOTCONFIRMED
 transactionInit.getReason(); // MULTIPLY_PAID_TRANSACTION
@@ -163,7 +164,7 @@ W zależności od kanału płatności jaki zostanie wybrany w kontekście transa
 Przykład wywołania (dane do transakcji):
 
 ```java
-final Publisher<TransactionBackground> result = client.doTransactionBackground(
+final Publisher<? extends Transaction> result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -182,13 +183,40 @@ final Publisher<TransactionBackground> result = client.doTransactionBackground(
     ).build()
 );
 
-final TransactionBackground transactionBackground = result.blockFirst();
+final Transaction transactionBackground = Flux.from(result).blockFirst();
 
 transactionBackground.getReceiverNRB(); // 47 1050 1764 1000 0023 2741 0516
 transactionBackground.getReceiverName(); // Autopay
 transactionBackground.getBankHref(); // https://ssl.bsk.com.pl/bskonl/login.html
 transactionBackground.toArray(); // [...]
 // ...
+```
+
+Przykład wywołania (formularz płatności):
+
+```java
+final Publisher<? extends Transaction> result = client.doTransactionBackground(
+  TransactionBackgroundRequest.builder()
+    .setGatewayUrl("https://testpay.autopay.eu")
+    .setTransaction(
+      TransactionBackground.builder()
+        .orderID("12345")
+        .amount("5.12")
+        .description("Test transaction 12345")
+        .gatewayID(1500)
+        .currency("PLN")
+        .customerEmail("test@test.test")
+        .customerIP("127.0.0.1")
+        .title("Test")
+        .validityTime(LocalDateTime.now().plusHours(5))
+        .linkValidityTime(LocalDateTime.now().plusHours(5))
+        .build()
+    ).build()
+);
+
+final Transaction transactionBackground = Flux.from(result).blockingGet();
+
+System.out.println(transactionBackground); // <form action="https://pg-accept.blue.pl/gateway/test/index.jsp" name="formGoPBL" method="POST"><input type="hidden" name="transaction" value="758519"> (...)
 ```
 
 ## Obsługa ITN (Instant Transaction Notification)
@@ -220,7 +248,8 @@ for (final Itn itn : itnIn.transactions.transaction) {
 }
 
 final Publisher<ItnResponse> itnResponse = client.doItnInResponse(itnIn, predicates::get);
-// Then return itnResponse as XML
+
+return Flux.from(itnResponse).map(it -> client.getSerializer().serialize(it));
 ```
 
 #### Obsługa ITN, utworzenie obiektu komunikatu
