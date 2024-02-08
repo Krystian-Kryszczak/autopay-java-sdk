@@ -5,8 +5,6 @@
 
 Kod zawarty w tym repozytorium umożliwia wykonanie transakcji oraz innych usług oferowanych przez Autopay S.A.
 
-Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
-
 ## Spis treści
 - [Wymagania](#wymagania)
 - [Konfiguracja klienta](#konfiguracja-klienta)
@@ -28,25 +26,29 @@ Użycie SDK zalecane jest podczas implementacji własnych modułów płatności.
 W celu utworzenia warstwy komunikacji należy utworzyć obiekt klasy `AutopayClient` podając id serwisu oraz klucz współdzielony (przyznane przez Autopay).
 
 ```java
-final AutopayClient client = new AutopayClient(
-  AutopayConfiguration.builder()
-    .setServiceId("ID SERWISU")
-    .setSharedKey("KLUCZ WSPÓŁDZIELONY")
-    .build()
-);
+final AutopayConfiguration configuration = AutopayConfiguration.builder()
+  .setServiceId("ID SERWISU")
+  .setSharedKey("KLUCZ WSPÓŁDZIELONY")
+  .build();
+
+final AutopayClient client = new AutopayClient(configuration);
+// lub
+final ReactorAutopayClient client = new ReactorAutopayClient(configuration);
 ```
 
 Podczas tworzenia obiektu klienta, za argumentami danych serwisu można dodatkowo dodać użyty tryb szyfrowania oraz separator danych (w przypadku kiedy są nadane inne niż domyślne):
 
 ```java
-final AutopayClient client = new AutopayClient(
-  AutopayConfiguration.builder()
-    .setServiceId("ID SERWISU")
-    .setSharedKey("KLUCZ WSPÓŁDZIELONY")
-    .setHashAlgorithm(HashType.SHA256) // tryb hashowania, domyślnie sha256, można użyć stałej z HashType
-    .setHashSeparator("|") // separator danych, domyślnie |
-    .build()
-);
+final AutopayConfiguration configuration = AutopayConfiguration.builder()
+  .setServiceId("ID SERWISU")
+  .setSharedKey("KLUCZ WSPÓŁDZIELONY")
+  .setHashAlgorithm(HashType.SHA256) // tryb hashowania, domyślnie sha256, można użyć stałej z HashType
+  .setHashSeparator("|") // separator danych, domyślnie |
+  .build();
+
+final AutopayClient client = new AutopayClient(configuration);
+// lub
+final ReactorAutopayClient client = new ReactorAutopayClient(configuration);
 ```
 
 ## Transakcja poprzez przekierowanie na paywall
@@ -104,7 +106,7 @@ W odpowiedzi otrzymywany jest link do kontynuacji transakcji lub odpowiedź info
 #### Przedtransakcja, link do kontynuacji płatności
 
 ```java
-final Publisher<? extends Transaction> result = client.doTransactionInit(
+final Mono<? extends Transaction> result = client.doTransactionInit(
   TransactionInitRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -118,7 +120,7 @@ final Publisher<? extends Transaction> result = client.doTransactionInit(
     ).build()
 );
 
-final Transaction transactionContinue = Flux.from(result).blockFirst();
+final Transaction transactionContinue = result.block();
 
 transactionContinue.getRedirectUrl(); // https://pay-accept.bm.pl/payment/continue/9IA2UISN/718GTV5E
 transactionContinue.getStatus(); // PENDING
@@ -130,7 +132,7 @@ transactionContinue.toArray(); // [...]
 #### Przedtransakcja, brak kontynuacji
 
 ```java
-final Publisher<? extends Transaction> result = client.doTransactionInit(
+final Mono<? extends Transaction> result = client.doTransactionInit(
   TransactionInitRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -147,7 +149,7 @@ final Publisher<? extends Transaction> result = client.doTransactionInit(
     ).build()
 );
 
-final Transaction transactionInit = Flux.from(result).blockFirst();
+final Transaction transactionInit = result.block();
 
 transactionInit.getConfirmation(); // NOTCONFIRMED
 transactionInit.getReason(); // MULTIPLY_PAID_TRANSACTION
@@ -164,7 +166,7 @@ W zależności od kanału płatności jaki zostanie wybrany w kontekście transa
 Przykład wywołania (dane do transakcji):
 
 ```java
-final Publisher<? extends Transaction> result = client.doTransactionBackground(
+final Mono<? extends Transaction> result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -183,7 +185,7 @@ final Publisher<? extends Transaction> result = client.doTransactionBackground(
     ).build()
 );
 
-final Transaction transactionBackground = Flux.from(result).blockFirst();
+final Transaction transactionBackground = result.block();
 
 transactionBackground.getReceiverNRB(); // 47 1050 1764 1000 0023 2741 0516
 transactionBackground.getReceiverName(); // Autopay
@@ -195,7 +197,7 @@ transactionBackground.toArray(); // [...]
 Przykład wywołania (formularz płatności):
 
 ```java
-final Publisher<? extends Transaction> result = client.doTransactionBackground(
+final Mono<? extends Transaction> result = client.doTransactionBackground(
   TransactionBackgroundRequest.builder()
     .setGatewayUrl("https://testpay.autopay.eu")
     .setTransaction(
@@ -214,9 +216,9 @@ final Publisher<? extends Transaction> result = client.doTransactionBackground(
     ).build()
 );
 
-final Transaction transactionBackground = Flux.from(result).blockingGet();
-
-System.out.println(transactionBackground); // <form action="https://pg-accept.blue.pl/gateway/test/index.jsp" name="formGoPBL" method="POST"><input type="hidden" name="transaction" value="758519"> (...)
+result
+  .doOnSuccess(System.out::println) // <form action="https://pg-accept.blue.pl/gateway/test/index.jsp" name="formGoPBL" method="POST"><input type="hidden" name="transaction" value="758519"> (...)
+  .subscribe();
 ```
 
 ## Obsługa ITN (Instant Transaction Notification)
@@ -247,9 +249,10 @@ for (final Itn itn : itnIn.transactions.transaction) {
   }
 }
 
-final Publisher<ItnResponse> itnResponse = client.doItnInResponse(itnIn, predicates::get);
+final Serializer serializer = client.getSerializer();
+final Mono<ItnResponse> itnResponse = client.doItnInResponse(itnIn, predicates::get);
 
-return Flux.from(itnResponse).map(it -> client.getSerializer().serialize(it));
+return itnResponse.map(serializer::serialize);
 ```
 
 #### Obsługa ITN, utworzenie obiektu komunikatu
@@ -269,12 +272,12 @@ for (final Itn itn : itnRequest.transactions.transaction) {
 Metoda `getRegulationList` umożliwia odpytanie o aktualną listę regulaminów wraz linkami do wyświetlenia w serwisie oraz akceptacji przez klienta.
 
 ```java
-final Publisher<PaywayList> result = client.getRegulationList("https://testpay.autopay.eu");
+final Mono<RegulationListResponse> result = client.getRegulationList("https://testpay.autopay.eu");
 ```
 
 ## Pobieranie listy kanałów płatności
 Metoda `getPaywayList` umożliwia odpytanie o aktualną listę płatności.
 
 ```java
-final Publisher<PaywayList> result = client.getPaywayList("https://testpay.autopay.eu");
+final Mono<PaywayListResponse> result = client.getPaywayList("https://testpay.autopay.eu");
 ```
