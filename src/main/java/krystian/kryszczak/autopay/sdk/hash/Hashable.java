@@ -15,20 +15,6 @@ import java.beans.Transient;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Hashable {
-    public static @NotNull Hashable create(@NotNull Object[] data, @NotNull String hash) {
-        return new Hashable() {
-            @Override
-            public @NotNull Object[] toArray() {
-                return data;
-            }
-
-            @Override
-            public @NotNull String getHash() {
-                return hash.trim();
-            }
-        };
-    }
-
     /**
      * @return Array without hash.
      */
