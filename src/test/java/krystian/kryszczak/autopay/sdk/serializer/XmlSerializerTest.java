@@ -30,7 +30,7 @@ public final class XmlSerializerTest {
 
     @BeforeAll
     public static void setUp() {
-        serializer = new XmlSerializer();
+        serializer = Serializer.createDefault();
     }
 
     @Test

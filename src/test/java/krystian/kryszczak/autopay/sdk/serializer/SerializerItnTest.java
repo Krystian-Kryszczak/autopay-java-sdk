@@ -17,7 +17,7 @@ public final class SerializerItnTest {
 
     @BeforeAll
     public static void setUp() {
-        serializer = new XmlSerializer();
+        serializer = Serializer.createDefault();
     }
 
     @ParameterizedTest

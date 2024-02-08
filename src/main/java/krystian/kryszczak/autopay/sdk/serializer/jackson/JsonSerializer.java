@@ -1,4 +1,4 @@
-package krystian.kryszczak.autopay.sdk.serializer;
+package krystian.kryszczak.autopay.sdk.serializer.jackson;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
