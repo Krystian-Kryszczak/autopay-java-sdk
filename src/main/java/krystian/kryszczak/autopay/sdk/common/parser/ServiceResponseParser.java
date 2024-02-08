@@ -8,12 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 public final class ServiceResponseParser extends ResponseParser<String> {
-    private final Serializer serializer;
-
     public ServiceResponseParser(@NotNull String responseBody,
             @NotNull AutopayConfiguration configuration, @NotNull Serializer serializer) {
-        super(responseBody, configuration);
-        this.serializer = serializer;
+        super(responseBody, configuration, serializer);
     }
 
     public <T extends Serializable> @NotNull T parseListResponse(Class<T> type) throws XmlException {

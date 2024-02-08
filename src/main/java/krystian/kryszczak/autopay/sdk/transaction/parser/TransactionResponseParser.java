@@ -1,13 +1,12 @@
 package krystian.kryszczak.autopay.sdk.transaction.parser;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
 import krystian.kryszczak.autopay.sdk.common.AutopayPattern;
 import krystian.kryszczak.autopay.sdk.common.exception.HashException;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
 import krystian.kryszczak.autopay.sdk.common.parser.ResponseParser;
 import krystian.kryszczak.autopay.sdk.hash.HashChecker;
-import krystian.kryszczak.autopay.sdk.serializer.jackson.XmlSerializer;
+import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import krystian.kryszczak.autopay.sdk.transaction.*;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +16,9 @@ import java.util.regex.Pattern;
 import static krystian.kryszczak.autopay.sdk.util.StringUtils.unescapeHtml;
 
 public final class TransactionResponseParser<T extends Transaction> extends ResponseParser<T> {
-    public TransactionResponseParser(@NotNull String response, @NotNull AutopayConfiguration configuration) {
-        super(response, configuration);
+    public TransactionResponseParser(@NotNull String response,
+            @NotNull AutopayConfiguration configuration, @NotNull Serializer serializer) {
+        super(response, configuration, serializer);
     }
 
     public @NotNull Transaction parse() throws RuntimeException {
@@ -43,7 +43,7 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
 
     @SneakyThrows
     private TransactionBackground parseTransactionBackgroundResponse() {
-        final var transaction = new XmlSerializer().deserialize(this.responseBody, TransactionBackground.class);
+        final var transaction = serializer.deserialize(this.responseBody, TransactionBackground.class);
 
         validateTransaction(transaction);
 
@@ -52,9 +52,9 @@ public final class TransactionResponseParser<T extends Transaction> extends Resp
 
     @SneakyThrows
     private Transaction parseTransactionInitResponse() {
-        final Transaction transaction = new XmlMapper().readTree(this.responseBody).findValue("redirecturl") != null
-            ? new XmlSerializer().deserialize(this.responseBody, TransactionContinue.class)
-            : new XmlSerializer().deserialize(this.responseBody, TransactionInit.class);
+        final Transaction transaction = this.responseBody.contains("redirecturl")
+            ? serializer.deserialize(this.responseBody, TransactionContinue.class)
+            : serializer.deserialize(this.responseBody, TransactionInit.class);
 
         validateTransaction(transaction);
 

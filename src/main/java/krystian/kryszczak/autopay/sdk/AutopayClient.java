@@ -102,7 +102,7 @@ public class AutopayClient {
                     transactionRequest.getTransaction()
                 )
             )).flatMapMany(httpClient::post)
-            .mapNotNull(response -> new TransactionResponseParser<T>(response, configuration).parse(transactionInit))
+            .mapNotNull(response -> new TransactionResponseParser<T>(response, configuration, serializer).parse(transactionInit))
             .doOnError(throwable -> logger.error(
                 "An error occurred while executing doTransaction" + (transactionInit ? "Init" : "Background") + ".",
                 throwable

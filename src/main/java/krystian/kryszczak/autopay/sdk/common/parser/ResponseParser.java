@@ -1,9 +1,9 @@
 package krystian.kryszczak.autopay.sdk.common.parser;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import krystian.kryszczak.autopay.sdk.AutopayConfiguration;
 import krystian.kryszczak.autopay.sdk.common.AutopayPattern;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
+import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +21,11 @@ public abstract class ResponseParser<T extends Serializable> {
 
     protected final @NotNull String responseBody;
     protected final @NotNull AutopayConfiguration configuration;
+    protected final @NotNull Serializer serializer;
 
     protected void checkResponseError() throws XmlException {
         if (Pattern.compile(AutopayPattern.PATTERN_XML_ERROR).matcher(this.responseBody).find()) {
-            final var xmlData = new XmlMapper().valueToTree(this.responseBody);
-
-            throw XmlException.xmlBodyContainsError(xmlData.get("name").asText());
+            throw XmlException.xmlBodyContainsError(this.responseBody);
         }
 
         if (Pattern.compile(AutopayPattern.PATTERN_GENERAL_ERROR).matcher(this.responseBody).find()) {
