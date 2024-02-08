@@ -13,7 +13,7 @@ import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 public final class TransactionInitFixture {
     public static @NotNull TransactionInitRequest getTransactionInitContinue() {
         return TransactionInitRequest.builder()
-            .setGatewayUrl("https://pay-accept.bm.pl")
+            .setGatewayUrl("https://testpay.autopay.eu")
             .setTransaction(
                 TransactionInit.builder()
                     .orderID("123")
@@ -28,7 +28,7 @@ public final class TransactionInitFixture {
 
     public static @NotNull TransactionInitRequest getTransactionInit() {
         return TransactionInitRequest.builder()
-            .setGatewayUrl("https://pay-accept.bm.pl")
+            .setGatewayUrl("https://testpay.autopay.eu")
             .setTransaction(
                 TransactionInit.builder()
                     .orderID("186-1590996507")

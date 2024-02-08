@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public final class SerializerTest {
     private final TransactionInitRequest transactionRequest = TransactionInitRequest.builder()
-        .setGatewayUrl("https://accept-pay.bm.pl")
+        .setGatewayUrl("https://testpay.autopay.eu")
         .setTransaction(
             TransactionInit.builder()
                 .orderID("123-123")

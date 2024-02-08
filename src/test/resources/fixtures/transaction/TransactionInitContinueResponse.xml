@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <transaction>
     <status>PENDING</status>
-    <redirecturl>https://pay-accept.bm.pl/payment/continue/9IA2UISN/718GTV5E</redirecturl>
+    <redirecturl>https://testpay.autopay.eu/payment/continue/9IA2UISN/718GTV5E</redirecturl>
     <orderID>123</orderID>
     <remoteID>9IA2UISN</remoteID>
-    <hash>a3700f934854728035ae2b22cbd0dcbbad0c207faecb16f707b9d2abb103f54e</hash>
+    <hash>6b60b96b6ce74d19c2655b2c5e29948d8360170dfb2c76f5f13811ec71f2e1da</hash>
 </transaction>

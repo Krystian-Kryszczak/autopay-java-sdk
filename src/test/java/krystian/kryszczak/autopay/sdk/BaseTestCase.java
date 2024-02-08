@@ -5,7 +5,7 @@ import krystian.kryszczak.autopay.sdk.hash.HashType;
 public abstract class BaseTestCase {
     protected static final int SERVICE_ID = 123456;
     protected static final String WRONG_SERVICE_ID = "123456789012";
-    protected static final String GATEWAY_URL = "https://pay-accept.bm.pl";
+    protected static final String GATEWAY_URL = "https://testpay.autopay.eu";
 
     protected static final String SHARED_KEY = "QCBm3N0oFjzQAWsTIVN8mPLK12TW6HU6InSfjvnF";
 

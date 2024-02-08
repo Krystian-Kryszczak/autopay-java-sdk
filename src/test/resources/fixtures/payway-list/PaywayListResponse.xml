@@ -7,7 +7,7 @@
         <gatewayName>PBC płatność testowa</gatewayName>
         <gatewayType>Karta płatnicza</gatewayType>
         <bankName>Karty</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/1500.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/1500.gif</iconURL>
         <statusDate>2020-06-26 10:50:03</statusDate>
     </gateway>
     <gateway>
@@ -15,7 +15,7 @@
         <gatewayName>BLIK</gatewayName>
         <gatewayType>BLIK</gatewayType>
         <bankName>BLIK</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/509.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/509.gif</iconURL>
         <statusDate>2020-06-26 10:50:01</statusDate>
     </gateway>
     <gateway>
@@ -23,7 +23,7 @@
         <gatewayName>PG płatność testowa</gatewayName>
         <gatewayType>PBL</gatewayType>
         <bankName>NONE</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/106.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/106.gif</iconURL>
         <statusDate>2020-02-25 08:45:18</statusDate>
     </gateway>
     <gateway>
@@ -31,7 +31,7 @@
         <gatewayName>Przelew Volkswagen Bank</gatewayName>
         <gatewayType>Szybki Przelew</gatewayType>
         <bankName>VWB</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/21.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/21.gif</iconURL>
         <statusDate>2020-02-25 08:45:18</statusDate>
     </gateway>
     <gateway>
@@ -39,7 +39,7 @@
         <gatewayName>Spółdzielcza Grupa Bankowa</gatewayName>
         <gatewayType>Szybki Przelew</gatewayType>
         <bankName>SGB</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/35.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/35.gif</iconURL>
         <statusDate>2020-02-25 08:45:18</statusDate>
     </gateway>
     <gateway>
@@ -47,7 +47,7 @@
         <gatewayName>Przelew z innego banku</gatewayName>
         <gatewayType>Szybki Przelew</gatewayType>
         <bankName>SANTANDER</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/9.gif</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/9.gif</iconURL>
         <statusDate>2020-02-25 08:45:18</statusDate>
     </gateway>
     <gateway>
@@ -55,7 +55,7 @@
         <gatewayName>Apple Pay</gatewayName>
         <gatewayType>Portfel elektroniczny</gatewayType>
         <bankName>Karty</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/1513.png</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/1513.png</iconURL>
         <statusDate>2020-02-25 08:00:01</statusDate>
     </gateway>
     <gateway>
@@ -63,7 +63,7 @@
         <gatewayName>Google Pay</gatewayName>
         <gatewayType>Portfel elektroniczny</gatewayType>
         <bankName>Karty</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/1512.png</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/1512.png</iconURL>
         <statusDate>2020-02-25 08:45:04</statusDate>
     </gateway>
     <gateway>
@@ -71,8 +71,8 @@
         <gatewayName>Alior Raty</gatewayName>
         <gatewayType>Raty online</gatewayType>
         <bankName>ALIOR</bankName>
-        <iconURL>https://platnosci.bm.pl/pomoc/grafika/1506.jpg</iconURL>
+        <iconURL>https://images.autopay.eu/pomoc/grafika/1506.jpg</iconURL>
         <statusDate>2020-06-26 10:50:03</statusDate>
     </gateway>
-    <hash>c7367ec06fa0a2226498d33b9f2a6766e551fb1d7c93008076fce6aed5a6c78f</hash>
+    <hash>1a11de0a8001cf09237540e72bb589f1a6ec4461f306de23c7c512f23faa8c33</hash>
 </list>

@@ -17,7 +17,7 @@ import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
 public final class TransactionBackgroundFixture {
     public static @NotNull TransactionBackgroundRequest getTransactionBackground() {
         return TransactionBackgroundRequest.builder()
-            .setGatewayUrl("https://pay-accept.bm.pl")
+            .setGatewayUrl("https://testpay.autopay.eu")
             .setTransaction(
                 TransactionBackground.builder()
                     .orderID("12345")

@@ -279,8 +279,8 @@ public final class AutopayClientTest extends BaseTestCase {
     @Contract(" -> new")
     public @NotNull @Unmodifiable List<Arguments> checkHashProvider() {
         return List.of(
-            Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f17e7", true),
-            Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f1111", false)
+            Arguments.of("fae54ccca82059af7d587ab51c06be070cf3233556de20451be842c6fb2396c2", true),
+            Arguments.of("fae54ccca82059af7d587ab51c06be070cf3233556de20451be842c6fb231111", false)
         );
     }
 
