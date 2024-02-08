@@ -48,17 +48,17 @@ import java.util.function.Predicate;
 @Singleton
 @AllArgsConstructor(onConstructor_ = @Inject)
 @ApiStatus.AvailableSince("1.0")
-public final class AutopayClient {
+public class AutopayClient {
     private static final String HEADER = "BmHeader";
     private static final String PAY_HEADER = "pay-bm";
     private static final String CONTINUE_HEADER = "pay-bm-continue-transaction-url";
 
     private static final Logger logger = LoggerFactory.getLogger(AutopayClient.class);
 
-    private final AutopayConfiguration configuration;
-    private final HttpClient httpClient;
+    private final @NotNull AutopayConfiguration configuration;
+    private final @NotNull HttpClient httpClient;
     @Getter
-    private final Serializer serializer;
+    private final @NotNull Serializer serializer;
 
     public AutopayClient(final @NotNull AutopayConfiguration configuration) {
         this(configuration, HttpClient.createDefault(), Serializer.createDefault());
