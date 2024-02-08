@@ -1,5 +1,7 @@
 package krystian.kryszczak.autopay.sdk;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import krystian.kryszczak.autopay.sdk.http.client.HttpClient;
 import krystian.kryszczak.autopay.sdk.itn.Itn;
 import krystian.kryszczak.autopay.sdk.itn.request.ItnRequest;
@@ -10,12 +12,16 @@ import krystian.kryszczak.autopay.sdk.serializer.Serializer;
 import krystian.kryszczak.autopay.sdk.transaction.Transaction;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundRequest;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Predicate;
 
+@Singleton
+@ApiStatus.AvailableSince("1.0")
 public final class ReactorAutopayClient extends AutopayClient {
+    @Inject
     public ReactorAutopayClient(@NotNull AutopayConfiguration configuration, @NotNull HttpClient httpClient, @NotNull Serializer serializer) {
         super(configuration, httpClient, serializer);
     }

@@ -45,9 +45,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.function.Predicate;
 
-@Singleton
-@AllArgsConstructor(onConstructor_ = @Inject)
 @ApiStatus.AvailableSince("1.0")
+@AllArgsConstructor(onConstructor_ = @Inject)
 public class AutopayClient {
     private static final String HEADER = "BmHeader";
     private static final String PAY_HEADER = "pay-bm";
