@@ -3,70 +3,70 @@
 [![CodeQL](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/codeql.yml/badge.svg)](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/codeql.yml)
 [![Java CI](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/gradle.yml/badge.svg)](https://github.com/Krystian-Kryszczak/autopay-java-sdk/actions/workflows/gradle.yml)
 
-Kod zawarty w tym repozytorium umożliwia wykonanie transakcji oraz innych usług oferowanych przez Autopay S.A.
+The code contained in this repository enables the execution of transactions and other services offered by Autopay S.A.
 
-## Spis treści
-- [Wymagania](#wymagania)
-- [Konfiguracja klienta](#konfiguracja-klienta)
-- [Transakcja poprzez przekierowanie na paywall](#transakcja-poprzez-przekierowanie-na-paywall)
-- [Przedtransakcja](#przedtransakcja)
-    * [Przedtransakcja, link do kontynuacji płatności](#przedtransakcja-link-do-kontynuacji-płatności)
-    * [Przedtransakcja, brak kontynuacji](#przedtransakcja-brak-kontynuacji)
-- [Szybki przelew](#szybki-przelew)
-- [Obsługa ITN (Instant Transaction Notification)](#obsługa-itn-instant-transaction-notification)
-    * [Obsługa ITN, utworzenie obiektu komunikatu](#obsługa-itn-utworzenie-obiektu-komunikatu)
-- [Pobieranie listy aktualnie dostępnych regulaminów](#pobieranie-listy-aktualnie-dostępnych-regulaminów)
-- [Pobieranie listy kanałów płatności](#pobieranie-listy-kanałów-płatności)
+## Table of contents
+- [Requirements](#requirements).
+- [Client Configuration](#client-configuration).
+- [Transaction by redirecting to paywall](#transaction-by-redirecting-to-paywall)
+- [Pre-transaction](#pre-transaction).
+  * [Pre-transaction, link to continue payment](#pre-transaction-link-to-continue-payment).
+  * [Pre-transaction, no-continuation](#pre-transaction-no-continuation).
+- [Quick-transfer](#quick-transfer).
+- [ITN (Instant Transaction Notification) processing](#itn-instant-transaction-notification-processing)
+  * [ITN processing, message object creation](#itn-processing-message-object-creation).
+- [Download list of currently available regulations](#download-list-of-currently-available-regulations)
+- [Download list of payment channels](#download-list-of-payment-channels)
 
-## Wymagania
-- Java 21 lub nowsza.
+## Requirements
+- Java 21 or later.
 
-## Konfiguracja klienta
+## Client configuration
 
-W celu utworzenia warstwy komunikacji należy utworzyć obiekt klasy `AutopayClient` podając id serwisu oraz klucz współdzielony (przyznane przez Autopay).
-
-```java
-final AutopayConfiguration configuration = AutopayConfiguration.builder()
-  .setServiceId("ID SERWISU")
-  .setSharedKey("KLUCZ WSPÓŁDZIELONY")
-  .build();
-
-final AutopayClient client = new AutopayClient(configuration);
-// lub
-final ReactorAutopayClient client = new ReactorAutopayClient(configuration);
-```
-
-Podczas tworzenia obiektu klienta, za argumentami danych serwisu można dodatkowo dodać użyty tryb szyfrowania oraz separator danych (w przypadku kiedy są nadane inne niż domyślne):
+In order to create a communication layer, create an object of class `AutopayClient` given the id of the service and the shared key (granted by Autopay).
 
 ```java
 final AutopayConfiguration configuration = AutopayConfiguration.builder()
-  .setServiceId("ID SERWISU")
-  .setSharedKey("KLUCZ WSPÓŁDZIELONY")
-  .setHashAlgorithm(HashType.SHA256) // tryb hashowania, domyślnie sha256, można użyć stałej z HashType
-  .setHashSeparator("|") // separator danych, domyślnie |
+  .setServiceId("SERVICE ID")
+  .setSharedKey("SHARED KEY")
   .build();
 
 final AutopayClient client = new AutopayClient(configuration);
-// lub
+// or
 final ReactorAutopayClient client = new ReactorAutopayClient(configuration);
 ```
 
-## Transakcja poprzez przekierowanie na paywall
-Najprostszym typem wykonania transakcji jest przekierowanie do serwisu Autopay wraz z danymi o transakcji. Obsługa płatności leży wtedy w całości po stronie serwisu Autopay.
+When creating a client object, you can additionally add the used encryption mode and data separator (in case they are given other than the default) behind the service data arguments:
 
-Aby wykonać transakcję należy wywołać metodę `getTransactionRedirect`, poprawne wykonanie metody zwróci formularz który wykona przekierowanie do serwisu Autopay:
+```java
+final AutopayConfiguration configuration = AutopayConfiguration.builder()
+  .setServiceId("SERVICE ID")
+  .setSharedKey("SHARED KEY")
+  .setHashAlgorithm(HashType.SHA256) // hash mode, sha256 by default, you can use a constant from HashType
+  .setHashSeparator("|") // data separator, "|" by default
+  .build();
+
+final AutopayClient client = new AutopayClient(configuration);
+// or
+final ReactorAutopayClient client = new ReactorAutopayClient(configuration);
+```
+
+## Transaction by redirecting to paywall
+The simplest type of transaction execution is redirecting to the Autopay service with the transaction data. Payment processing then lies entirely with the Autopay service.
+
+To execute a transaction, call the `getTransactionRedirect` method, correct execution of the method will return a form that performs a redirect to the Autopay service:
 
 ```java
 final String result = client.getTransactionRedirect(
   TransactionInitRequest.builder()
-    .setGatewayUrl("https://testpay.autopay.eu") // Adres bramki Autopay
+    .setGatewayUrl("https://testpay.autopay.eu") // Autopay gateway address
     .setTransaction(
       TransactionInit.builder()
-        .orderID("123") // Id transakcji, wymagany
-        .amount("1.20") // Kwota transakcji, wymagany
-        .description("Transakcja 123-123") // Tytuł transakcji, opcjonalny
-        .currency("PLN") // Waluta transakcji, opcjonalny, domyślnie PLN
-        .customerEmail("test@hostname.domain") // Email klienta, opcjonalny, zalecany ze względu na automatyczne uzupełnienie pola po stronie serwisu BM
+        .orderID("123") // Transaction id, required
+        .amount("1.20") // Transaction amount, required
+        .description("Transaction 123-123") // Transaction title, optional
+        .currency("PLN") // Currency of transaction, optional, PLN by default 
+        .customerEmail("test@hostname.domain") // Customer email, optional, recommended due to auto-complete field on Autopay side of service
         .build()
     ).build()
 );
@@ -74,12 +74,12 @@ final String result = client.getTransactionRedirect(
 System.out.println(result);
 ```
 
-Po wykonaniu płatności, serwis Autopay wykona przekierowanie na skonfigurowany wcześniej adres powrotu płatności. Przekierowanie następuje poprzez żądanie HTTPS (GET) z trzema parametrami:
-- ServiceID - Identyfikator serwisu
-- OrderID - Identyfikator transakcji
-- Hash - Suma kontrolna wyliczona na podstawie ServiceID i OrderID.
+Once the payment is made, the Autopay service will perform a redirection to the pre-configured payment return address. The redirection is done via HTTPS (GET) request with three parameters:
+- ServiceID - Service identifier
+- OrderID - Transaction ID
+- Hash - A checksum calculated from the ServiceID and OrderID.
 
-Wymagane jest, aby strona powrotu z płatności weryfikowała poprawność Hash, służy do tego metoda `doConfirmationCheck`. Należy przekazać do niej dane przesłane w żądaniu GET:
+It is required that the payment return page verify the correctness of the Hash, the `doConfirmationCheck` method is used for this. The data sent in the GET request should be passed to it:
 
 ```java
 final Confirmation confirmation = new Confirmation(
@@ -91,19 +91,19 @@ final Confirmation confirmation = new Confirmation(
 final boolean result = client.doConfirmationCheck(Confirmation);
 ```
 
-## Przedtransakcja
-Metoda `doTransactionInit` rozszerza standardowy model rozpoczęcia transakcji o obsługę określonych potrzeb:
-- zamówienia linku do płatności na podstawie przesłanych parametrów
-- obciążenia Klienta (jeśli nie jest wymagana dodatkowa autoryzacja dokonana przez Klienta)
-- zweryfikowania poprawności linku płatności, zanim Klient zostanie przekierowany do Systemu – wywołanie powoduje walidację parametrów i konfiguracji Systemu
-- skrócenia linka płatności – zamiast kilku/kilkunastu parametrów, link zostaje skrócony do dwóch identyfikatorów
-- ukrycia danych wrażliwych parametrów linku transakcji – przedtransakcja odbywa się backendowo, a link do kontynuacji transakcji nie zawiera danych wrażliwych, a jedynie identyfikatory kontynuacji
-- użycia SDK w modelu pełnym (bezpiecznym)
+## Pre-transaction
+The `doTransactionInit` method extends the standard transaction initiation model to support specific needs:
+- ordering a payment link based on the submitted parameters
+- Customer debits (if no additional authorization by the customer is required)
+- verify the correctness of the payment link before the Customer is redirected to the System - the call causes validation of the parameters and configuration of the System
+- shorten the payment link - instead of several/several parameters, the link is shortened to two identifiers
+- hiding sensitive data parameters of the transaction link - pre-transaction is done on the backend, and the link to continue the transaction does not contain sensitive data, only continuation identifiers
+- the use of SDK in the full (safe) model
 
-Metoda przyjmuje parametry takie jak w przypadku transakcji z przekierowaniem na paywall, z tą różnicą że wysyłany jest inny nagłówek, dzięki czemu serwis Autopay obsługuje żądanie w inny sposób.
-W odpowiedzi otrzymywany jest link do kontynuacji transakcji lub odpowiedź informująca o braku kontynuacji oraz statusem płatności.
+The method takes parameters like those of a paywall redirect transaction, except that a different header is sent, so that the Autopay service handles the request differently.
+In response, you receive a link to continue the transaction or a reply informing you that there is no continuation and the status of the payment.
 
-#### Przedtransakcja, link do kontynuacji płatności
+#### Pre-transaction, link to continue payment
 
 ```java
 final Mono<? extends Transaction> result = client.doTransactionInit(
@@ -113,7 +113,7 @@ final Mono<? extends Transaction> result = client.doTransactionInit(
       TransactionInit.builder()
         .orderID("123")
         .amount("1.20")
-        .description("Transakcja 123-123")
+        .description("Transaction 123-123")
         .currency("PLN")
         .customerEmail("test@hostname.domain")
         .build()
@@ -122,14 +122,14 @@ final Mono<? extends Transaction> result = client.doTransactionInit(
 
 final Transaction transactionContinue = result.block();
 
-transactionContinue.getRedirectUrl(); // https://pay-accept.bm.pl/payment/continue/9IA2UISN/718GTV5E
+transactionContinue.getRedirectUrl(); // https://testpay.autopay.eu/payment/continue/9IA2UISN/718GTV5E
 transactionContinue.getStatus(); // PENDING
 transactionContinue.getOrderId(); // 123
 transactionContinue.toArray(); // [...]
 // ...
 ```
 
-#### Przedtransakcja, brak kontynuacji
+#### Pre-transaction, no-continuation
 
 ```java
 final Mono<? extends Transaction> result = client.doTransactionInit(
@@ -139,7 +139,7 @@ final Mono<? extends Transaction> result = client.doTransactionInit(
       TransactionInit.builder()
         .orderID("123")
         .amount("1.20")
-        .description("Transakcja 123-123")
+        .description("Transaction 123-123")
         .gatewayID(1500)
         .currency("PLN")
         .customerEmail("test@hostname.domain")
@@ -158,12 +158,12 @@ transactionInit.toArray(); // [...]
 // ...
 ```
 
-## Szybki przelew
-Szybki Przelew to forma płatności, która wymaga od Klienta samodzielnego przepisania danych do przelewu dostarczanych przez System. Dane do przelewu można pozyskać dzięki metodzie `doTransactionBackground`.
+## Quick transfer
+Quick Transfer is a form of payment that requires the Customer to rewrite the transfer data provided by the System himself. The transfer data can be obtained through the `toTransactionBackground` method.
 
-W zależności od kanału płatności jaki zostanie wybrany w kontekście transakcji, metoda zwróci dane do przelewu lub gotowy formularz.
+Depending on the payment channel that is selected in the context of the transaction, the method will return transfer data or a ready-made form.
 
-Przykład wywołania (dane do transakcji):
+Call example (data for transaction):
 
 ```java
 final Mono<? extends Transaction> result = client.doTransactionBackground(
@@ -194,7 +194,7 @@ transactionBackground.toArray(); // [...]
 // ...
 ```
 
-Przykład wywołania (formularz płatności):
+Call example (payment form):
 
 ```java
 final Mono<? extends Transaction> result = client.doTransactionBackground(
@@ -221,14 +221,14 @@ result
   .subscribe();
 ```
 
-## Obsługa ITN (Instant Transaction Notification)
-Serwis Autopay po wykonaniu płatności wysyła na wcześniej skonfigurowany adres ITN komunikat o statusie płatności. Dane przesyłane są w formacie XML dodatkowo zakodowanym w base64.
-SDK oferuje metodę `doItnIn` która w wyniku przekazania danych z serwisu Autopay zwraca gotowy obiekt `ItnIn` pozwalający na użycie akcesorów lub konwersję do tablicy.
-Dzięki temu obiektowi, programista może użyć danych potrzebnych np. do aktualizacji statusu płatności w bazie danych itp.
+## ITN (Instant Transaction Notification) processing
+The Autopay service sends a payment status message to a pre-configured ITN address after payment execution. The data is sent in XML format additionally encoded in base64.
+The SDK offers a `doItnIn` method that, as a result of passing data from the Autopay service, returns a ready-made `ItnIn` object allowing the use of accessors or conversion to an array.
+With this object, the programmer can use the data needed, for example, to update the status of payments in the database, etc.
 
-Po przetworzeniu komunikatu ITN należy przekazać odpowiedź. Służy do tego metoda `doItnInResponse` która przyjmuje obiekt `ItnIn` oraz argument informujący o potwierdzeniu transakcji.
+Once the ITN message has been processed, a response must be passed. This is done by the `doItnInResponse` method, which takes an `ItnIn` object and an argument indicating that the transaction has been confirmed.
 
-Poniżej przykład zastosowania obsługi ITN:
+Below is an example of the application of ITN processing:
 
 ```java
 final ItnRequest itnIn = client.doItnIn(transactions);
@@ -237,8 +237,8 @@ final Map<Itn, Boolean> predicates = new HashMap<>();
 
 for (final Itn itn : itnIn.transactions.transaction) {
   final boolean transactionConfirmed = client.checkHash(itn);
-  
-  // Jeżeli status płatności z ITN jest potwierdzony i hash jest poprawny - zakończ płatność w systemie
+
+  // If the payment status from ITN is confirmed and the hash is correct - complete the payment in the system
   if (itn.getPaymentStatus() == "SUCCESS" && transactionConfirmed) {
     final var order = orderRepository.find(itn.getOrderId());
 
@@ -255,9 +255,9 @@ final Mono<ItnResponse> itnResponse = client.doItnInResponse(itnIn, predicates::
 return itnResponse.map(serializer::serialize);
 ```
 
-#### Obsługa ITN, utworzenie obiektu komunikatu
-Podczas implementacji może okazać się że przed wykonaniem obsługi ITN zajdzie potrzeba np. konfiguracji klienta na podstawie danych dostępowych w oparciu o walutę.
-W takim modelu programista może wspomóc się metodą `getItnRequestObject`.
+#### ITN processing, message object creation
+During implementation, it may become necessary, for example, to configure the client on the basis of access data based on currency before performing ITN processing.
+In such a model, the programmer can help with the `getItnRequestObject` method.
 
 ```java
 final ItnRequest itnRequest = AutopayClient.getItnRequestObject(encodedItnRequest, serializer);
@@ -268,15 +268,15 @@ for (final Itn itn : itnRequest.transactions.transaction) {
 // ...
 ```
 
-## Pobieranie listy aktualnie dostępnych regulaminów
-Metoda `getRegulationList` umożliwia odpytanie o aktualną listę regulaminów wraz linkami do wyświetlenia w serwisie oraz akceptacji przez klienta.
+## Download list of currently available regulations
+The `getRegulationList` method allows you to query the current list of regulations with links to be displayed on the site and accepted by the customer.
 
 ```java
 final Mono<RegulationListResponse> result = client.getRegulationList("https://testpay.autopay.eu");
 ```
 
-## Pobieranie listy kanałów płatności
-Metoda `getPaywayList` umożliwia odpytanie o aktualną listę płatności.
+## Download list of payment channels
+The `getPaywayList` method allows you to query the current payment list.
 
 ```java
 final Mono<PaywayListResponse> result = client.getPaywayList("https://testpay.autopay.eu");
