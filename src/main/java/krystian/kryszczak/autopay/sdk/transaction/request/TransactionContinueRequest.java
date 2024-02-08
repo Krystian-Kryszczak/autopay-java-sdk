@@ -7,9 +7,12 @@ import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
+
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public final class TransactionContinueRequest extends TransactionRequest<TransactionContinue> {
+    @ConstructorProperties({"gatewayUrl", "transaction", "language"})
     private TransactionContinueRequest(@NotNull String gatewayUrl, @NotNull TransactionContinue transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
     }
