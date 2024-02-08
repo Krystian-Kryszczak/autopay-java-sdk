@@ -13,7 +13,7 @@ public final class TranslationsTest extends BaseTestCase {
     private static final String TRANSLATION_EXCEPTION = "Missing required translation key(s): form.test.key";
 
     @Test
-    public void testGetTranslationReturnsTranslation() {
+    public void getTranslationReturnsTranslation() {
         final Map<String, String> translation = Translations.getTranslations(Translations.Language.pl);
 
         assertFalse(translation.isEmpty());
@@ -21,7 +21,7 @@ public final class TranslationsTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetTranslationThrowsExceptionOnMissingTranslationKey() {
+    public void getTranslationThrowsExceptionOnMissingTranslationKey() {
         final String[] required_translation_keys = new String[] {
             "form.test.key"
         };

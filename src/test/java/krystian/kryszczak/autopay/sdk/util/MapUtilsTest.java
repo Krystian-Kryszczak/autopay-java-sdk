@@ -16,17 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public final class MapUtilsTest {
     @Test
-    public void testNotNullMapOfWithNullsInputDoesNotThrowsException() {
+    public void notNullMapOfWithNullsInputDoesNotThrowsException() {
         assertDoesNotThrow(() -> MapUtils.notNullMapOf(null, null));
     }
 
     @Test
-    public void testNotNullMapOfWithUnpairedInputThrowsException() {
+    public void notNullMapOfWithUnpairedInputThrowsException() {
         assertThrows(InvalidParameterException.class, () -> MapUtils.notNullMapOf(null, null, null));
     }
 
     @Test
-    public void testNotNullMapOfReturnsExceptedMap() {
+    public void notNullMapOfReturnsExceptedMap() {
         final Map<String, String> excepted = new LinkedHashMap<>();
         excepted.put("Hello", "world!");
         excepted.put("Autopay", "SDK");
@@ -36,7 +36,7 @@ public final class MapUtilsTest {
     }
 
     @Test
-    public void testMergeMapsReturnsExceptedMap() {
+    public void mergeMapsReturnsExceptedMap() {
         final var mergedMap = MapUtils.merge(
             Map.of("Hello world!", 1),
             Map.of("Autopay SDK", 1f),
@@ -59,7 +59,7 @@ public final class MapUtilsTest {
     }
 
     @Test
-    public void testMergeIfAbsentMapsReturnsExceptedMap() {
+    public void mergeIfAbsentMapsReturnsExceptedMap() {
         final var mergedMap = MapUtils.mergeIfAbsent(
             Map.of("Hello world!", 1),
             Map.of("Autopay SDK", 1f),
@@ -85,7 +85,7 @@ public final class MapUtilsTest {
 
     @ParameterizedTest
     @MethodSource("mapsToCapitalizeProvider")
-    public void testCapitalizeMapReturnsMapWithExceptedKeysTest(Map<String, String> src, Map<String, String> excepted) {
+    public void capitalizeMapReturnsMapWithExceptedKeysTest(Map<String, String> src, Map<String, String> excepted) {
         assertEquals(excepted, MapUtils.capitalizeMap(src));
     }
 

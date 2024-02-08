@@ -22,7 +22,7 @@ public final class SerializerItnTest {
 
     @ParameterizedTest
     @MethodSource("getItns")
-    public void testSerializedAndDeserializedItnAreEquals(Itn itn) {
+    public void serializedAndDeserializedItnAreEquals(Itn itn) {
         final String serialized = serializer.serialize(itn);
         assertNotNull(serialized);
 

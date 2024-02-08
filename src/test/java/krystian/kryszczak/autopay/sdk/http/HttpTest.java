@@ -40,7 +40,7 @@ public final class HttpTest extends BaseTestCase {
         httpClient = HttpClient.createDefault();
     }
 
-    void configurePaymentForTransactionInitContinueResponseRoute() {
+    private void configurePaymentForTransactionInitContinueResponseRoute() {
         stubFor(post(Routes.PAYMENT_ROUTE.getValue())
             .withFormParam("OrderID", matching("^\\d+$"))
             .withFormParam("Amount", matching("^\\d*\\.?\\d+$"))
@@ -56,7 +56,7 @@ public final class HttpTest extends BaseTestCase {
             ));
     }
 
-    void configurePaymentForTransactionInitResponseRoute() {
+    private void configurePaymentForTransactionInitResponseRoute() {
         stubFor(post(Routes.PAYMENT_ROUTE.getValue())
             .withFormParam("OrderID", matching("^\\d+$"))
             .withFormParam("Amount", matching("^\\d*\\.?\\d+$"))
@@ -75,7 +75,7 @@ public final class HttpTest extends BaseTestCase {
             ));
     }
 
-    void configurePaymentForTransactionBackgroundResponseRoute() {
+    private void configurePaymentForTransactionBackgroundResponseRoute() {
         stubFor(post(Routes.PAYMENT_ROUTE.getValue())
             .withFormParam("OrderID", matching("^\\d+$"))
             .withFormParam("Amount", matching("^\\d*\\.?\\d+$"))
@@ -94,7 +94,7 @@ public final class HttpTest extends BaseTestCase {
             ));
     }
 
-    void configurePaymentForPaywayFormResponseRoute() {
+    private void configurePaymentForPaywayFormResponseRoute() {
         stubFor(post(Routes.PAYMENT_ROUTE.getValue())
             .withFormParam("OrderID", matching("^\\d+$"))
             .withFormParam("Amount", matching("^\\d*\\.?\\d+$"))
@@ -113,7 +113,7 @@ public final class HttpTest extends BaseTestCase {
             ));
     }
 
-    void configureRegulationsRoute() {
+    private void configureRegulationsRoute() {
         stubFor(post(Routes.GET_REGULATIONS_ROUTE.getValue())
             .withFormParam("ServiceID", matching("^\\d+$"))
             .withFormParam("MessageID", matching("^[0-9a-z]{32}$"))
@@ -126,7 +126,7 @@ public final class HttpTest extends BaseTestCase {
             ));
     }
 
-    void configurePaywayListRoute() {
+    private void configurePaywayListRoute() {
         stubFor(post(Routes.PAYWAY_LIST_ROUTE.getValue())
             .withFormParam("ServiceID", matching("^\\d+$"))
             .withFormParam("MessageID", matching("^[0-9a-z]{32}$"))
@@ -140,7 +140,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsTransactionInitContinueResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsTransactionInitContinueResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configurePaymentForTransactionInitContinueResponseRoute();
 
         // given
@@ -169,7 +169,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsTransactionInitResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsTransactionInitResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configurePaymentForTransactionInitResponseRoute();
 
         // given
@@ -201,7 +201,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsTransactionBackgroundResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsTransactionBackgroundResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configurePaymentForTransactionBackgroundResponseRoute();
 
         // given
@@ -235,7 +235,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsPaywayFormResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsPaywayFormResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configurePaymentForPaywayFormResponseRoute();
 
         // given
@@ -269,7 +269,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsRegulationListResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsRegulationListResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configureRegulationsRoute();
 
         // given
@@ -287,7 +287,7 @@ public final class HttpTest extends BaseTestCase {
     }
 
     @Test
-    void httpClientPostReturnsPaywayListResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
+    public void httpClientPostReturnsPaywayListResponseFixture(final @NotNull WireMockRuntimeInfo runtimeInfo) {
         configurePaywayListRoute();
 
         // given

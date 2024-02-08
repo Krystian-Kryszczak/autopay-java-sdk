@@ -34,7 +34,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsItnResponse() {
+    public void deserializeReturnsItnResponse() {
         final String itnResponse = ItnFixture.getItnResponse();
         final ItnResponse deserialized = serializer.deserialize(itnResponse, ItnResponse.class);
 
@@ -46,7 +46,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsPaywayListResponse() {
+    public void deserializeReturnsPaywayListResponse() {
         final String paywayListResponse = PaywayListFixture.getPaywayListResponse();
         final PaywayListResponse deserialized = serializer.deserialize(paywayListResponse, PaywayListResponse.class);
 
@@ -58,7 +58,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsRegulationList() {
+    public void deserializeReturnsRegulationList() {
         final String regulationListResponse = RegulationListFixture.getRegulationListResponse();
         final RegulationListResponse deserialized = serializer.deserialize(regulationListResponse, RegulationListResponse.class);
 
@@ -70,7 +70,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsTransactionBackgroundResponse() {
+    public void deserializeReturnsTransactionBackgroundResponse() {
         final String transactionBackgroundResponse = TransactionBackgroundFixture.getTransactionBackgroundResponse();
         final TransactionBackground deserialized = serializer.deserialize(transactionBackgroundResponse, TransactionBackground.class);
 
@@ -82,7 +82,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsTransactionInitContinueResponse() {
+    public void deserializeReturnsTransactionInitContinueResponse() {
         final String transactionInitContinueResponse = TransactionInitFixture.getTransactionInitContinueResponse();
         final TransactionContinue deserialized = serializer.deserialize(transactionInitContinueResponse, TransactionContinue.class);
 
@@ -94,7 +94,7 @@ public final class XmlSerializerTest {
     }
 
     @Test
-    public void testDeserializeReturnsTransactionInitResponse() {
+    public void deserializeReturnsTransactionInitResponse() {
         final String transactionInitResponse = TransactionInitFixture.getTransactionInitResponse();
         final TransactionInit deserialized = serializer.deserialize(transactionInitResponse, TransactionInit.class);
 
@@ -107,7 +107,7 @@ public final class XmlSerializerTest {
 
     @ParameterizedTest
     @MethodSource("wrongXmlProvider")
-    public void testParseReturnsNullOnWrongXml(String wrongXml) {
+    public void parseReturnsNullOnWrongXml(String wrongXml) {
         assertNull(serializer.deserialize(wrongXml, Serializable.class));
     }
 

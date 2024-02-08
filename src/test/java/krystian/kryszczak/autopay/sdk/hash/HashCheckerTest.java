@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public final class HashCheckerTest extends BaseTestCase {
     @Test
-    public void testCheckHashReturnsTrue() {
+    public void checkHashReturnsTrue() {
         final Object[] fieldsValues = new Object[] {
             "Hello", "world", '!', 55
         };

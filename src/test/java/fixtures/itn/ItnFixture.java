@@ -25,21 +25,16 @@ public final class ItnFixture {
 
     @SneakyThrows
     public static @NotNull Map<String, String> getTransactionDataFromXml() {
-        final var xml = new XmlMapper().readTree(getItnInRequest());
         final Map<String, String> dst = new HashMap<>();
-        final var fields = xml.get("transactions").get("transaction").fields();
-        while (fields.hasNext()) {
-            final var entry = fields.next();
-            dst.put(entry.getKey(), entry.getValue().asText());
-        }
+        new XmlMapper().readTree(getItnInRequest()).get("transactions").get("transaction").fields()
+            .forEachRemaining(entry -> dst.put(entry.getKey(), entry.getValue().asText()));
         return dst;
     }
 
     @SneakyThrows
     public static String getItnInWrongHashRequest() {
         return Base64.getEncoder().encodeToString(
-            Files.readString(Path.of(FIXTURES_FOLDER_PATH + "itn/ItnInWrongHashRequest.xml"))
-                .getBytes()
+            Files.readString(Path.of(FIXTURES_FOLDER_PATH + "itn/ItnInWrongHashRequest.xml")).getBytes()
         );
     }
 

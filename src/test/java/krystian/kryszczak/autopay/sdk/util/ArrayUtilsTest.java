@@ -2,14 +2,12 @@ package krystian.kryszczak.autopay.sdk.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public final class ArrayUtilsTest {
     @Test
-    public void testFilterNotNullReturnsExceptedArray() {
-        final var notNullArray = ArrayUtils.filterNotNull("Hello ", null, "world!");
+    public void filterNotNullReturnsExceptedArray() {
+        final String[] notNullArray = ArrayUtils.filterNotNull("Hello ", null, "world!");
 
         assertNotNull(notNullArray);
         assertEquals(2, notNullArray.length);
@@ -17,7 +15,7 @@ public final class ArrayUtilsTest {
     }
 
     @Test
-    public void testMergeArraysReturnsExceptedArray() {
+    public void mergeArraysReturnsExceptedArray() {
         final String[] mergedArray = ArrayUtils.merge(new String[] { "zero", "one", "two" }, "three", "four");
 
         assertNotNull(mergedArray);
@@ -26,7 +24,7 @@ public final class ArrayUtilsTest {
     }
 
     @Test
-    public void testMergeArraysIfAbsentReturnsExceptedArray() {
+    public void mergeArraysIfAbsentReturnsExceptedArray() {
         final String[] mergedArray = ArrayUtils.mergeArraysIfAbsent(
             new String[] { "zero", "one", "two" },
             "one", "two", "zero", "three", "four", "four"
@@ -38,7 +36,7 @@ public final class ArrayUtilsTest {
     }
 
     @Test
-    public void testFlatMapArraysReturnsExceptedArray() {
+    public void flatMapArraysReturnsExceptedArray() {
         final String[] flattedArray = ArrayUtils.flatMap(
             new String[] { "zero", "one", "two" },
             new String[] { "three", "four", "five" }
@@ -50,7 +48,7 @@ public final class ArrayUtilsTest {
     }
 
     @Test
-    public void testReverseArrayReturnsExceptedArray() {
+    public void reverseArrayReturnsExceptedArray() {
         final String[] mergedArray = ArrayUtils.reverse("four", "three", "two", "one", "zero");
 
         assertNotNull(mergedArray);

@@ -20,7 +20,7 @@ public final class AutopayConfigurationTest extends BaseTestCase {
     }
 
     @Test
-    public void testThrowsExceptionOnInvalidHashAlgorithm() {
+    public void throwsExceptionOnInvalidHashAlgorithm() {
         assertThrows(IllegalArgumentException.class, () ->
             AutopayConfiguration.builder()
                 .setServiceId(SERVICE_ID)
@@ -32,7 +32,7 @@ public final class AutopayConfigurationTest extends BaseTestCase {
     }
 
     @Test
-    public void testThrowsExceptionOnInvalidServiceId() {
+    public void throwsExceptionOnInvalidServiceId() {
         assertThrows(IllegalArgumentException.class, () ->
             AutopayConfiguration.builder()
                 .setServiceId(Integer.parseInt(WRONG_SERVICE_ID))
@@ -44,22 +44,22 @@ public final class AutopayConfigurationTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetServiceIdReturnTypeAndValue() {
+    public void getServiceIdReturnTypeAndValue() {
         assertEquals(SERVICE_ID, configuration.serviceId());
     }
 
     @Test
-    public void testGetSharedKeyReturnTypeAndValue() {
+    public void getSharedKeyReturnTypeAndValue() {
         assertSame(SHARED_KEY, configuration.sharedKey());
     }
 
     @Test
-    public void testGetHashAlgoReturnTypeAndValue() {
+    public void getHashAlgoReturnTypeAndValue() {
         assertSame(HASH_SHA256, configuration.hashAlgorithm());
     }
 
     @Test
-    public void testGetHashSeparatorReturnTypeAndValue() {
+    public void getHashSeparatorReturnTypeAndValue() {
         assertSame(HASH_SEPARATOR, configuration.hashSeparator());
     }
 }

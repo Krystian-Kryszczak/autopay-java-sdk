@@ -34,13 +34,13 @@ public final class HashGeneratorTest extends BaseTestCase {
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsItnInRequestFixture() {
+    public void generateHashReturnsHashEqualsItnInRequestFixture() {
         final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
         assertHashIsValid(itnRequest);
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsItnResponseFixture() {
+    public void generateHashReturnsHashEqualsItnResponseFixture() {
         final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
         assertNotNull(itnRequest);
 
@@ -54,7 +54,7 @@ public final class HashGeneratorTest extends BaseTestCase {
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsItnResponse2Fixture() {
+    public void generateHashReturnsHashEqualsItnResponse2Fixture() {
         final ItnRequest itnRequest = serializer.deserialize(ItnFixture.getItnInRequest(), ItnRequest.class);
         assertNotNull(itnRequest);
 
@@ -68,35 +68,35 @@ public final class HashGeneratorTest extends BaseTestCase {
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsPaywayListResponseFixture() {
+    public void generateHashReturnsHashEqualsPaywayListResponseFixture() {
         final PaywayListResponse paywayListResponse = serializer.deserialize(
             PaywayListFixture.getPaywayListResponse(), PaywayListResponse.class);
         assertHashIsValid(paywayListResponse);
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsRegulationListFixture() {
+    public void generateHashReturnsHashEqualsRegulationListFixture() {
         final RegulationListResponse regulationListResponse = serializer.deserialize(
             RegulationListFixture.getRegulationListResponse(), RegulationListResponse.class);
         assertHashIsValid(regulationListResponse);
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsTransactionBackgroundResponseFixture() {
+    public void generateHashReturnsHashEqualsTransactionBackgroundResponseFixture() {
         final TransactionBackground transactionBackground = serializer.deserialize(
             TransactionBackgroundFixture.getTransactionBackgroundResponse(), TransactionBackground.class);
         assertHashIsValid(transactionBackground);
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsTransactionInitContinueResponseFixture() {
+    public void generateHashReturnsHashEqualsTransactionInitContinueResponseFixture() {
         final TransactionContinue transactionContinue = serializer.deserialize(
             TransactionInitFixture.getTransactionInitContinueResponse(), TransactionContinue.class);
         assertHashIsValid(transactionContinue);
     }
 
     @Test
-    public void testGenerateHashReturnsHashEqualsTransactionInitResponseFixture() {
+    public void generateHashReturnsHashEqualsTransactionInitResponseFixture() {
         final TransactionInit transactionInit = serializer.deserialize(
             TransactionInitFixture.getTransactionInitResponse(), TransactionInit.class);
         assertHashIsValid(transactionInit);
@@ -112,7 +112,7 @@ public final class HashGeneratorTest extends BaseTestCase {
     }
 
     @Test
-    public void testGenerateHashReturnsExpectedHash() {
+    public void generateHashReturnsExpectedHash() {
         final Object[] data = new Object[] {
             getTestConfiguration().serviceId(),
             123,

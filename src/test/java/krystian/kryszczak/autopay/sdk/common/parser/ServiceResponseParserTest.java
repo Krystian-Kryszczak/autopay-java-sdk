@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class ServiceResponseParserTest extends BaseTestCase {
     @ParameterizedTest
     @MethodSource("wrongXmlProvider")
-    public void testParseListResponseReturnsEmptyMonoOnWrongXml(String responseBody) {
+    public void parseListResponseReturnsEmptyMonoOnWrongXml(String responseBody) {
         final ServiceResponseParser parser = new ServiceResponseParser(
             responseBody,
             getTestConfiguration(),

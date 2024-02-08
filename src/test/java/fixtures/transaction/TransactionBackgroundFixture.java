@@ -41,13 +41,9 @@ public final class TransactionBackgroundFixture {
 
     @SneakyThrows
     public static @NotNull Map<String, String> getTransactionBackgroundResponseData() {
-        final var xml = new XmlMapper().readTree(getTransactionBackgroundResponse());
         final Map<String, String> dst = new HashMap<>();
-        final var fields = xml.fields();
-        while (fields.hasNext()) {
-            final var entry = fields.next();
-            dst.put(entry.getKey(), entry.getValue().asText());
-        }
+        new XmlMapper().readTree(getTransactionBackgroundResponse()).fields()
+            .forEachRemaining(entry -> dst.put(entry.getKey(), entry.getValue().asText()));
         return dst;
     }
 

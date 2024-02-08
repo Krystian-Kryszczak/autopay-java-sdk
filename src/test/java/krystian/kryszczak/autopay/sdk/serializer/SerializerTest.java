@@ -28,7 +28,7 @@ public final class SerializerTest {
     }
 
     @Test
-    public void testSerializedTransactionRequestAndDeserializedTransactionRequestAreEquals() {
+    public void serializedTransactionRequestAndDeserializedTransactionRequestAreEquals() {
         final String transactionData = serializer.serialize(this.transactionRequest);
         assertNotNull(transactionData);
 

@@ -60,7 +60,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetTransactionRedirectReturnsRedirectView() {
+    public void getTransactionRedirectReturnsRedirectView() {
         final String result = client.getTransactionRedirect(TransactionInitFixture.getTransactionInitContinue());
 
         assertNotNull(result);
@@ -69,14 +69,14 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @ParameterizedTest
     @MethodSource("checkConfirmationProvider")
-    public void testDoConfirmationCheckReturnsStatus(Confirmation data, boolean result) {
+    public void doConfirmationCheckReturnsStatus(Confirmation data, boolean result) {
         final boolean check = client.doConfirmationCheck(data);
 
         assertSame(result, check);
     }
 
     @Test
-    public void testDoTransactionBackgroundReturnsTransactionData() {
+    public void doTransactionBackgroundReturnsTransactionData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(TransactionBackgroundFixture.getTransactionBackgroundResponse())
         );
@@ -119,7 +119,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testDoTransactionBackgroundReturnsPaywayForm() {
+    public void doTransactionBackgroundReturnsPaywayForm() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(TransactionBackgroundFixture.getPaywayFormResponse())
         );
@@ -136,7 +136,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testDoTransactionInitReturnsTransactionContinueData() {
+    public void doTransactionInitReturnsTransactionContinueData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(TransactionInitFixture.getTransactionInitContinueResponse())
         );
@@ -151,7 +151,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testDoTransactionInitReturnsTransactionData() {
+    public void doTransactionInitReturnsTransactionData() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(TransactionInitFixture.getTransactionInitResponse())
         );
@@ -166,7 +166,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testDoItnInReturnsItnData() {
+    public void doItnInReturnsItnData() {
         final ItnRequest itnRequest = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
         final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
 
@@ -183,12 +183,12 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @ParameterizedTest
     @MethodSource("itnProvider")
-    public void testDoItnInThrowsExceptionOnWrongBase64(String itn) {
+    public void doItnInThrowsExceptionOnWrongBase64(String itn) {
         assertThrows(IllegalArgumentException.class, () -> client.doItnIn(itn));
     }
 
     @Test
-    public void testDoItnResponseReturnsConfirmationResponse() {
+    public void doItnResponseReturnsConfirmationResponse() {
         final ItnRequest itn = assertDoesNotThrow(() -> client.doItnIn(ItnFixture.getItnInRequestBase64Encoded()));
         assertNotNull(itn);
         final Mono<ItnResponse> result = Mono.fromDirect(client.doItnInResponse(itn, it -> true));
@@ -201,7 +201,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetPaywayList() {
+    public void getPaywayList() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(PaywayListFixture.getPaywayListResponse())
         );
@@ -212,7 +212,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetRegulationList() {
+    public void getRegulationList() {
         when(httpClient.post((HttpRequest<? extends HttpRequestBody>) notNull())).thenReturn(
             Mono.just(RegulationListFixture.getRegulationListResponse())
         );
@@ -224,7 +224,7 @@ public final class AutopayClientTest extends BaseTestCase {
 
     @ParameterizedTest
     @MethodSource("checkHashProvider")
-    public void testCheckHashReturnsExpectedValue(String hash, boolean value) {
+    public void checkHashReturnsExpectedValue(String hash, boolean value) {
         final Transaction transaction = mock(TransactionInit.class);
         final TransactionInitRequest fixture = TransactionInitFixture.getTransactionInit();
         final String[] transactionInitData = merge(
@@ -244,7 +244,7 @@ public final class AutopayClientTest extends BaseTestCase {
     @ParameterizedTest
     @SuppressWarnings("unused")
     @MethodSource("checkHashProvider")
-    public void testCheckHashThrowsHashNotReturnedException(String hash, boolean value) {
+    public void checkHashThrowsHashNotReturnedException(String hash, boolean value) {
         final Transaction transaction = mock(TransactionInit.class);
         final TransactionInitRequest fixture = TransactionInitFixture.getTransactionInit();
         final String[] transactionInitData = merge(
@@ -260,7 +260,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Test
-    public void testGetItnRequestObject() {
+    public void getItnRequestObject() {
         final ItnRequest itnRequest = AutopayClient.getItnRequestObject(
             ItnFixture.getItnInRequestBase64Encoded(), client.getSerializer());
         final Map<String, String> itnFixture = ItnFixture.getTransactionDataFromXml();
@@ -277,7 +277,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Contract(" -> new")
-    public static @NotNull @Unmodifiable List<Arguments> checkHashProvider() {
+    public @NotNull @Unmodifiable List<Arguments> checkHashProvider() {
         return List.of(
             Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f17e7", true),
             Arguments.of("56507c9294e43e649e8726d271174297a165aedb858edb0414aadbc9632f1111", false)
@@ -285,7 +285,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Contract(" -> new")
-    public static @Unmodifiable List<Arguments> itnProvider() {
+    public @Unmodifiable List<Arguments> itnProvider() {
         return List.of(
             Arguments.of("PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiP"),
             Arguments.of("nope"),
@@ -294,7 +294,7 @@ public final class AutopayClientTest extends BaseTestCase {
     }
 
     @Contract(" -> new")
-    public static @NotNull @Unmodifiable List<Arguments> checkConfirmationProvider() {
+    public @NotNull @Unmodifiable List<Arguments> checkConfirmationProvider() {
         return List.of(
             Arguments.of(
                 new Confirmation(
