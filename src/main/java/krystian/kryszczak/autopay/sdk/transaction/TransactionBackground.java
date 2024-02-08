@@ -1,7 +1,5 @@
 package krystian.kryszczak.autopay.sdk.transaction;
 
-import com.fasterxml.jackson.annotation.JsonClassDescription;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
@@ -22,7 +20,6 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@JsonClassDescription
 @XmlRootElement
 @XmlType(propOrder = {
     "receiverNRB",
@@ -38,7 +35,6 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
     "hash"
 })
 public final class TransactionBackground extends Transaction {
-    @JsonCreator
     @ConstructorProperties({
         "receiverNRB", "receiverName", "receiverAddress", "orderID", "amount", "currency", "title", "remoteID", "bankHref",
         "returnURL", "hash", "serviceID", "description", "gatewayID", "customerEmail", "customerNRB", "texCountry",

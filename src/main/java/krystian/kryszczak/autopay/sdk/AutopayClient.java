@@ -1,7 +1,6 @@
 package krystian.kryszczak.autopay.sdk;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import krystian.kryszczak.autopay.sdk.common.Routes;
 import krystian.kryszczak.autopay.sdk.common.exception.HashNotReturnedFromServerException;
 import krystian.kryszczak.autopay.sdk.common.parser.ServiceResponseParser;

@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.payway.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.xml.bind.annotation.XmlList;
@@ -23,7 +22,6 @@ public final class PaywayListResponse extends PaywayList {
     @JsonProperty("gateway")
     private final @NotNull Gateway @NotNull [] gateways;
 
-    @JsonCreator
     @ConstructorProperties({ "serviceID", "messageID", "gateways", "hash" })
     public PaywayListResponse(int serviceID, @NotNull String messageID, @NotNull Gateway @NotNull [] gateways, @NotNull String hash) {
         super(serviceID, messageID, hash);

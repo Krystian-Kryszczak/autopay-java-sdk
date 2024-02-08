@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.itn.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import jakarta.xml.bind.annotation.*;
@@ -23,7 +22,6 @@ import java.util.function.Predicate;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "serviceID", "transactionsConfirmations", "hash" })
 @AllArgsConstructor(access = AccessLevel.PUBLIC, onConstructor_ = {
-    @JsonCreator,
     @ConstructorProperties({ "serviceID", "transactionsConfirmations", "hash" })
 })
 public final class ItnResponse implements Serializable {

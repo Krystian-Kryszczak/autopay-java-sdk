@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.itn;
 
-import com.fasterxml.jackson.annotation.JsonClassDescription;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import lombok.Builder;
@@ -21,7 +20,6 @@ import java.io.Serializable;
  * @param senderData Merged customer data.
  */
 @Builder
-@JsonClassDescription
 @XmlRootElement
 @XmlType(propOrder = {
     "fName",

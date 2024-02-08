@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.regulation.response;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 public final class RegulationListResponse extends RegulationList {
     private final Regulations regulations;
 
-    @JsonCreator
     @ConstructorProperties({ "serviceID", "messageID", "regulations", "hash" })
     public RegulationListResponse(int serviceID, @NotNull String messageID, @NotNull Regulations regulations, @NotNull String hash) {
         super(serviceID, messageID, hash);

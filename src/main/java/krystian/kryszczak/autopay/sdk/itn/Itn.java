@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.itn;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
@@ -33,7 +32,6 @@ import static krystian.kryszczak.autopay.sdk.util.ArrayUtils.filterNotNull;
     "hash"
 })
 @AllArgsConstructor(onConstructor_ = {
-    @JsonCreator,
     @ConstructorProperties({
         "serviceID",
         "orderID",

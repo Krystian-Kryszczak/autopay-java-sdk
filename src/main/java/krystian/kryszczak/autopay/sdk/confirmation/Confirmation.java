@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.confirmation;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import krystian.kryszczak.autopay.sdk.hash.Hashable;
@@ -24,7 +23,7 @@ import static krystian.kryszczak.autopay.sdk.util.MapUtils.notNullMapOf;
 @EqualsAndHashCode(callSuper = false)
 @XmlRootElement
 @XmlType(propOrder = { "serviceID", "messageID", "hash" })
-@AllArgsConstructor(onConstructor_ = { @JsonCreator, @ConstructorProperties({ "serviceID", "messageID", "hash" }) })
+@AllArgsConstructor(onConstructor_ = @ConstructorProperties({ "serviceID", "messageID", "hash" }))
 public final class Confirmation extends Hashable implements Serializable, HttpRequestBody {
     private final int serviceID;
     private final @NotNull String orderID;

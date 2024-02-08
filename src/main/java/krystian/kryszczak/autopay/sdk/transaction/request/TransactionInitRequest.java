@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.transaction.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import krystian.kryszczak.autopay.sdk.common.util.Translations;
 import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
 import lombok.EqualsAndHashCode;
@@ -8,13 +7,9 @@ import lombok.ToString;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.beans.ConstructorProperties;
-
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public final class TransactionInitRequest extends TransactionRequest<TransactionInit> {
-    @JsonCreator
-    @ConstructorProperties({"gatewayUrl", "transaction", "language"})
     public TransactionInitRequest(@NotNull String gatewayUrl, @NotNull TransactionInit transaction, @NotNull Translations.Language language) {
         super(gatewayUrl, transaction, language);
     }

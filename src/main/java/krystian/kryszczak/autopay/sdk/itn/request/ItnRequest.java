@@ -1,6 +1,5 @@
 package krystian.kryszczak.autopay.sdk.itn.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -22,7 +21,6 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "serviceID", "transactions", "hash" })
 @AllArgsConstructor(access = AccessLevel.PUBLIC, onConstructor_ = {
-    @JsonCreator,
     @ConstructorProperties({ "serviceID", "transactions", "hash" })
 })
 public final class ItnRequest extends Hashable implements Serializable {
