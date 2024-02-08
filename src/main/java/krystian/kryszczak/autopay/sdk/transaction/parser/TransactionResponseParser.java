@@ -7,7 +7,7 @@ import krystian.kryszczak.autopay.sdk.common.exception.HashException;
 import krystian.kryszczak.autopay.sdk.common.exception.XmlException;
 import krystian.kryszczak.autopay.sdk.common.parser.ResponseParser;
 import krystian.kryszczak.autopay.sdk.hash.HashChecker;
-import krystian.kryszczak.autopay.sdk.serializer.XmlSerializer;
+import krystian.kryszczak.autopay.sdk.serializer.jackson.XmlSerializer;
 import krystian.kryszczak.autopay.sdk.transaction.*;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;

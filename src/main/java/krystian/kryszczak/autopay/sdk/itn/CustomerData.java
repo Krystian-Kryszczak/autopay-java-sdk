@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonClassDescription;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;

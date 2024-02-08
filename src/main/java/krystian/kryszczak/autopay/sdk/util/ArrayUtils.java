@@ -53,7 +53,7 @@ public final class ArrayUtils {
     }
 
     @SafeVarargs
-    public static <T> @NotNull T @NotNull [] flatMap(final @NotNull T[]... src) {
+    public static <T> @NotNull T @NotNull [] flatMap(final @NotNull T[] @NotNull ... src) {
         @SuppressWarnings("unchecked")
         final Class<T> dstComponentType = (Class<T>) src.getClass().getComponentType().getComponentType();
         final int srcLength = src.length;

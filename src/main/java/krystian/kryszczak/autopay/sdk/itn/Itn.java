@@ -104,7 +104,7 @@ public final class Itn extends Hashable implements Serializable {
     }
 
     @Override
-    public @NotNull Object[] toArray() {
+    public @NotNull Object @NotNull [] toArray() {
         return filterNotNull(
             serviceID,
             orderID,
