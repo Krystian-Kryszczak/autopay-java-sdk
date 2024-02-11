@@ -2,13 +2,9 @@ package fixtures.transaction;
 
 import krystian.kryszczak.autopay.sdk.transaction.TransactionInit;
 import krystian.kryszczak.autopay.sdk.transaction.request.TransactionInitRequest;
-import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
+import static fixtures.Fixtures.readFixtureFile;
 
 public final class TransactionInitFixture {
     public static @NotNull TransactionInitRequest getTransactionInitContinue() {
@@ -43,13 +39,11 @@ public final class TransactionInitFixture {
             ).build();
     }
 
-    @SneakyThrows
-    public static String getTransactionInitContinueResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/TransactionInitContinueResponse.xml"));
+    public static @NotNull String getTransactionInitContinueResponse() {
+        return readFixtureFile("transaction/TransactionInitContinueResponse.xml");
     }
 
-    @SneakyThrows
-    public static String getTransactionInitResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/TransactionInitResponse.xml"));
+    public static @NotNull String getTransactionInitResponse() {
+        return readFixtureFile("transaction/TransactionInitResponse.xml");
     }
 }

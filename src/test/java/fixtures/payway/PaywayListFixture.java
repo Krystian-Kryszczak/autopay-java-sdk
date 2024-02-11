@@ -1,15 +1,11 @@
 package fixtures.payway;
 
-import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
+import static fixtures.Fixtures.readFixtureFile;
 
 public final class PaywayListFixture {
-    @SneakyThrows
-    public static String getPaywayListResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "payway-list/PaywayListResponse.xml"));
+    public static @NotNull String getPaywayListResponse() {
+        return readFixtureFile("payway-list/PaywayListResponse.xml");
     }
 }

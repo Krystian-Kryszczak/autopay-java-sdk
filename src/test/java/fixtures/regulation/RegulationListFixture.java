@@ -1,15 +1,11 @@
 package fixtures.regulation;
 
-import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
+import static fixtures.Fixtures.readFixtureFile;
 
 public final class RegulationListFixture {
-    @SneakyThrows
-    public static String getRegulationListResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "regulation-list/RegulationList.xml"));
+    public static @NotNull String getRegulationListResponse() {
+        return readFixtureFile("regulation-list/RegulationList.xml");
     }
 }

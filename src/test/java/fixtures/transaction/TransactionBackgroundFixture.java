@@ -6,13 +6,11 @@ import krystian.kryszczak.autopay.sdk.transaction.request.TransactionBackgroundR
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fixtures.Fixtures.FIXTURES_FOLDER_PATH;
+import static fixtures.Fixtures.readFixtureFile;
 
 public final class TransactionBackgroundFixture {
     public static @NotNull TransactionBackgroundRequest getTransactionBackground() {
@@ -34,9 +32,8 @@ public final class TransactionBackgroundFixture {
             ).build();
     }
 
-    @SneakyThrows
-    public static String getTransactionBackgroundResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/TransactionBackgroundResponse.xml"));
+    public static @NotNull String getTransactionBackgroundResponse() {
+        return readFixtureFile("transaction/TransactionBackgroundResponse.xml");
     }
 
     @SneakyThrows
@@ -47,8 +44,7 @@ public final class TransactionBackgroundFixture {
         return dst;
     }
 
-    @SneakyThrows
-    public static String getPaywayFormResponse() {
-        return Files.readString(Path.of(FIXTURES_FOLDER_PATH + "transaction/PaywayFormResponse.txt"));
+    public static @NotNull String getPaywayFormResponse() {
+        return readFixtureFile("transaction/PaywayFormResponse.txt");
     }
 }
